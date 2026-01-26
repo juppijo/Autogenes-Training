@@ -29,3 +29,6 @@ Da es sich um eine reine HTML/JavaScript-App handelt, ist keine Installation nö
 
 ---
 *Erstellt von Jup (Jo) – Inspiriert von Zaminia, der Kunst und der Astrophysik.*
+
+Link :   https://juppijo.github.io/Autogenes-Training/
+
