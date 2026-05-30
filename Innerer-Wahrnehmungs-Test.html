@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erforschung des Inneren Erlebens</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #b4d7f6;
+            color: #333;
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .intro {
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .timer-box {
+            background-color: #cee2f5;
+            border: 1px solid #d5dbdb;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .timer-box input {
+            width: 50px;
+            padding: 8px;
+            font-size: 16px;
+            text-align: center;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+        }
+        .timer-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: #16a085;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .timer-btn.active {
+            background-color: #c0392b;
+        }
+        .status-text {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+        
+        /* Neues Layout für Buttons und Info-Elemente */
+        .row-container {
+            margin-bottom: 15px;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+        button.exp-btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #34495e;
+            color: white;
+            transition: background 0.2s, transform 0.1s;
+            text-align: left;
+        }
+        button.exp-btn:hover {
+            background-color: #415b76;
+            transform: translateY(-2px);
+        }
+        button.exp-btn:active {
+            transform: translateY(0);
+        }
+        button.exp-btn span {
+            font-weight: bold;
+            display: block;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+        
+        /* Kleiner Info-Button */
+        .info-btn {
+            width: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #7f8c8d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .info-btn:hover {
+            background-color: #95a5a6;
+        }
+        
+        /* Aufklappbares Info-Fenster */
+        .info-panel {
+            display: none;
+            background-color: #eff;
+            border-left: 4px solid #2980b9;
+            padding: 12px 15px;
+            margin-top: 5px;
+            border-radius: 0 4px 4px 0;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .info-panel strong {
+            color: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #dee2f5;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        /* Bereich für die Datenverwaltung */
+        .data-management-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+        .save-btn {
+            background-color: #2980b9;
+        }
+        .load-btn {
+            background-color: #8e44ad;
+        }
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+        .reset-btn {
+            background-color: #e74c3c;
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
+        #file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mein Inneres Erleben</h1>
+    <p class="intro">Halte inne. Was genau war im Bruchteil einer Sekunde VOR diesem Moment in deinem Bewusstsein? Wähle die dominanteste Form:</p>
+
+    <div class="timer-box">
+        <label for="interval-input"><strong>Achtsamkeits-Gong alle:</strong> </label>
+        <input type="number" id="interval-input" min="1" max="99" value="10"> <span>Minuten</span>
+        <button id="toggle-timer-btn" class="timer-btn" onclick="toggleTimer()">Timer starten</button>
+        <button class="timer-btn" style="background-color: #7f8c8d;" onclick="playGong()">Gong Testen</button>
+        <div id="timer-status" class="status-text">Timer ist inaktiv.</div>
+    </div>
+
+    <div class="row-container">
+        <div class="btn-row">
+            <button class="exp-btn" onclick="logExperience('Innere Sprache')">
+                <span>1. Innere Sprache (Inner Speech)</span>
+                Worte, Sätze oder innere Monologe.
+            </button>
+            <button class="info-btn" onclick="toggleInfo('info1')">?</button>
+        </div>
+        <div id="info1" class="info-panel">
+            <strong>Beschreibung:</strong> Du sprichst im Kopf aktiv zu dir selbst. Das Denken geschieht in einer bestimmten Sprache, mit grammatikalischen Strukturen, Tonfall oder Rhythmus.<br>
+            <strong>Beispiel:</strong> Du denkst exakt die Worte: <em>„Ich muss nachher unbedingt noch Brot kaufen und danach jemand anrufen.“</em>
+        </div>
+    </div>
+
+    <div class="row-container">
+        <div class="btn-row">
+            <button class="exp-btn" onclick="logExperience('Inneres Sehen')">
+                <span>2. Inneres Sehen (Visual Imagery)</span>
+                Bilder, Formen, Filme oder Geometrie.
+            </button>
+            <button class="info-btn" onclick="toggleInfo('info2')">?</button>
+        </div>
+        <div id="info2" class="info-panel">
+            <strong>Beschreibung:</strong> Vor deinem inneren Auge erscheint ein visuelles Bild. Es kann eine Erinnerung, eine erfundene Szene, eine Farbe oder ein räumliches Muster sein.<br>
+            <strong>Beispiel:</strong> Du siehst die rot-weißen Fellmuster einer Katze vor dir oder stellst dir die exakte geometrische Flugbahn eines Sterns im Raum vor, ohne die Worte dafür zu sprechen.
+        </div>
+    </div>
+
+    <div class="row-container">
+        <div class="btn-row">
+            <button class="exp-btn" onclick="logExperience('Unformulierter Gedanke')">
+                <span>3. Unformulierter Gedanke (Unsymbolized)</span>
+                Reines Wissen, völlig ohne Worte oder Bilder.
+            </button>
+            <button class="info-btn" onclick="toggleInfo('info3')">?</button>
+        </div>
+        <div id="info3" class="info-panel">
+            <strong>Beschreibung:</strong> Du denkst etwas vollkommen Konkretes und weißt genau, worum es geht – aber im Kopf existiert in dieser Millisekunde weder ein gesprochenes Wort noch ein visuelles Bild. Es ist die pure, nackte Bedeutung.<br>
+            <strong>Beispiel:</strong> Du stehst vor der Tür und weißt plötzlich blitzartig, dass der Schlüssel noch auf dem Tisch liegt. Du „siehst“ den Schlüssel nicht innerlich und du „sprichst“ den Satz nicht aus; das Wissen ist einfach sofort als Ganzes da.
+        </div>
+    </div>
+
+    <div class="row-container">
+        <div class="btn-row">
+            <button class="exp-btn" onclick="logExperience('Gefühl')">
+                <span>4. Gefühl (Feeling)</span>
+                Direktes Erleben einer emotionalen Tönung.
+            </button>
+            <button class="info-btn" onclick="toggleInfo('info4')">?</button>
+        </div>
+        <div id="info4" class="info-panel">
+            <strong>Beschreibung:</strong> Im Fokus steht ein reines Gefühl oder eine emotionale Resonanz im Körper, die in diesem Moment dein Bewusstsein ausfüllt, noch bevor der Verstand sie analysiert oder benennt.<br>
+            <strong>Beispiel:</strong> Eine plötzliche, warme Welle von innerem Frieden, eine unbestimmte Melancholie oder eine freudige Erwartung, die du einfach im Brustbereich spürst.
+        </div>
+    </div>
+
+    <div class="row-container">
+        <div class="btn-row">
+            <button class="exp-btn" onclick="logExperience('Sensorisches Bewusstsein')">
+                <span>5. Sensorisches Bewusstsein (Sensory Awareness)</span>
+                Reine, unbewertete Sinneswahrnehmung.
+            </button>
+            <button class="info-btn" onclick="toggleInfo('info5')">?</button>
+        </div>
+        <div id="info5" class="info-panel">
+            <strong>Beschreibung:</strong> Deine Aufmerksamkeit ist komplett nach außen oder auf den physischen Körper gerichtet. Du bist ganz im „Spüren“, „Hören“ oder „Sehen“, ohne dass der innere Monolog die Wahrnehmung kommentiert.<br>
+            <strong>Beispiel:</strong> Du nimmst in der Sekunde des Gongs intensiv das sanfte Kribbeln in deinen Fingerspitzen beim Tippen wahr, oder du verlierst dich ganz im monotonen Prasseln des Regens gegen die Fensterscheibe.
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Deine Statistik (<span id="total-count">0</span> Einträge)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Erlebens-Typ</th>
+                <th>Anzahl</th>
+                <th>Anteil (%)</th>
+            </tr>
+        </thead>
+        <tbody id="stats-body">
+        </tbody>
+    </table>
+
+    <div class="data-management-box">
+        <button class="action-btn save-btn" onclick="saveStatsToFile()">Aktuellen Stand speichern</button>
+        <button class="action-btn load-btn" onclick="document.getElementById('file-input').click()">Stand laden</button>
+        <input type="file" id="file-input" accept=".json" onchange="loadStatsFromFile(event)">
+    </div>
+
+    <button class="reset-btn" onclick="resetStats()">Statistik zurücksetzen</button>
+
+    <script>
+        // Datenstruktur initialisieren aus LocalStorage
+        let stats = JSON.parse(localStorage.getItem('innerExperienceStats')) || {
+            'Innere Sprache': 0,
+            'Inneres Sehen': 0,
+            'Unformulierter Gedanke': 0,
+            'Gefühl': 0,
+            'Sensorisches Bewusstsein': 0
+        };
+
+        let timerId = null;
+
+        // Funktion zum Auf- und Zuklappen der Erklärungen
+        function toggleInfo(panelId) {
+            const panel = document.getElementById(panelId);
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+
+        // Funktion zur Synthese des tibetischen Gongs (Web Audio API)
+        function playGong() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                
+                const now = ctx.currentTime;
+                const duration = 6.0;
+
+                const masterGain = ctx.createGain();
+                masterGain.gain.setValueAtTime(0.4, now);
+                masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                masterGain.connect(ctx.destination);
+
+                const freqs = [144, 289, 435];
+                const gains = [0.5, 0.25, 0.12];
+
+                freqs.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gainNode = ctx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+                    
+                    if (i > 0) {
+                        osc.frequency.linearRampToValueAtTime(freq + (i * 1.5), now + duration);
+                    }
+
+                    gainNode.gain.setValueAtTime(gains[i], now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+                    osc.connect(gainNode);
+                    gainNode.connect(masterGain);
+                    osc.start(now);
+                    osc.stop(now + duration);
+                });
+            } catch (e) {
+                console.error("Web Audio API wird von diesem Browser nicht unterstützt.", e);
+            }
+        }
+
+        // Timer-Logik
+        function toggleTimer() {
+            const btn = document.getElementById('toggle-timer-btn');
+            const input = document.getElementById('interval-input');
+            const status = document.getElementById('timer-status');
+
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+                btn.innerText = "Timer starten";
+                btn.classList.remove('active');
+                input.disabled = false;
+                status.innerText = "Timer ist inaktiv.";
+            } else {
+                let mins = parseInt(input.value);
+                if (isNaN(mins) || mins < 1 || mins > 99) {
+                    alert("Bitte eine Zahl zwischen 1 und 99 eingeben.");
+                    return;
+                }
+
+                input.disabled = true;
+                btn.innerText = "Timer stoppen";
+                btn.classList.add('active');
+                status.innerText = `Gong active. Nächster Gong in ${mins} Minute(n).`;
+
+                const ms = mins * 60 * 1000;
+
+                timerId = setInterval(() => {
+                    playGong();
+                    console.log("Achtsamkeits-Gong! Zeit zur Erfassung.");
+                }, ms);
+            }
+        }
+
+        function updateUI() {
+            const tbody = document.getElementById('stats-body');
+            const totalSpan = document.getElementById('total-count');
+            tbody.innerHTML = '';
+            
+            let total = Object.values(stats).reduce((a, b) => a + b, 0);
+            totalSpan.innerText = total;
+
+            for (let type in stats) {
+                let count = stats[type];
+                let percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+
+                let row = `<tr>
+                    <td><strong>${type}</strong></td>
+                    <td>${count}</td>
+                    <td>${percentage} %</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            }
+        }
+
+        function logExperience(type) {
+            stats[type]++;
+            localStorage.setItem('innerExperienceStats', JSON.stringify(stats));
+            updateUI();
+        }
+
+        function resetStats() {
+            if (confirm('Möchtest du die bisherige Statistik wirklich löschen?')) {
+                stats = {
+                    'Innere Sprache': 0,
+                    'Inneres Sehen': 0,
+                    'Unformulierter Gedanke': 0,
+                    'Gefühl': 0,
+                    'Sensorisches Bewusstsein': 0
+                };
+                localStorage.removeItem('innerExperienceStats');
+                updateUI();
+            }
+        }
+
+        // NEU: Statistik als Datei exportieren
+        function saveStatsToFile() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(stats, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "inneres_erleben_stand.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        // NEU: Statistik aus Datei importieren
+        function loadStatsFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedStats = JSON.parse(e.target.result);
+                    
+                    // Validierung, ob die Datei die richtigen Keys enthält
+                    const requiredKeys = ['Innere Sprache', 'Inneres Sehen', 'Unformulierter Gedanke', 'Gefühl', 'Sensorisches Bewusstsein'];
+                    const hasAllKeys = requiredKeys.every(key => typeof importedStats[key] === 'number');
+
+                    if (hasAllKeys) {
+                        stats = importedStats;
+                        localStorage.setItem('innerExperienceStats', JSON.stringify(stats));
+                        updateUI();
+                        alert('Statistik erfolgreich geladen!');
+                    } else {
+                        alert('Fehler: Die Datei hat nicht das richtige Format.');
+                    }
+                } catch (err) {
+                    alert('Fehler beim Lesen der Datei. Bitte stelle sicher, dass es eine gültige JSON-Datei ist.');
+                }
+            };
+            reader.readAsText(file);
+            // Input zurücksetzen, damit dieselbe Datei mehrfach geladen werden könnte
+            event.target.value = '';
+        }
+
+        // Initialisierung
+        updateUI();
+    </script>
+
+</body>
+</html>
