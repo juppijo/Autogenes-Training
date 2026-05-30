@@ -5,300 +5,442 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Erforschung des Inneren Erlebens</title>
     <style>
+        :root {
+            --bg-color: #b4d7f6;
+            --container-bg: #ffffff;
+            --timer-bg: #cee2f5;
+            --text-color: #333333;
+            --heading-color: #2c3e50;
+            --btn-primary: #34495e;
+            --btn-primary-hover: #415b76;
+            --btn-info: #7f8c8d;
+            --btn-info-hover: #95a5a6;
+            --btn-start: #16a085;
+            --btn-stop: #c0392b;
+            --btn-save: #2980b9;
+            --btn-load: #8e44ad;
+            --panel-bg: #eeffff;
+            --panel-border: #2980b9;
+            --table-bg: #dee2f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #b4d7f6;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: top;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
             max-width: 650px;
-            margin: 40px auto;
+            background-color: var(--container-bg);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            margin: 20px auto;
         }
-        h1, h2 {
+
+        h1 {
+            font-size: 24px;
             text-align: center;
-            color: #2c3e50;
+            color: var(--heading-color);
+            margin-bottom: 10px;
         }
+
+        h2 {
+            font-size: 20px;
+            text-align: center;
+            color: var(--heading-color);
+            margin: 25px 0 15px 0;
+        }
+
         .intro {
             font-style: italic;
             text-align: center;
             margin-bottom: 20px;
             color: #555;
+            font-size: 15px;
+            line-height: 1.4;
         }
+
         .timer-box {
-            background-color: #cee2f5;
-            border: 1px solid #d5dbdb;
-            border-radius: 6px;
+            background-color: var(--timer-bg);
+            border: 1px solid #b7cbdc;
+            border-radius: 8px;
             padding: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .timer-box label {
+            font-weight: bold;
+            font-size: 15px;
+        }
+
         .timer-box input {
-            width: 50px;
+            width: 60px;
             padding: 8px;
             font-size: 16px;
             text-align: center;
             border: 1px solid #bdc3c7;
-            border-radius: 4px;
+            border-radius: 6px;
         }
+
         .timer-btn {
-            padding: 8px 15px;
+            padding: 10px 16px;
             font-size: 14px;
-            background-color: #16a085;
+            font-weight: bold;
+            background-color: var(--btn-start);
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .timer-btn.active {
-            background-color: #c0392b;
-        }
-        .status-text {
-            font-size: 13px;
-            color: #7f8c8d;
-            margin-top: 8px;
-        }
-        
-        /* Neues Layout für Buttons und Info-Elemente */
-        .row-container {
-            margin-bottom: 15px;
-        }
-        .btn-row {
-            display: flex;
-            gap: 10px;
-        }
-        button.exp-btn {
-            flex: 1;
-            padding: 15px;
-            font-size: 16px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            background-color: #34495e;
+            transition: background 0.2s;
+        }
+
+        .timer-btn.active {
+            background-color: var(--btn-stop);
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: #5d6d7e;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .row-container {
+            margin-bottom: 12px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        button.exp-btn {
+            flex: 1;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--btn-primary);
             color: white;
             transition: background 0.2s, transform 0.1s;
             text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         button.exp-btn:hover {
-            background-color: #415b76;
-            transform: translateY(-2px);
+            background-color: var(--btn-primary-hover);
         }
+
         button.exp-btn:active {
-            transform: translateY(0);
+            transform: scale(0.99);
         }
+
         button.exp-btn span {
             font-weight: bold;
             display: block;
-            font-size: 17px;
-            margin-bottom: 4px;
+            font-size: 16px;
+            margin-bottom: 3px;
+            color: #ecf0f1;
         }
-        
-        /* Kleiner Info-Button */
+
         .info-btn {
-            width: 50px;
+            width: 48px;
             font-size: 20px;
             font-weight: bold;
-            background-color: #7f8c8d;
+            background-color: var(--btn-info);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         .info-btn:hover {
-            background-color: #95a5a6;
+            background-color: var(--btn-info-hover);
         }
-        
-        /* Aufklappbares Info-Fenster */
+
         .info-panel {
             display: none;
-            background-color: #eff;
-            border-left: 4px solid #2980b9;
+            background-color: var(--panel-bg);
+            border-left: 4px solid var(--panel-border);
             padding: 12px 15px;
-            margin-top: 5px;
-            border-radius: 0 4px 4px 0;
+            margin-top: 6px;
+            border-radius: 4px;
             font-size: 14px;
             line-height: 1.5;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
         }
+
         .info-panel strong {
-            color: #2980b9;
+            color: var(--panel-border);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #dee2f5;
+            margin-top: 15px;
+            background-color: var(--table-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+
         th, td {
-            border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
+
         th {
             background-color: #2ecc71;
             color: white;
+            font-weight: bold;
         }
 
-        /* Bereich für die Datenverwaltung */
         .data-management-box {
             display: flex;
             gap: 10px;
             margin-top: 20px;
         }
+
         .action-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             font-size: 14px;
             font-weight: bold;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             color: white;
             text-align: center;
-            transition: opacity 0.2s;
+            transition: background 0.2s, opacity 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .save-btn {
-            background-color: #2980b9;
-        }
-        .load-btn {
-            background-color: #8e44ad;
-        }
-        .action-btn:hover {
+
+        .save-btn { background-color: var(--btn-save); }
+        .load-btn { background-color: var(--btn-load); }
+
+        .action-btn:hover, .reset-btn:hover {
             opacity: 0.9;
         }
+
         .reset-btn {
             background-color: #e74c3c;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
             width: 100%;
             padding: 12px;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .reset-btn:hover {
-            background-color: #c0392b;
-        }
+
         #file-input {
             display: none;
+        }
+
+        /* --- Smartphone Optimierungen (@media) --- */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                margin: 5px auto;
+                padding: 12px;
+                border-radius: 8px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            h2 {
+                font-size: 18px;
+                margin: 20px 0 10px 0;
+            }
+            .intro {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+            button.exp-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+            button.exp-btn span {
+                font-size: 15px;
+            }
+            .info-btn {
+                width: 44px;
+            }
+            th, td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+            .timer-box {
+                padding: 12px;
+            }
+            .timer-controls {
+                gap: 5px;
+            }
+            .timer-btn {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            .action-btn {
+                padding: 10px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>Mein Inneres Erleben</h1>
-    <p class="intro">Halte inne. Was genau war im Bruchteil einer Sekunde VOR diesem Moment in deinem Bewusstsein? Wähle die dominanteste Form:</p>
+    <div class="container">
+        <h1>Mein Inneres Erleben</h1>
+        <p class="intro">Halte inne. Was genau war im Bruchteil einer Sekunde VOR diesem Moment in deinem Bewusstsein? Wähle die dominanteste Form:</p>
 
-    <div class="timer-box">
-        <label for="interval-input"><strong>Achtsamkeits-Gong alle:</strong> </label>
-        <input type="number" id="interval-input" min="1" max="99" value="10"> <span>Minuten</span>
-        <button id="toggle-timer-btn" class="timer-btn" onclick="toggleTimer()">Timer starten</button>
-        <button class="timer-btn" style="background-color: #7f8c8d;" onclick="playGong()">Gong Testen</button>
-        <div id="timer-status" class="status-text">Timer ist inaktiv.</div>
+        <!-- Timer-Bereich -->
+        <div class="timer-box">
+            <label for="interval-input">Achtsamkeits-Gong alle: </label>
+            <div class="timer-controls">
+                <input type="number" id="interval-input" min="1" max="99" value="10">
+                <span>Minuten</span>
+                <button id="toggle-timer-btn" class="timer-btn" onclick="toggleTimer()">Starten</button>
+                <button class="timer-btn" style="background-color: var(--btn-info);" onclick="playGong()">Testen</button>
+            </div>
+            <div id="timer-status" class="status-text">Timer ist inaktiv.</div>
+        </div>
+
+        <!-- Buttons mit Aufklapp-Funktion -->
+        <div class="row-container">
+            <div class="btn-row">
+                <button class="exp-btn" onclick="logExperience('Innere Sprache')">
+                    <span>1. Innere Sprache</span>
+                    Worte, Sätze oder innere Monologe.
+                </button>
+                <button class="info-btn" onclick="toggleInfo('info1')">?</button>
+            </div>
+            <div id="info1" class="info-panel">
+                <strong>Beschreibung:</strong> Du sprichst im Kopf aktiv zu dir selbst. Das Denken geschieht in einer bestimmten Sprache, mit grammatikalischen Strukturen oder Tonfall.<br>
+                <strong>Beispiel:</strong> Du denkst exakt die Worte: <em>„Ich muss nachher unbedingt noch Brot kaufen und danach jemand anrufen.“</em>
+            </div>
+        </div>
+
+        <div class="row-container">
+            <div class="btn-row">
+                <button class="exp-btn" onclick="logExperience('Inneres Sehen')">
+                    <span>2. Inneres Sehen</span>
+                    Bilder, Formen, Filme oder Geometrie.
+                </button>
+                <button class="info-btn" onclick="toggleInfo('info2')">?</button>
+            </div>
+            <div id="info2" class="info-panel">
+                <strong>Beschreibung:</strong> Vor deinem inneren Auge erscheint ein visuelles Bild. Es kann eine Erinnerung, eine erfundene Szene, eine Farbe oder ein räumliches Muster sein.<br>
+                <strong>Beispiel:</strong> Du siehst die rot-weißen Fellmuster einer Katze vor dir oder stellst dir die Flugbahn eines Sterns im Raum vor.
+            </div>
+        </div>
+
+        <div class="row-container">
+            <div class="btn-row">
+                <button class="exp-btn" onclick="logExperience('Unformulierter Gedanke')">
+                    <span>3. Unformulierter Gedanke</span>
+                    Reines Wissen, ohne Worte/Bilder.
+                </button>
+                <button class="info-btn" onclick="toggleInfo('info3')">?</button>
+            </div>
+            <div id="info3" class="info-panel">
+                <strong>Beschreibung:</strong> Du denkst etwas Konkretes und weißt genau, worum es geht – aber im Kopf existiert in dieser Millisekunde weder ein gesprochenes Wort noch ein Bild.<br>
+                <strong>Beispiel:</strong> Du stehst vor der Tür und weißt plötzlich blitzartig, dass der Schlüssel noch auf dem Tisch liegt – ohne Worte oder Bilder.
+            </div>
+        </div>
+
+        <div class="row-container">
+            <div class="btn-row">
+                <button class="exp-btn" onclick="logExperience('Gefühl')">
+                    <span>4. Gefühl</span>
+                    Direktes Erleben einer Emotion.
+                </button>
+                <button class="info-btn" onclick="toggleInfo('info4')">?</button>
+            </div>
+            <div id="info4" class="info-panel">
+                <strong>Beschreibung:</strong> Eine emotionale Resonanz im Körper füllt dein Bewusstsein aus, noch bevor der Verstand sie analysiert oder benennt.<br>
+                <strong>Beispiel:</strong> Eine plötzliche, warme Welle von innerem Frieden oder eine freudige Erwartung, die du im Brustbereich spürst.
+            </div>
+        </div>
+
+        <div class="row-container">
+            <div class="btn-row">
+                <button class="exp-btn" onclick="logExperience('Sensorisches Bewusstsein')">
+                    <span>5. Sensorisches Bewusstsein</span>
+                    Reine, unbewertete Sinneswahrnehmung.
+                </button>
+                <button class="info-btn" onclick="toggleInfo('info5')">?</button>
+            </div>
+            <div id="info5" class="info-panel">
+                <strong>Beschreibung:</strong> Deine Aufmerksamkeit ist komplett nach außen oder auf den Körper gerichtet. Du bist ganz im reinen Spüren, Hören oder Sehen ohne Kommentar.<br>
+                <strong>Beispiel:</strong> Du nimmst das sanfte Kribbeln in deinen Fingerspitzen beim Tippen wahr, oder verlierst dich im Prasseln des Regens.
+            </div>
+        </div>
+
+        <hr style="border: 0; height: 1px; background: #cbd5e0; margin-top: 20px;">
+
+        <h2>Deine Statistik (<span id="total-count">0</span> Einträge)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Erlebens-Typ</th>
+                    <th>Anzahl</th>
+                    <th>Anteil</th>
+                </tr>
+            </thead>
+            <tbody id="stats-body">
+            </tbody>
+        </table>
+
+        <!-- Bereich zum Speichern und Laden -->
+        <div class="data-management-box">
+            <button class="action-btn save-btn" onclick="saveStatsToFile()">Stand speichern</button>
+            <button class="action-btn load-btn" onclick="document.getElementById('file-input').click()">Stand laden</button>
+            <input type="file" id="file-input" accept=".json" onchange="loadStatsFromFile(event)">
+        </div>
+
+        <button class="reset-btn" onclick="resetStats()">Statistik zurücksetzen</button>
     </div>
-
-    <div class="row-container">
-        <div class="btn-row">
-            <button class="exp-btn" onclick="logExperience('Innere Sprache')">
-                <span>1. Innere Sprache (Inner Speech)</span>
-                Worte, Sätze oder innere Monologe.
-            </button>
-            <button class="info-btn" onclick="toggleInfo('info1')">?</button>
-        </div>
-        <div id="info1" class="info-panel">
-            <strong>Beschreibung:</strong> Du sprichst im Kopf aktiv zu dir selbst. Das Denken geschieht in einer bestimmten Sprache, mit grammatikalischen Strukturen, Tonfall oder Rhythmus.<br>
-            <strong>Beispiel:</strong> Du denkst exakt die Worte: <em>„Ich muss nachher unbedingt noch Brot kaufen und danach jemand anrufen.“</em>
-        </div>
-    </div>
-
-    <div class="row-container">
-        <div class="btn-row">
-            <button class="exp-btn" onclick="logExperience('Inneres Sehen')">
-                <span>2. Inneres Sehen (Visual Imagery)</span>
-                Bilder, Formen, Filme oder Geometrie.
-            </button>
-            <button class="info-btn" onclick="toggleInfo('info2')">?</button>
-        </div>
-        <div id="info2" class="info-panel">
-            <strong>Beschreibung:</strong> Vor deinem inneren Auge erscheint ein visuelles Bild. Es kann eine Erinnerung, eine erfundene Szene, eine Farbe oder ein räumliches Muster sein.<br>
-            <strong>Beispiel:</strong> Du siehst die rot-weißen Fellmuster einer Katze vor dir oder stellst dir die exakte geometrische Flugbahn eines Sterns im Raum vor, ohne die Worte dafür zu sprechen.
-        </div>
-    </div>
-
-    <div class="row-container">
-        <div class="btn-row">
-            <button class="exp-btn" onclick="logExperience('Unformulierter Gedanke')">
-                <span>3. Unformulierter Gedanke (Unsymbolized)</span>
-                Reines Wissen, völlig ohne Worte oder Bilder.
-            </button>
-            <button class="info-btn" onclick="toggleInfo('info3')">?</button>
-        </div>
-        <div id="info3" class="info-panel">
-            <strong>Beschreibung:</strong> Du denkst etwas vollkommen Konkretes und weißt genau, worum es geht – aber im Kopf existiert in dieser Millisekunde weder ein gesprochenes Wort noch ein visuelles Bild. Es ist die pure, nackte Bedeutung.<br>
-            <strong>Beispiel:</strong> Du stehst vor der Tür und weißt plötzlich blitzartig, dass der Schlüssel noch auf dem Tisch liegt. Du „siehst“ den Schlüssel nicht innerlich und du „sprichst“ den Satz nicht aus; das Wissen ist einfach sofort als Ganzes da.
-        </div>
-    </div>
-
-    <div class="row-container">
-        <div class="btn-row">
-            <button class="exp-btn" onclick="logExperience('Gefühl')">
-                <span>4. Gefühl (Feeling)</span>
-                Direktes Erleben einer emotionalen Tönung.
-            </button>
-            <button class="info-btn" onclick="toggleInfo('info4')">?</button>
-        </div>
-        <div id="info4" class="info-panel">
-            <strong>Beschreibung:</strong> Im Fokus steht ein reines Gefühl oder eine emotionale Resonanz im Körper, die in diesem Moment dein Bewusstsein ausfüllt, noch bevor der Verstand sie analysiert oder benennt.<br>
-            <strong>Beispiel:</strong> Eine plötzliche, warme Welle von innerem Frieden, eine unbestimmte Melancholie oder eine freudige Erwartung, die du einfach im Brustbereich spürst.
-        </div>
-    </div>
-
-    <div class="row-container">
-        <div class="btn-row">
-            <button class="exp-btn" onclick="logExperience('Sensorisches Bewusstsein')">
-                <span>5. Sensorisches Bewusstsein (Sensory Awareness)</span>
-                Reine, unbewertete Sinneswahrnehmung.
-            </button>
-            <button class="info-btn" onclick="toggleInfo('info5')">?</button>
-        </div>
-        <div id="info5" class="info-panel">
-            <strong>Beschreibung:</strong> Deine Aufmerksamkeit ist komplett nach außen oder auf den physischen Körper gerichtet. Du bist ganz im „Spüren“, „Hören“ oder „Sehen“, ohne dass der innere Monolog die Wahrnehmung kommentiert.<br>
-            <strong>Beispiel:</strong> Du nimmst in der Sekunde des Gongs intensiv das sanfte Kribbeln in deinen Fingerspitzen beim Tippen wahr, oder du verlierst dich ganz im monotonen Prasseln des Regens gegen die Fensterscheibe.
-        </div>
-    </div>
-
-    <hr>
-
-    <h2>Deine Statistik (<span id="total-count">0</span> Einträge)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Erlebens-Typ</th>
-                <th>Anzahl</th>
-                <th>Anteil (%)</th>
-            </tr>
-        </thead>
-        <tbody id="stats-body">
-        </tbody>
-    </table>
-
-    <div class="data-management-box">
-        <button class="action-btn save-btn" onclick="saveStatsToFile()">Aktuellen Stand speichern</button>
-        <button class="action-btn load-btn" onclick="document.getElementById('file-input').click()">Stand laden</button>
-        <input type="file" id="file-input" accept=".json" onchange="loadStatsFromFile(event)">
-    </div>
-
-    <button class="reset-btn" onclick="resetStats()">Statistik zurücksetzen</button>
 
     <script>
-        // Datenstruktur initialisieren aus LocalStorage
+        // Datenstruktur aus LocalStorage laden
         let stats = JSON.parse(localStorage.getItem('innerExperienceStats')) || {
             'Innere Sprache': 0,
             'Inneres Sehen': 0,
@@ -309,22 +451,17 @@
 
         let timerId = null;
 
-        // Funktion zum Auf- und Zuklappen der Erklärungen
+        // Auf- und Zuklappen der Erklärungen
         function toggleInfo(panelId) {
             const panel = document.getElementById(panelId);
-            if (panel.style.display === "block") {
-                panel.style.display = "none";
-            } else {
-                panel.style.display = "block";
-            }
+            panel.style.display = (panel.style.display === "block") ? "none" : "block";
         }
 
-        // Funktion zur Synthese des tibetischen Gongs (Web Audio API)
+        // Synthese des tibetischen Gongs (Web Audio API)
         function playGong() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 const ctx = new AudioContext();
-                
                 const now = ctx.currentTime;
                 const duration = 6.0;
 
@@ -356,7 +493,7 @@
                     osc.stop(now + duration);
                 });
             } catch (e) {
-                console.error("Web Audio API wird von diesem Browser nicht unterstützt.", e);
+                console.error("Web Audio API wird nicht unterstützt.", e);
             }
         }
 
@@ -369,7 +506,7 @@
             if (timerId) {
                 clearInterval(timerId);
                 timerId = null;
-                btn.innerText = "Timer starten";
+                btn.innerText = "Starten";
                 btn.classList.remove('active');
                 input.disabled = false;
                 status.innerText = "Timer ist inaktiv.";
@@ -381,15 +518,13 @@
                 }
 
                 input.disabled = true;
-                btn.innerText = "Timer stoppen";
+                btn.innerText = "Stoppen";
                 btn.classList.add('active');
-                status.innerText = `Gong active. Nächster Gong in ${mins} Minute(n).`;
+                status.innerText = `Gong aktiv. Nächster Gong in ${mins} Minute(n).`;
 
                 const ms = mins * 60 * 1000;
-
                 timerId = setInterval(() => {
                     playGong();
-                    console.log("Achtsamkeits-Gong! Zeit zur Erfassung.");
                 }, ms);
             }
         }
@@ -435,7 +570,6 @@
             }
         }
 
-        // NEU: Statistik als Datei exportieren
         function saveStatsToFile() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(stats, null, 2));
             const downloadAnchor = document.createElement('a');
@@ -446,7 +580,6 @@
             downloadAnchor.remove();
         }
 
-        // NEU: Statistik aus Datei importieren
         function loadStatsFromFile(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -455,8 +588,6 @@
             reader.onload = function(e) {
                 try {
                     const importedStats = JSON.parse(e.target.result);
-                    
-                    // Validierung, ob die Datei die richtigen Keys enthält
                     const requiredKeys = ['Innere Sprache', 'Inneres Sehen', 'Unformulierter Gedanke', 'Gefühl', 'Sensorisches Bewusstsein'];
                     const hasAllKeys = requiredKeys.every(key => typeof importedStats[key] === 'number');
 
@@ -466,20 +597,18 @@
                         updateUI();
                         alert('Statistik erfolgreich geladen!');
                     } else {
-                        alert('Fehler: Die Datei hat nicht das richtige Format.');
+                        alert('Fehler: Ungültiges Dateiformat.');
                     }
                 } catch (err) {
-                    alert('Fehler beim Lesen der Datei. Bitte stelle sicher, dass es eine gültige JSON-Datei ist.');
+                    alert('Fehler beim Lesen der Datei.');
                 }
             };
             reader.readAsText(file);
-            // Input zurücksetzen, damit dieselbe Datei mehrfach geladen werden könnte
             event.target.value = '';
         }
 
         // Initialisierung
         updateUI();
     </script>
-
 </body>
 </html>
