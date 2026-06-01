@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro-Trainer: Die 5 Phänomene des Erlebens (Pro)</title>
+    <style>
+        /* Farbthemen-Variablen */
+        :root {
+            --bg-color: #f0f4f8;
+            --container-bg: #ffffff;
+            --text-color: #2c3e50;
+            --primary: #34495e;
+            --accent-speech: #2980b9;
+            --accent-visual: #e67e22;
+            --accent-thought: #9b59b6;
+            --accent-feeling: #e74c3c;
+            --accent-sensory: #16a085;
+            --btn-hover: #415b76;
+            --panel-bg: #f8fafc;
+        }
+
+        /* Thema 2: Salbeigrün */
+        [data-theme="sage"] {
+            --bg-color: #edf2f0;
+            --container-bg: #ffffff;
+            --text-color: #2f3e46;
+            --primary: #52796f;
+            --btn-hover: #354f52;
+            --panel-bg: #f4f7f6;
+        }
+
+        /* Thema 3: Terrakotta / Sand */
+        [data-theme="terracotta"] {
+            --bg-color: #f7f1eb;
+            --container-bg: #ffffff;
+            --text-color: #4a3728;
+            --primary: #c07d53;
+            --btn-hover: #a0633b;
+            --panel-bg: #faf6f2;
+        }
+
+        /* Thema 4: Deep Zen / Dunkelmodus */
+        [data-theme="zen"] {
+            --bg-color: #1a252f;
+            --container-bg: #2c3e50;
+            --text-color: #ecf0f1;
+            --primary: #1abc9c;
+            --btn-hover: #16a085;
+            --panel-bg: #34495e;
+        }
+
+        /* Thema 5: Lavendel / Rosé */
+        [data-theme="lavender"] {
+            --bg-color: #f3f0f7;
+            --container-bg: #ffffff;
+            --text-color: #3d3447;
+            --primary: #8e44ad;
+            --btn-hover: #732d91;
+            --panel-bg: #f9f6fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: top;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background-color: var(--container-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            margin: 20px auto;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .utility-btn {
+            background: rgba(0,0,0,0.05);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: background 0.2s;
+        }
+        [data-theme="zen"] .utility-btn { background: rgba(255,255,255,0.1); }
+        .utility-btn:hover { background: rgba(0,0,0,0.1); }
+        [data-theme="zen"] .utility-btn:hover { background: rgba(255,255,255,0.2); }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 8px;
+            padding-right: 140px;
+        }
+
+        @media (max-width: 550px) {
+            h1 { padding-right: 0; margin-top: 40px; }
+            .top-controls { top: 15px; right: 15px; }
+        }
+
+        .subtitle {
+            font-size: 14px;
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        [data-theme="zen"] .subtitle { color: #bdc3c7; }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .menu-card {
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        [data-theme="zen"] .menu-card { background: #34495e; border-color: #455a64; }
+
+        .menu-card h3 { font-size: 14px; margin-bottom: 4px; color: #2c3e50; }
+        [data-theme="zen"] .menu-card h3 { color: #fff; }
+        .menu-card p { font-size: 11px; color: #7f8c8d; }
+        [data-theme="zen"] .menu-card p { color: #bdc3c7; }
+
+        .menu-card.speech { border-color: var(--accent-speech); }
+        .menu-card.visual { border-color: var(--accent-visual); }
+        .menu-card.thought { border-color: var(--accent-thought); }
+        .menu-card.feeling { border-color: var(--accent-feeling); }
+        .menu-card.sensory { border-color: var(--accent-sensory); }
+
+        .menu-card.active { color: white !important; transform: scale(1.02); }
+        .menu-card.active h3, .menu-card.active p { color: white !important; }
+        .menu-card.speech.active { background-color: var(--accent-speech); }
+        .menu-card.visual.active { background-color: var(--accent-visual); }
+        .menu-card.thought.active { background-color: var(--accent-thought); }
+        .menu-card.feeling.active { background-color: var(--accent-feeling); }
+        .menu-card.sensory.active { background-color: var(--accent-sensory); }
+
+        .training-zone {
+            display: none;
+            background-color: var(--panel-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        [data-theme="zen"] .training-zone { border-color: #455a64; }
+
+        .exercise-title { font-size: 20px; font-weight: bold; margin-bottom: 6px; }
+        .meta-desc { font-size: 12.5px; font-style: italic; color: #7f8c8d; margin-bottom: 20px; line-height: 1.4; }
+        [data-theme="zen"] .meta-desc { color: #bdc3c7; }
+
+        /* Variations-Umschalter */
+        .variation-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .var-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px 12px;
+            font-size: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+        [data-theme="zen"] .var-btn { background: #2c3e50; border-color: #455a64; }
+        .var-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .instruction-box {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #34495e;
+            background: white;
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+        }
+        [data-theme="zen"] .instruction-box { background: #2c3e50; color: #ecf0f1; }
+
+        .canvas-area {
+            display: none;
+            width: 100%;
+            height: 110px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background: #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+        [data-theme="zen"] .canvas-area { background: #2c3e50; }
+
+        .pulse-circle {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.7); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.3; }
+        }
+
+        .timer-display {
+            font-size: 40px;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            font-variant-numeric: tabular-nums;
+            color: var(--primary);
+        }
+
+        .control-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+        }
+        .control-btn:hover { filter: brightness(1.1); }
+        .control-btn.running { background-color: #c0392b; }
+
+        .tracker-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+        }
+        [data-theme="zen"] .tracker-box { background: #34495e; border-color: #455a64; }
+        .tracker-title { font-size: 13px; font-weight: bold; margin-bottom: 12px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px; }
+        [data-theme="zen"] .tracker-title { color: #bdc3c7; }
+        .counter-badges { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+        .badge { padding: 6px 10px; font-size: 11px; font-weight: bold; border-radius: 20px; color: white; background: #bdc3c7; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <div class="top-controls">
+            <button class="utility-btn" onclick="rotateTheme()">🎨 Thema</button>
+            <button class="utility-btn" onclick="toggleFullscreen()">🖥️ Vollbild</button>
+        </div>
+
+        <h1>Bewusstseins-Pfad-Trainer</h1>
+        <p class="subtitle">Wähle eine Säule deines inneren Erlebens aus und passe das Training über die Variations-Buttons an deine tagesaktuelle Verfassung an.</p>
+
+        <!-- Das 5er-Raster -->
+        <div class="menu-grid">
+            <div class="menu-card speech" id="card-speech" onclick="selectMode('speech')">
+                <h3>🗣️ Innere Sprache</h3>
+                <p>Monolog & Struktur</p>
+            </div>
+            <div class="menu-card visual" id="card-visual" onclick="selectMode('visual')">
+                <h3>🎨 Inneres Sehen</h3>
+                <p>Visuelle Leinwand</p>
+            </div>
+            <div class="menu-card thought" id="card-thought" onclick="selectMode('thought')">
+                <h3>⚡ Unformuliert</h3>
+                <p>Pure Abstraktion</p>
+            </div>
+            <div class="menu-card feeling" id="card-feeling" onclick="selectMode('feeling')">
+                <h3>❤️ Gefühl</h3>
+                <p>Körper-Resonanz</p>
+            </div>
+            <div class="menu-card sensory" id="card-sensory" onclick="selectMode('sensory')">
+                <h3>🍃 Sensorik</h3>
+                <p>Reine Sinneswelt</p>
+            </div>
+        </div>
+
+        <!-- Interaktiver Trainingsbereich -->
+        <div class="training-zone" id="zone">
+            <div class="exercise-title" id="ex-title">Übung</div>
+            <div class="meta-desc" id="ex-meta">Hintergrund...</div>
+            
+            <!-- Dynamische Variations-Buttons -->
+            <div class="variation-selector" id="var-container"></div>
+
+            <div class="instruction-box" id="ex-instruction">Anleitung...</div>
+            
+            <div class="canvas-area" id="canvas-container">
+                <div class="pulse-circle" id="pulse-element"></div>
+            </div>
+
+            <div class="timer-display" id="timer-text">01:00</div>
+            <button class="control-btn" id="action-btn" onclick="toggleSession()">Übung starten</button>
+        </div>
+
+        <!-- Erfolgs-Tracker -->
+        <div class="tracker-box">
+            <div class="tracker-title">Abgeschlossene Sitzungen</div>
+            <div class="counter-badges">
+                <div class="badge" id="badge-speech" style="background-color: var(--accent-speech)">Sprache: 0</div>
+                <div class="badge" id="badge-visual" style="background-color: var(--accent-visual)">Sehen: 0</div>
+                <div class="badge" id="badge-thought" style="background-color: var(--accent-thought)">Gedanke: 0</div>
+                <div class="badge" id="badge-feeling" style="background-color: var(--accent-feeling)">Gefühl: 0</div>
+                <div class="badge" id="badge-sensory" style="background-color: var(--accent-sensory)">Sensorik: 0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = null;
+        let activeVariationIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 60;
+        let isRunning = false;
+        
+        const themes = ["default", "sage", "terracotta", "zen", "lavender"];
+        let currentThemeIndex = 0;
+
+        let stats = JSON.parse(localStorage.getItem('universalNeuroStats_v3')) || {
+            speech: 0, visual: 0, thought: 0, feeling: 0, sensory: 0
+        };
+
+        const exercises = {
+            speech: {
+                title: "🗣️ Fokussierte Innere Sprache (Inner Speech)",
+                meta: "Aktiviert die bewusste Kontrolle über die Artikulationsschleife im Frontallappen, um unbewusstes Gedankenkreisen (Rumination) gezielt zu unterbinden.",
+                color: "var(--accent-speech)",
+                showPulse: false,
+                variations: [
+                    { name: "Variante 1: Der feste Vorsatz", text: "Formuliere innerlich einen klaren, ruhigen Satz (z.B. <i>'Ich lenke mein Bewusstsein mit absoluter Klarheit'</i>). Sprich diesen Satz im Geist wieder und wieder lautlos aus. Achte auf die exakte Artikulation jedes inneren Wortes." },
+                    { name: "Variante 2: Die Zählschleife", text: "Spreche lautlos im Geist die Zahlen von 1 bis 10 im Rhythmus deiner Atmung. Dehne das Aussprechen der Zahl im Kopf über die gesamte Länge des Ausatmens aus (<i>'Eiiiiiiinnnnnsssss'</i>)." },
+                    { name: "Variante 3: Das bewusste Echo", text: "Stelle dir vor, deine innere Stimme würde in einer riesigen, leeren Kathedrale hallen. Sprich ein einzelnes kurzes Wort wie <i>'Ruhe'</i> oder <i>'Hier'</i> und lausche intensiv dem lautlosen mentalen Echo nach." }
+                ]
+            },
+            visual: {
+                title: "🎨 Stabiles Inneres Sehen (Visual Imagery)",
+                meta: "Trainiert die Okzipitallappen-Netzwerke, visuelle Konstrukte über einen längeren Zeitraum stabil aufrechtzuerhalten, ohne dass das Bild verwaschen wird.",
+                color: "var(--accent-visual)",
+                showPulse: true,
+                variations: [
+                    { name: "Variante 1: Geometrie-Fokus", text: "Schließe die Augen. Visualisiere vor dir eine scharf abgegrenzte, leuchtend goldene Pyramide oder Kugel vor einem tiefschwarzen Hintergrund. Halte alle Kanten stabil und unbewegt." },
+                    { name: "Variante 2: Natur-Projektion", text: "Stelle dir die Oberfläche eines absolut stillen, spiegelnden Bergsees vor. Jedes Mal, wenn sich eine Welle bilden will oder das Bild zittert, glätte die Wasseroberfläche mit deiner Willenskraft." },
+                    { name: "Variante 3: Das Nachbild", text: "Blicke kurz auf ein Objekt im Raum, schließe die Augen und versuche, die exakten Konturen, Schatten und Farben dieses Objekts so originalgetreu wie möglich vor deinem inneren Auge nachzubauen." }
+                ]
+            },
+            thought: {
+                title: "⚡ Unformulierter Gedanke (Unsymbolized Thinking)",
+                meta: "Schult das Gehirn, reine abstrakte Konzepte und logische Architekturen im Bewusstsein zu halten, noch bevor sie in Worte oder Bilder zerfallen.",
+                color: "var(--accent-thought)",
+                showPulse: false,
+                variations: [
+                    { name: "Variante 1: Das reine Konzept", text: "Fokussiere das pure mathematische oder physikalische Prinzip von <strong>'Symmetrie'</strong> oder <strong>'Trägheit'</strong>. Du weißt exakt, was es bedeutet. Verbiete dem Gehirn strikt, das Wort zu sprechen oder ein Bild aufzurufen." },
+                    { name: "Variante 2: Die Erwartung", text: "Halte den geistigen Zustand kurz vor einer bahnbrechenden Erkenntnis. Das Gefühl, kurz davor zu sein, die Antwort zu wissen – ohne die Antwort bereits in Worte gefasst zu haben. Halte diese reine Spannung." },
+                    { name: "Variante 3: Das leere Raster", text: "Denke an die Struktur eines dreidimensionalen Netzes oder Rasters, aber ohne die Linien zu sehen oder zu benennen. Konzentriere dich auf das reine Gefühl von geordnetem Raum." }
+                ]
+            },
+            feeling: {
+                title: "❤️ Bewusste Gefühls-Resonanz (Feeling)",
+                meta: "Stärkt die Verbindung zwischen der Insula und dem präfrontalen Cortex, um emotionale Zustände im Körper exakt zu lokalisieren und zu regulieren.",
+                color: "var(--accent-feeling)",
+                showPulse: true,
+                variations: [
+                    { name: "Variante 1: Somatischer Tracker", text: "Erzeuge ein Gefühl von tiefer Erleichterung. Scanne den Körper: Wo verankert sich das Gefühl? Im Brustkorb? Als Wärme im Bauch? Bleibe mit der Aufmerksamkeit exakt auf dieser körperlichen Koordinate." },
+                    { name: "Variante 2: Herz-Wärme", text: "Fokussiere den Bereich deines physischen Herzens. Generiere ein Gefühl von aufrichtiger Dankbarkeit und spüre, wie sich die physische Mikrozirkulation und die Entspannung in diesem Bereich ausbreiten." },
+                    { name: "Variante 3: Raum-Resonanz", text: "Nimm das Gefühl von innerer Weite wahr. Stelle dir vor, die Grenzen deines Körpers würden weicher werden, und fühle die emotionale Resonanz in den dich umgebenden Raum hinein." }
+                ]
+            },
+            sensory: {
+                title: "🍃 Reines Sensorisches Bewusstsein (Sensory Awareness)",
+                meta: "Beruhigt das Default Mode Network (DMN), indem der neuronale Fokus vollständig auf die afferenten Bahnen des Nervensystems verlagert wird.",
+                color: "var(--accent-sensory)",
+                showPulse: true,
+                variations: [
+                    { name: "Variante 1: Die Schwerkraft", text: "Löse dich von allen Gedanken. Lenke die gesamte Aufmerksamkeit auf den Druck deines Gesäßes auf dem Stuhl und das exakte Gewicht deiner Fußsohlen auf dem Boden. Spüre die rohe Schwerkraft." },
+                    { name: "Variante 2: Der Atemstrom", text: "Konzentriere dich ausschließlich auf den taktilen Reiz an den Rändern deiner Nasenflügel. Spüre die minimale Temperaturdifferenz zwischen der kühleren Luft beim Einatmen und der wärmeren Luft beim Ausatmen." },
+                    { name: "Variante 3: Das Panorama-Hören", text: "Schließe die Augen und analysiere nicht, was die Geräusche bedeuten. Nimm sie rein als physikalische Frequenzen und Wellen wahr, die aus verschiedenen Distanzen und Richtungen auf dein Trommelfell treffen." }
+                ]
+            }
+        };
+
+        function updateBadges() {
+            document.getElementById('badge-speech').innerText = `Sprache: ${stats.speech}`;
+            document.getElementById('badge-visual').innerText = `Sehen: ${stats.visual}`;
+            document.getElementById('badge-thought').innerText = `Gedanke: ${stats.thought}`;
+            document.getElementById('badge-feeling').innerText = `Gefühl: ${stats.feeling}`;
+            document.getElementById('badge-sensory').innerText = `Sensorik: ${stats.sensory}`;
+        }
+
+        function selectMode(mode) {
+            if (isRunning) return;
+
+            currentMode = mode;
+            activeVariationIndex = 0; // Zurücksetzen auf Variante 1 bei Moduswechsel
+            
+            document.querySelectorAll('.menu-card').forEach(card => card.classList.remove('active'));
+            document.getElementById(`card-${mode}`).classList.add('active');
+
+            renderVariations();
+            loadVariation();
+            
+            document.getElementById('zone').style.display = "block";
+            resetTimer();
+        }
+
+        function renderVariations() {
+            const container = document.getElementById('var-container');
+            container.innerHTML = "";
+            
+            const ex = exercises[currentMode];
+            ex.variations.forEach((v, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `var-btn ${idx === activeVariationIndex ? 'active' : ''}`;
+                btn.innerText = v.name;
+                btn.onclick = () => {
+                    if (isRunning) return;
+                    activeVariationIndex = idx;
+                    document.querySelectorAll('.var-btn').forEach((b, i) => {
+                        b.classList.toggle('active', i === idx);
+                    });
+                    loadVariation();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function loadVariation() {
+            const ex = exercises[currentMode];
+            const activeVar = ex.variations[activeVariationIndex];
+            
+            document.getElementById('ex-title').innerText = ex.title;
+            document.getElementById('ex-title').style.color = ex.color;
+            document.getElementById('ex-meta').innerText = ex.meta;
+            document.getElementById('ex-instruction').innerHTML = activeVar.text;
+            
+            const canvas = document.getElementById('canvas-container');
+            if (ex.showPulse) {
+                canvas.style.display = "block";
+                const pulse = document.getElementById('pulse-element');
+                pulse.style.backgroundColor = ex.color;
+                pulse.style.animation = "pulse 4s infinite ease-in-out";
+            } else {
+                canvas.style.display = "none";
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 60;
+            document.getElementById('timer-text').innerText = "01:00";
+            const btn = document.getElementById('action-btn');
+            btn.innerText = "Übung starten";
+            btn.classList.remove('running');
+            isRunning = false;
+        }
+
+        function toggleSession() {
+            const btn = document.getElementById('action-btn');
+            
+            if (isRunning) {
+                resetTimer();
+            } else {
+                isRunning = true;
+                btn.innerText = "Abbrechen";
+                btn.classList.add('running');
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    let mins = Math.floor(timeLeft / 60);
+                    let secs = timeLeft % 60;
+                    document.getElementById('timer-text').innerText = 
+                        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        playTibetanGong();
+                        stats[currentMode]++;
+                        localStorage.setItem('universalNeuroStats_v3', JSON.stringify(stats));
+                        updateBadges();
+                        setTimeout(() => {
+                            alert("Hervorragend! Die Trainingseinheit für diesen Kanal ist abgeschlossen.");
+                            resetTimer();
+                        }, 500);
+                    }
+                }, 1000);
+            }
+        }
+
+        // Akustische Synthese einer echten tibetischen Klangschale (mehrschichtiges Frequenzcluster)
+        function playTibetanGong() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                const now = ctx.currentTime;
+                
+                // Harmonische Obertonstruktur einer klassischen tibetischen Klangschale
+                // Tiefer Grundton mit ungeraden Harmonischen und minimaler Frequenz-Reibung für das typische Schwebungs-Singen
+                const partials = [
+                    { f: 142.0, g: 0.4, type: 'sine' },     // Grundton (tiefes, warmes Fundament)
+                    { f: 284.5, g: 0.2, type: 'sine' },     // Erste Oktave (leichte Schwebung durch +0.5Hz)
+                    { f: 426.3, g: 0.15, type: 'triangle' },// Perfekte Quinte (Klangfarbe)
+                    { f: 570.0, g: 0.1, type: 'sine' },     // Höherer singender Teilton
+                    { f: 712.2, g: 0.08, type: 'sine' },    // Brillanz-Oberton
+                    { f: 855.0, g: 0.05, type: 'sine' }     // Feiner metallischer Nachklang
+                ];
+
+                partials.forEach((p) => {
+                    const osc = ctx.createOscillator();
+                    const gainNode = ctx.createGain();
+                    
+                    osc.type = p.type;
+                    osc.frequency.setValueAtTime(p.f, now);
+                    
+                    // Erzeugt das typische wellenartige Singen der Schale (LFO-Simulation per Ramp)
+                    osc.frequency.linearRampToValueAtTime(p.f + (Math.random() * 1.5 - 0.75), now + 5.0);
+                    
+                    // Master-Hüllkurve: Schlag-Anschlag gefolgt von einer extrem langen, exponentiellen Ausschwingphase
+                    gainNode.gain.setValueAtTime(p.g, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+                    gainNode.gain.linearRampToValueAtTime(0.0001, now + 5.0); // Ultra-langer Nachhall
+                    
+                    osc.connect(gainNode);
+                    gainNode.connect(ctx.destination);
+                    
+                    osc.start(now);
+                    osc.stop(now + 5.0);
+                });
+            } catch(e) {
+                console.log("Audio-Gong wurde blockiert oder ist inkompatibel.");
+            }
+        }
+
+        function rotateTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const chosenTheme = themes[currentThemeIndex];
+            
+            if (chosenTheme === "default") {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', chosenTheme);
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Vollbild-Fehler: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Init
+        updateBadges();
+    </script>
+</body>
+</html>
