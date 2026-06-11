@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-Test – Emotionale Intelligenz</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        background: #f4f8fb;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        color: #2c5d8a;
+    }
+
+    .frage {
+        background: white;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    button {
+        display: block;
+        margin: 30px auto;
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        background: #2c5d8a;
+        color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1f4566;
+    }
+
+    #ergebnis {
+        margin-top: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>EQ-Test – Emotionale Intelligenz</h1>
+
+<p>Bewerte jede Aussage von 1 bis 5:</p>
+
+<ul>
+    <li>1 = Trifft überhaupt nicht zu</li>
+    <li>2 = Trifft eher nicht zu</li>
+    <li>3 = Teils / teils</li>
+    <li>4 = Trifft eher zu</li>
+    <li>5 = Trifft vollkommen zu</li>
+</ul>
+
+<form id="eqForm">
+
+<div class="frage">
+    <p>1. Ich erkenne schnell, wie ich mich gerade fühle.</p>
+    <select name="q1" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<div class="frage">
+    <p>2. Ich kann ruhig bleiben, auch wenn ich unter Druck stehe.</p>
+    <select name="q2" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<div class="frage">
+    <p>3. Ich kann die Gefühle anderer Menschen gut nachvollziehen.</p>
+    <select name="q3" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<div class="frage">
+    <p>4. Ich höre anderen aufmerksam zu.</p>
+    <select name="q4" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<div class="frage">
+    <p>5. Ich kann Konflikte konstruktiv lösen.</p>
+    <select name="q5" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<div class="frage">
+    <p>6. Ich motiviere mich auch bei Rückschlägen weiterzumachen.</p>
+    <select name="q6" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<div class="frage">
+    <p>7. Ich bemerke oft, wenn jemand unausgesprochene Sorgen hat.</p>
+    <select name="q7" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<div class="frage">
+    <p>8. Ich denke nach, bevor ich emotional reagiere.</p>
+    <select name="q8" required>
+        <option value="">Bitte wählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+</div>
+
+<button type="button" onclick="auswerten()">EQ berechnen</button>
+
+</form>
+
+<div id="ergebnis"></div>
+
+<script>
+function auswerten() {
+    const form = document.getElementById("eqForm");
+    let summe = 0;
+
+    for (let i = 1; i <= 8; i++) {
+        const wert = form["q" + i].value;
+
+        if (wert === "") {
+            alert("Bitte beantworte alle Fragen.");
+            return;
+        }
+
+        summe += parseInt(wert);
+    }
+
+    let text = "";
+
+    if (summe <= 19) {
+        text = "Dein Ergebnis: " + summe +
+               " Punkte.<br><br>Dein emotionales Bewusstsein könnte noch weiterentwickelt werden. Achtsamkeit und Reflexion können hilfreich sein.";
+    }
+    else if (summe <= 29) {
+        text = "Dein Ergebnis: " + summe +
+               " Punkte.<br><br>Du verfügst über eine durchschnittlich ausgeprägte emotionale Intelligenz mit Entwicklungspotenzial.";
+    }
+    else {
+        text = "Dein Ergebnis: " + summe +
+               " Punkte.<br><br>Du zeigst viele Merkmale einer gut entwickelten emotionalen Intelligenz.";
+    }
+
+    document.getElementById("ergebnis").innerHTML = text;
+}
+</script>
+
+</body>
+</html>
