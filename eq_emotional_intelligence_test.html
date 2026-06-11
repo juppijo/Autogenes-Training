@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ-Evaluationslabor – Emotionale Intelligenz</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8; /* Soft slate/blue tone for a psychological laboratory vibe */
+            --card-bg: #ffffff;
+            --text-main: #232b38;
+            --text-muted: #627289;
+            --accent-primary: #102a43; /* Deep corporate/scientific blue */
+            --accent-soft: #bcccdc;
+            --border-color: #d9e2ec;
+            
+            /* The 5 Pillars of EQ Color Coding */
+            --color-wahrnehmung: #486581; /* Selbstwahrnehmung */
+            --color-regulierung: #627d98; /* Selbstregulierung */
+            --color-motivation: #bac7d5;  /* Motivation */
+            --color-empathie: #334e68;    /* Empathie */
+            --color-sozial: #243b53;       /* Soziale Kompetenz */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #102a43, #243b53);
+            color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(16,42,67,0.15);
+        }
+
+        header h1 {
+            font-size: 24pt;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 11pt;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background-color: var(--card-bg);
+            border-left: 5px solid var(--accent-primary);
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .info-section p {
+            font-size: 10.5pt;
+        }
+
+        .pillar-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--border-color);
+        }
+
+        .pillar-card.p-1 { border-top-color: #2b6cb0; } /* Blue */
+        .pillar-card.p-2 { border-top-color: #319795; } /* Teal */
+        .pillar-card.p-3 { border-top-color: #d69e2e; } /* Yellow/Gold */
+        .pillar-card.p-4 { border-top-color: #b7791f; } /* Bronze/Orange */
+        .pillar-card.p-5 { border-top-color: #4a5568; } /* Charcoal */
+
+        .pillar-title {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--accent-primary);
+        }
+
+        .pillar-desc {
+            font-size: 9.5pt;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .question-row {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f4f8;
+        }
+
+        .question-row:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-size: 11pt;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .options-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            padding: 10px;
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 9pt;
+            text-align: center;
+        }
+
+        .option-label:hover {
+            background-color: #e2e8f0;
+            border-color: #cbd5e0;
+        }
+
+        .option-label input {
+            margin-bottom: 6px;
+        }
+
+        .option-label.selected {
+            background-color: #102a43;
+            color: #ffffff;
+            border-color: #102a43;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .btn-calc {
+            background-color: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 12pt;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(43, 108, 176, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-calc:hover {
+            background-color: #2c5282;
+            transform: translateY(-2px);
+        }
+
+        #result-section {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-top: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .result-title {
+            font-size: 18pt;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            color: #102a43;
+        }
+
+        .result-grid {
+            margin-bottom: 30px;
+        }
+
+        .result-bar-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .result-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 10.5pt;
+        }
+
+        .progress-container {
+            background-color: #edf2f7;
+            border-radius: 10px;
+            height: 22px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        .interpretation-box {
+            background-color: #f7fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 25px;
+        }
+
+        .interpretation-box h3 {
+            font-size: 13pt;
+            margin-bottom: 12px;
+            color: #102a43;
+        }
+
+        .interpretation-box p {
+            font-size: 10.5pt;
+            color: #4a5568;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .options-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .option-label {
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 15px;
+                padding: 12px;
+            }
+            .option-label input {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>EQ-Evaluationslabor</h1>
+        <p>Interaktiver Selbsttest zur Messung der 5 Säulen der Emotionalen Intelligenz nach Daniel Goleman</p>
+    </header>
+
+    <div class="info-section">
+        <p><strong>Testanleitung:</strong> Bewerten Sie die folgenden 25 Aussagen ganz ehrlich basierend auf Ihrem alltäglichen Verhalten und Erleben. Wählen Sie eine Punktzahl von 1 (Trifft gar nicht zu) bis 5 (Trifft vollkommen zu).</p>
+    </div>
+
+    <form id="eq-test-form">
+        
+        <!-- Pillar 1 -->
+        <div class="pillar-card p-1">
+            <div class="pillar-title">Säule 1: Selbstwahrnehmung (Self-Awareness)</div>
+            <div class="pillar-desc">Fähigkeit, eigene Emotionen im Moment ihres Entstehens präzise zu erkennen und zu benennen.</div>
+            
+            <div class="question-row">
+                <div class="question-text">1. Wenn sich meine Stimmung schlagartig ändert, weiß ich meistens genau, was der Auslöser war.</div>
+                <div class="options-group" data-q="e1">
+                    <label class="option-label"><input type="radio" name="e1" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e1" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e1" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e1" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e1" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">2. Ich spüre emotionale Anspannungen frühzeitig im Körper (z. B. Verspannungen, Druckgefühl im Magen), noch bevor ich gedanklich darüber nachdenke.</div>
+                <div class="options-group" data-q="e2">
+                    <label class="option-label"><input type="radio" name="e2" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e2" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e2" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e2" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e2" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">3. Ich kann meine aktuellen Gefühle jederzeit klar in Worte fassen, wenn mich jemand danach fragt.</div>
+                <div class="options-group" data-q="e3">
+                    <label class="option-label"><input type="radio" name="e3" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e3" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e3" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e3" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e3" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">4. Ich kenne meine persönlichen emotionalen „Trigger“ (Ereignisse oder Worte, die mich leicht verletzen oder wütend machen) sehr genau.</div>
+                <div class="options-group" data-q="e4">
+                    <label class="option-label"><input type="radio" name="e4" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e4" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e4" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e4" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e4" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">5. Ich bin mir bewusst, wie meine aktuelle Stimmung auf das Verhalten anderer Menschen in meiner Umgebung wirkt.</div>
+                <div class="options-group" data-q="e5">
+                    <label class="option-label"><input type="radio" name="e5" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e5" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e5" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e5" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e5" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="pillar-card p-2">
+            <div class="pillar-title">Säule 2: Selbstregulierung (Self-Regulation)</div>
+            <div class="pillar-desc">Fähigkeit, Impulse zu kontrollieren, Emotionen konstruktiv zu kanalisieren und unter Stress besonnen zu agieren.</div>
+            
+            <div class="question-row">
+                <div class="question-text">6. Wenn ich wütend oder aufgebracht bin, gelingt es mir, erst kurz innezuhalten (z. B. durchzuatmen), anstatt sofort unüberlegt zu reagieren.</div>
+                <div class="options-group" data-q="e6">
+                    <label class="option-label"><input type="radio" name="e6" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e6" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e6" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e6" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e6" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">7. Ich kann destruktive Gedanken oder Sorgen aktiv unterbrechen, um mich wieder auf das Hier und Jetzt zu konzentrieren.</div>
+                <div class="options-group" data-q="e7">
+                    <label class="option-label"><input type="radio" name="e7" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e7" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e7" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e7" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e7" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">8. In unvorhersehbaren Krisensituationen bleibe ich weitgehend ruhig und handlungsfähig.</div>
+                <div class="options-group" data-q="e8">
+                    <label class="option-label"><input type="radio" name="e8" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e8" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e8" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e8" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e8" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">9. Es fällt mir leicht, Fehler oder Kritik anzunehmen, ohne sofort in eine aggressive Rechtfertigungshaltung zu verfallen.</div>
+                <div class="options-group" data-q="e9">
+                    <label class="option-label"><input type="radio" name="e9" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e9" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e9" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e9" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e9" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">10. Ich besitze wirksame Strategien (z. B. Atemübungen, Sport, Meditation), um mich nach stressigen Phasen verlässlich herunterzuregeln.</div>
+                <div class="options-group" data-q="e10">
+                    <label class="option-label"><input type="radio" name="e10" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e10" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e10" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e10" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e10" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="pillar-card p-3">
+            <div class="pillar-title">Säule 3: Eigenmotivation (Motivation)</div>
+            <div class="pillar-desc">Innere Antriebskraft, Ziele unabhängig von äußeren Belohnungen aus reiner Leidenschaft und Ausdauer zu verfolgen.</div>
+            
+            <div class="question-row">
+                <div class="question-text">11. Wenn ich ein Ziel vor Augen habe, kann ich mich auch für die ungeliebten, zähen Zwischenschritte langfristig motivieren.</div>
+                <div class="options-group" data-q="e11">
+                    <label class="option-label"><input type="radio" name="e11" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e11" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e11" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e11" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e11" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">12. Nach herben Rückschlägen oder Fehlern fange ich zügig wieder an, nach neuen Lösungen zu suchen, anstatt aufzugeben.</div>
+                <div class="options-group" data-q="e12">
+                    <label class="option-label"><input type="radio" name="e12" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e12" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e12" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e12" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e12" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">13. Meine größten Projekte treibe ich aus innerer Neugier und echter Leidenschaft voran, nicht wegen Geld oder Anerkennung von außen.</div>
+                <div class="options-group" data-q="e13">
+                    <label class="option-label"><input type="radio" name="e13" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e13" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e13" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e13" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e13" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">14. Ich bin bereit, kurzfristige Annehmlichkeiten oder Belohnungen aufzuschieben, um ein großes, langfristiges Ziel zu erreichen.</div>
+                <div class="options-group" data-q="e14">
+                    <label class="option-label"><input type="radio" name="e14" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e14" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e14" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e14" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e14" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">15. Ich setze mir regelmäßig persönliche Entwicklungsziele und arbeite kontinuierlich an meiner eigenen Persönlichkeit.</div>
+                <div class="options-group" data-q="e15">
+                    <label class="option-label"><input type="radio" name="e15" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e15" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e15" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e15" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e15" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="pillar-card p-4">
+            <div class="pillar-title">Säule 4: Empathie (Empathy)</div>
+            <div class="pillar-desc">Fähigkeit, emotionale Schwingungen und unausgesprochene Bedürfnisse anderer Menschen intuitiv zu erfassen.</div>
+            
+            <div class="question-row">
+                <div class="question-text">16. Ich merke meistens sofort, wenn ein guter Freund oder Gesprächspartner bedrückt ist, selbst wenn er versucht, es zu überspielen.</div>
+                <div class="options-group" data-q="e16">
+                    <label class="option-label"><input type="radio" name="e16" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e16" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e16" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e16" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e16" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">17. Es fällt mir leicht, mich bei Meinungsverschiedenheiten in die Perspektive und die Gefühlswelt des anderen hineinzunversetzen.</div>
+                <div class="options-group" data-q="e17">
+                    <label class="option-label"><input type="radio" name="e17" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e17" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e17" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e17" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e17" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">18. Ich bin ein aufmerksamer Zuhörer und unterbreche andere nicht direkt mit meinen eigenen Ratschlägen oder Geschichten.</div>
+                <div class="options-group" data-q="e18">
+                    <label class="option-label"><input type="radio" name="e18" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e18" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e18" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e18" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e18" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">19. Ich habe ein gutes Gespür für unausgesprochene Spannungen oder die allgemeine Dynamik in einer Gruppe von Menschen.</div>
+                <div class="options-group" data-q="e19">
+                    <label class="option-label"><input type="radio" name="e19" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e19" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e19" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e19" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e19" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">20. Ich kann mitfühlen und Trost spenden, ohne mich von dem emotionalen Leid des anderen völlig erdrücken oder mitreißen zu lassen.</div>
+                <div class="options-group" data-q="e20">
+                    <label class="option-label"><input type="radio" name="e20" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e20" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e20" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e20" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e20" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pillar 5 -->
+        <div class="pillar-card p-5">
+            <div class="pillar-title">Säule 5: Soziale Kompetenz (Social Skills)</div>
+            <div class="pillar-desc">Geschicklichkeit im Beziehungsmanagement, diplomatische Konfliktlösung und der Aufbau tiefer Bindungen.</div>
+            
+            <div class="question-row">
+                <div class="question-text">21. Wenn in einer Gruppe oder Beziehung ein Konflikt schwelt, spreche ich diesen lösungsorientiert und ohne Schuldzuweisungen an.</div>
+                <div class="options-group" data-q="e21">
+                    <label class="option-label"><input type="radio" name="e21" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e21" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e21" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e21" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e21" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">22. Es fällt mir leicht, tragfähige, langfristige und tiefe Vertrauensbeziehungen zu anderen Menschen aufzubauen.</div>
+                <div class="options-group" data-q="e22">
+                    <label class="option-label"><input type="radio" name="e22" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e22" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e22" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e22" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e22" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">23. In Gesprächen gelingt es mir gut, eine vertrauensvolle Atmosphäre („Rapport“) herzustellen, in der sich mein Gegenüber sicher fühlt.</div>
+                <div class="options-group" data-q="e23">
+                    <label class="option-label"><input type="radio" name="e23" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e23" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e23" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e23" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e23" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">24. Ich kann andere Menschen für Ideen begeistern, sie positiv beeinflussen oder ihnen effektiv Hilfestellung bei Problemen leisten.</div>
+                <div class="options-group" data-q="e24">
+                    <label class="option-label"><input type="radio" name="e24" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e24" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e24" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e24" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e24" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+            <div class="question-row">
+                <div class="question-text">25. Ich kann gut im Team zusammenarbeiten und ordne mein Ego unter, wenn es dem gemeinsamen Gesamtziel dient.</div>
+                <div class="options-group" data-q="e25">
+                    <label class="option-label"><input type="radio" name="e25" value="1" required>1<br><span>Nie</span></label>
+                    <label class="option-label"><input type="radio" name="e25" value="2">2<br><span>Selten</span></label>
+                    <label class="option-label"><input type="radio" name="e25" value="3">3<br><span>Manchmal</span></label>
+                    <label class="option-label"><input type="radio" name="e25" value="4">4<br><span>Oft</span></label>
+                    <label class="option-label"><input type="radio" name="e25" value="5">5<br><span>Immer</span></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-container">
+            <button type="button" class="btn-calc" onclick="calculateEQ()">EQ-Profil analysieren</button>
+        </div>
+    </form>
+
+    <!-- Results Display -->
+    <div id="result-section">
+        <h2 class="result-title">Ihr Emotionales Intelligenzprofil (EQ)</h2>
+        
+        <div class="result-grid">
+            <!-- Bar 1 -->
+            <div class="result-bar-wrapper">
+                <div class="result-bar-header">
+                    <span>1. Selbstwahrnehmung (Self-Awareness)</span>
+                    <span id="eq-1-val">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div id="eq-bar-1" class="progress-bar" style="background-color: #2b6cb0;"></div>
+                </div>
+            </div>
+            
+            <!-- Bar 2 -->
+            <div class="result-bar-wrapper">
+                <div class="result-bar-header">
+                    <span>2. Selbstregulierung (Self-Regulation)</span>
+                    <span id="eq-2-val">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div id="eq-bar-2" class="progress-bar" style="background-color: #319795;"></div>
+                </div>
+            </div>
+
+            <!-- Bar 3 -->
+            <div class="result-bar-wrapper">
+                <div class="result-bar-header">
+                    <span>3. Eigenmotivation (Motivation)</span>
+                    <span id="eq-3-val">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div id="eq-bar-3" class="progress-bar" style="background-color: #d69e2e;"></div>
+                </div>
+            </div>
+
+            <!-- Bar 4 -->
+            <div class="result-bar-wrapper">
+                <div class="result-bar-header">
+                    <span>4. Empathie (Empathy)</span>
+                    <span id="eq-4-val">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div id="eq-bar-4" class="progress-bar" style="background-color: #b7791f;"></div>
+                </div>
+            </div>
+
+            <!-- Bar 5 -->
+            <div class="result-bar-wrapper">
+                <div class="result-bar-header">
+                    <span>5. Soziale Kompetenz (Social Skills)</span>
+                    <span id="eq-5-val">0%</span>
+                </div>
+                <div class="progress-container">
+                    <div id="eq-bar-5" class="progress-bar" style="background-color: #4a5568;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="interpretation-box">
+            <h3>Ganzheitliche neuro-emotionale Synthese:</h3>
+            <p id="eq-interpretation-text">Bitte beantworten Sie alle Fragen vollständig, um Ihr psychologisches Auswertungsprofil zu generieren.</p>
+            <p style="font-size: 8.5pt; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 15px; font-style: italic;">
+                Hinweis: Dieses interaktive Tool basiert auf den theoretischen Grundlagen der emotionalen Intelligenz nach Daniel Goleman. Es dient der Selbstreflexion und persönlichen Weiterentwicklung.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Styling interaction logic
+    document.querySelectorAll('.options-group input').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const groupName = this.name;
+            document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+                r.parentElement.classList.remove('selected');
+            });
+            if (this.checked) {
+                this.parentElement.classList.add('selected');
+            }
+        });
+    });
+
+    function calculateEQ() {
+        const form = document.getElementById('eq-test-form');
+        if (!form.checkValidity()) {
+            alert("Bitte beantworten Sie alle 25 Fragen, um ein vollständiges EQ-Profil zu generieren.");
+            return;
+        }
+
+        // Each pillar contains exactly 5 questions
+        const mapping = {
+            1: ['e1', 'e2', 'e3', 'e4', 'e5'], // Self-Awareness
+            2: ['e6', 'e7', 'e8', 'e9', 'e10'], // Self-Regulation
+            3: ['e11', 'e12', 'e13', 'e14', 'e15'], // Motivation
+            4: ['e16', 'e17', 'e18', 'e19', 'e20'], // Empathy
+            5: ['e21', 'e22', 'e23', 'e24', 'e25']  // Social Skills
+        };
+
+        let scores = {};
+
+        for (let pillar in mapping) {
+            let sum = 0;
+            mapping[pillar].forEach(q => {
+                const checkedEl = document.querySelector(`input[name="${q}"]:checked`);
+                if (checkedEl) {
+                    sum += parseInt(checkedEl.value);
+                }
+            });
+            
+            // Formula: (Sum - Min) / (Max - Min) -> Min = 5*1 = 5, Max = 5*5 = 25
+            let minScore = 5;
+            let maxScore = 25;
+            let percentage = Math.round(((sum - minScore) / (maxScore - minScore)) * 100);
+            scores[pillar] = percentage;
+        }
+
+        // Render UI Visuals
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById(`eq-bar-${i}`).style.width = scores[i] + "%";
+            document.getElementById(`eq-1-${i}-val` ? `eq-${i}-val` : `eq-${i}-val`).innerText = scores[i] + "%";
+        }
+
+        // Show result box
+        document.getElementById('result-section').style.display = 'block';
+        document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+
+        // Generate narrative summary based on values
+        let feedback = "<strong>Ihr emotionales Profil im Überblick:</strong> ";
+        
+        let average = (scores[1] + scores[2] + scores[3] + scores[4] + scores[5]) / 5;
+        
+        if (average >= 70) {
+            feedback += "Sie verfügen über eine hochentwickelte emotionale Intelligenz. Ihr Nervensystem arbeitet harmonisch mit Ihren kognitiven Fähigkeiten zusammen, was Ihnen sowohl innere Ruhe als auch exzellente Beziehungsqualitäten schenkt. ";
+        } else if (average >= 45) {
+            feedback += "Sie besitzen ein solides, gut ausbalanciertes Fundament emotionaler Intelligenz. In vielen Alltagsbereichen reagieren Sie bereits sehr bewusst und empathisch, während Ihr System in spezifischen Stressmomenten noch Wachstumspotenzial zeigt. ";
+        } else {
+            feedback += "Ihr Profil deutet darauf hin, dass Sie emotionale Reize derzeit sehr intensiv und ungeschützt erleben. Das ist ein wunderbarer Ausgangspunkt, um durch gezielte Achtsamkeits- und Regulationsübungen mehr innere Stabilität aufzubauen. ";
+        }
+
+        // Highlight high and low pillars
+        let highPillars = [];
+        let lowPillars = [];
+        const names = {
+            1: "Selbstwahrnehmung",
+            2: "Selbstregulierung",
+            3: "Eigenmotivation",
+            4: "Empathie",
+            5: "Soziale Kompetenz"
+        };
+
+        for (let i = 1; i <= 5; i++) {
+            if (scores[i] >= 65) highPillars.push(names[i]);
+            if (scores[i] < 50) lowPillars.push(names[i]);
+        }
+
+        if (highPillars.length > 0) {
+            feedback += "<br><br><strong>Besondere Stärken:</strong> Ihre Werte im Bereich <em>" + highPillars.join(", ") + "</em> sind stark ausgeprägt. Diese Fähigkeiten dienen Ihnen im Alltag als stabiler Anker und psychosomatische Ressource. ";
+        }
+
+        if (lowPillars.length > 0) {
+            feedback += "<br><br><strong>Entwicklungspotenzial:</strong> Ein tieferer Blick lohnt sich auf den Bereich <em>" + lowPillars.join(", ") + "</em>. Hier neigt Ihr System unter Belastung noch dazu, in automatische Stressmuster zu verfallen. Das Schöne ist: Genau diese Säulen lassen sich durch gezieltes Training, wie Achtsamkeit (Zen) oder körperorientierte Übungen (Qigong), wunderbar stärken und verändern.";
+        }
+
+        document.getElementById('eq-interpretation-text').innerHTML = feedback;
+    }
+</script>
+
+</body>
+</html>
