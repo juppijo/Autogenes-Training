@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurodiversität – Orientierungstest</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            color: #34495e;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        p.intro {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        label:hover {
+            background: #e9ecef;
+        }
+        input[type="radio"] {
+            margin-right: 12px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #eaf2f8;
+            display: none;
+        }
+        #result h2 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Orientierungstest: Neurodiversität</h1>
+    <p class="intro">Wähle für jede Aussage die Antwort, die am besten auf dich zutrifft.</p>
+
+    <form id="quizForm">
+        <div id="questionsContainer"></div>
+        <button type="button" onclick="calculateResult()">Ergebnis auswerten</button>
+    </form>
+
+    <div id="result">
+        <h2>Dein Ergebnis</h2>
+        <p id="scoreText"></p>
+        <p id="evaluationText"></p>
+    </div>
+</div>
+
+<script>
+const questions = [
+    "Fällt es dir schwer, deine Aufmerksamkeit bei monotonen Aufgaben zu halten, während du dich in Dinge, die dich begeistern, stundenlang völlig vertiefen kannst (Hyperfokus)?",
+    "Fühlst du dich von hellem Licht, lauten Umgebungen, bestimmten Texturen oder vielen Hintergrundgeräuschen schnell überfordert oder körperlich erschöpft?",
+    "Bemerkst du feine Muster, Details oder Zusammenhänge in deiner Umwelt, die anderen meist gar nicht auffallen?",
+    "Hast du Themen oder Hobbys, mit denen du dich extrem tiefgehend beschäftigst und über die du ein sehr umfangreiches Wissen ansammelst?",
+    "Empfindest du soziale Interaktionen manchmal als anstrengend, weil du Mimik, Tonfall oder ungeschriebene soziale Regeln bewusst „übersetzen“ musst?",
+    "Bringt es dich stark aus dem Konzept, wenn deine gewohnten Pläne oder Abläufe kurzfristig und ohne Vorwarnung geändert werden?",
+    "Verspürst du eine ständige innere Unruhe oder neigst du dazu, mit den Fingern zu tippeln, dich zu bewegen oder Gegenstände zu bewegen, um dich zu konzentrieren?",
+    "Löst eine Wahrnehmung (z. B. ein Ton, ein Wochentag oder eine Zahl) bei dir automatisch eine andere Sinnesempfindung aus (z. B. eine bestimmte Farbe oder Form)?",
+    "Fällt es dir schwer, mehrstufige Alltagsaufgaben zu strukturieren, Zeitspannen realistisch einzuschätzen oder Termine im Blick zu behalten?",
+    "Benötigst du nach viel Kontakt mit Menschen oder Reizen viel Zeit für dich alleine in einer ruhigen Umgebung, um deine Akkus wieder aufzuladen?"
+];
+
+const container = document.getElementById('questionsContainer');
+
+// Fragen dynamisch generieren
+questions.forEach((q, index) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.innerHTML = `
+        <div class="question-text">${index + 1}. ${q}</div>
+        <div class="options">
+            <label><input type="radio" name="q${index}" value="0" checked> Nie / Selten (0 Punkte)</label>
+            <label><input type="radio" name="q${index}" value="1"> Manchmal (1 Punkt)</label>
+            <label><input type="radio" name="q${index}" value="2"> Oft / Fast immer (2 Punkte)</label>
+        </div>
+    `;
+    container.appendChild(qDiv);
+});
+
+function calculateResult() {
+    let score = 0;
+    for (let i = 0; i < questions.length; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) {
+            score += parseInt(selected.value);
+        }
+    }
+
+    const resultDiv = document.getElementById('result');
+    const scoreText = document.getElementById('scoreText');
+    const evalText = document.getElementById('evaluationText');
+
+    scoreText.innerHTML = `<strong>Erreichte Punkte: ${score} von 20</strong>`;
+
+    if (score <= 6) {
+        evalText.innerText = "Eher neurotypisches Profil: Deine Wahrnehmungs- und Verarbeitungsweisen entsprechen weitgehend den gängigen gesellschaftlichen Standards.";
+    } else if (score <= 13) {
+        evalText.innerText = "Mögliche neurodivergente Tendenzen: Du zeigst in einzelnen Bereichen (z. B. Hochsensibilität, Fokussteuerung oder Detailwahrnehmung) klare Abweichungen vom Durchschnitt.";
+    } else {
+        evalText.innerText = "Deutliche neurodivergente Tendenzen: Viele deiner Denk-, Wahrnehmungs- und Erlebensmuster sprechen für eine ausgeprägte Neurodivergenz (z. B. im Bereich ADHS, Autismus-Spektrum oder Synästhesie).";
+    }
+
+    resultDiv.style.display = 'block';
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
