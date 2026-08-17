@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurofunktionalität – Praktische Übungen</title>
+    <style>
+        :root {
+            --primary: #2C3E50;
+            --accent: #E67E22;
+            --bg-color: #FDFBF7;
+            --card-bg: #FFFFFF;
+            --text-color: #34495E;
+            --border-color: #EAE6DF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7F8C8D;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background-color: var(--accent);
+            border-radius: 4px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.3rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #F3F0EB;
+            color: #8E7D6A;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .instruction {
+            margin-bottom: 10px;
+        }
+
+        .instruction strong {
+            color: var(--accent);
+        }
+        
+        .tip-box {
+            background-color: #FFF8F3;
+            border-left: 4px solid var(--accent);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 40px;
+        }
+
+        .tip-box h4 {
+            margin-top: 0;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Neurofunktionalität Trainieren</h1>
+        <p class="subtitle">Tägliche Übungen zur bilateralen Koordination und für das Arbeitsgedächtnis</p>
+    </header>
+
+    <!-- Bilaterale Koordination -->
+    <h2 class="section-title">Bilaterale Koordination</h2>
+    <p>Diese Übungen fordern die Zusammenarbeit beider Gehirnhälften über den Gehirnbalken (Corpus Callosum).</p>
+
+    <div class="card">
+        <h3>1. Der „Ohr-Nase-Tausch“ (Überkreuz-Koordination)</h3>
+        <span class="tag">Motorik & Fokus</span>
+        <div class="instruction">
+            <strong>Ablauf:</strong> Nimm mit der rechten Hand deine Nasenspitze und mit der linken Hand dein rechtes Ohrläppchen (die Arme sind vor der Brust überkreuzt).
+        </div>
+        <div class="instruction">
+            <strong>Wechsel:</strong> Klatsche einmal kurz in die Hände und wechsle sofort: Die linke Hand fasst an die Nase, die rechte Hand an das linke Ohrläppchen.
+        </div>
+        <div class="instruction">
+            <strong>Ziel:</strong> Versuche, den Wechsel flüssig und mit steigendem Tempo 10- bis 15-mal zu wiederholen.
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2. Die Daumen-Kleinfinger-Schere</h3>
+        <span class="tag">Feinmotorik & Trennung</span>
+        <div class="instruction">
+            <strong>Ablauf:</strong> Halte beide Hände vor dich. Strecke an der <em>rechten Hand</em> nur den Daumen aus. Strecke an der <em>linken Hand</em> nur den kleinen Finger aus.
+        </div>
+        <div class="instruction">
+            <strong>Wechsel:</strong> Wechsle nun gleichzeitig auf beiden Seiten: Links zeigt jetzt der Daumen, rechts der kleine Finger.
+        </div>
+        <div class="instruction">
+            <strong>Fokus:</strong> Das Gehirn neigt dazu, an beiden Händen denselben Finger zu strecken. Die Trennung erfordert hohe Kontrolle.
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>3. Diagonales Überkreuz-Gehen (Cross-Crawl)</h3>
+        <span class="tag">Grobmotorik & Orientierung</span>
+        <div class="instruction">
+            <strong>Ablauf:</strong> Gehe auf der Stelle. Hebe das rechte Knie und berühre es mit der linken Hand. Hebe dann das linke Knie und berühre es mit der rechten Hand.
+        </div>
+        <div class="instruction">
+            <strong>Variation:</strong> Führe die Hand hinter dem Rücken zur gegenüberliegenden Ferse, um Gleichgewicht und räumliche Orientierung zu trainieren.
+        </div>
+    </div>
+
+    <!-- Arbeitsgedächtnis -->
+    <h2 class="section-title">Stärkung des Arbeitsgedächtnisses</h2>
+    <p>Diese Übungen trainieren die Fähigkeit, Informationen kurzfristig im Geist zu halten und gleichzeitig zu verarbeiten.</p>
+
+    <div class="card">
+        <h3>1. Rückwärts-Buchstabieren & Rückwärts-Zählen</h3>
+        <span class="tag">Mentaler Fokus</span>
+        <div class="instruction">
+            <strong>Buchstabieren:</strong> Nimm dir Wörter mit 6 bis 10 Buchstaben (z. B. <em>KREATIVITÄT, GARTENZAUN</em>) und buchstabiere sie rein mental von hinten nach vorne.
+        </div>
+        <div class="instruction">
+            <strong>Zählen:</strong> Zähle von 100 rückwärts in 7er-Schritten (100, 93, 86...) oder in 3er-Schritten ab einer ungeraden Zahl (z. B. 87).
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2. Der „Einkaufszettel-Spiegel“</h3>
+        <span class="tag">Speichern & Umsortieren</span>
+        <div class="instruction">
+            <strong>Ablauf:</strong> Merke dir 5 bis 7 Begriffe (z. B. <em>Apfel, Brot, Milch, Kaffee, Käse</em>).
+        </div>
+        <div class="instruction">
+            <strong>Aufgabe:</strong> Sortiere diese Begriffe rein mental um:
+            <ul>
+                <li>1. Alphabetisch <em>(Apfel, Brot, Kaffee, Käse, Milch)</em></li>
+                <li>2. Nach Wortlänge <em>(Brot, Käse, Apfel, Milch, Kaffee)</em></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <h4>Tipp für die Praxis</h4>
+        <p>Trainiere lieber <strong>täglich 3 bis 5 Minuten</strong> als einmal pro Woche eine Stunde. Kurze, intensive Reize reichen völlig aus, um plastische Umbauprozesse im Gehirn anzuregen.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
