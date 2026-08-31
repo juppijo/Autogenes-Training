@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EQ-Test — Emotionale Intelligenz</title>
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --border-color: #30363d;
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --primary: #58a6ff;
+      --primary-hover: #79c0ff;
+      --accent: #39d353;
+      --accent-cyan: #38bdf8;
+      --radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .view {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: var(--transition);
+    }
+
+    .view.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      color: var(--primary-hover);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+
+    p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* Buttons */
+    .btn {
+      background: linear-gradient(135deg, #1f6beb, #38bdf8);
+      color: #ffffff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Progress Bar */
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background-color: var(--border-color);
+      border-radius: 3px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+      transition: width 0.3s ease;
+    }
+
+    /* Question & Likert Scale */
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 28px;
+      min-height: 60px;
+      color: var(--text-main);
+    }
+
+    .likert-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .likert-btn {
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 14px 16px;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+
+    .likert-btn:hover {
+      border-color: var(--primary);
+      background-color: rgba(56, 189, 248, 0.08);
+      transform: translateX(4px);
+    }
+
+    .likert-btn.selected {
+      border-color: var(--accent-cyan);
+      background-color: rgba(56, 189, 248, 0.15);
+      font-weight: 600;
+    }
+
+    /* Results */
+    .overall-score-card {
+      text-align: center;
+      padding: 24px;
+      background: rgba(56, 189, 248, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      margin-bottom: 28px;
+    }
+
+    .score-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin: 8px 0;
+    }
+
+    .dimension-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .dimension-card {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: 8px;
+    }
+
+    .dimension-title-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .dim-bar-bg {
+      height: 6px;
+      background-color: var(--border-color);
+      border-radius: 3px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .dim-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+      width: 0%;
+      transition: width 0.6s ease;
+    }
+
+    .dim-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      h1 { font-size: 1.5rem; }
+      .question-text { font-size: 1.05rem; }
+      .score-number { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div id="view-intro" class="view active">
+      <h1>Emotionale Intelligenz (EQ)</h1>
+      <p>Willkommen zum EQ-Selbsttest. Emotionale Intelligenz beschreibt die Fähigkeit, eigene und fremde Gefühle wahrzunehmen, zu verstehen und wirkungsvoll zu nutzen.</p>
+      <p>Dieser Test basiert auf den 5 zentralen Dimensionen von Daniel Goleman: Selbstwahrnehmung, Selbstregulierung, Motivation, Empathie und soziale Kompetenz.</p>
+      <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 32px;">Dauer: ca. 3 Minuten (10 Fragen)</p>
+      <button class="btn" onclick="startTest()">Test jetzt starten</button>
+    </div>
+
+    <div id="view-quiz" class="view">
+      <div class="progress-header">
+        <span id="progress-text">Frage 1 von 10</span>
+        <span id="dimension-tag" style="color: var(--accent-cyan); font-weight: 500;"></span>
+      </div>
+      <div class="progress-bar-bg">
+        <div id="progress-bar" class="progress-bar-fill"></div>
+      </div>
+
+      <div id="question-text" class="question-text">Fragetext lädt...</div>
+
+      <div class="likert-options">
+        <button class="likert-btn" onclick="selectAnswer(1)">1 — Trifft gar nicht zu</button>
+        <button class="likert-btn" onclick="selectAnswer(2)">2 — Trifft eher nicht zu</button>
+        <button class="likert-btn" onclick="selectAnswer(3)">3 — Neutral / Teils-teils</button>
+        <button class="likert-btn" onclick="selectAnswer(4)">4 — Trifft eher zu</button>
+        <button class="likert-btn" onclick="selectAnswer(5)">5 — Trifft voll zu</button>
+      </div>
+    </div>
+
+    <div id="view-result" class="view">
+      <h1>Deine Auswertung</h1>
+      <div class="overall-score-card">
+        <div>Gesamter EQ-Wert</div>
+        <div id="overall-score" class="score-number">0%</div>
+        <p id="overall-feedback" style="margin-bottom:0; font-size: 0.9rem;"></p>
+      </div>
+
+      <h2>Teildimensionen</h2>
+      <div id="dimension-results" class="dimension-list"></div>
+
+      <button class="btn" onclick="restartTest()">Test erneut starten</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { id: 1, dim: "selfAwareness", name: "Selbstwahrnehmung", text: "Ich kann meine eigenen Emotionen in Echtzeit genau benennen und verstehe deren Ursachen." },
+      { id: 2, dim: "selfAwareness", name: "Selbstwahrnehmung", text: "Ich weiß genau, welche Situationen oder Aussagen bei mir Stress oder Ärger auslösen." },
+      { id: 3, dim: "selfRegulation", name: "Selbstregulierung", text: "Auch in unvorhergesehenen oder stressigen Momenten behalte ich die Kontrolle über meine Reaktionen." },
+      { id: 4, dim: "selfRegulation", name: "Selbstregulierung", text: "Ich kann impulsive Reaktionen aufschieben, um sachlich nach einer Lösung zu suchen." },
+      { id: 5, dim: "motivation", name: "Motivation", text: "Ich bleibe an meinen Zielen dran, selbst wenn Rückschläge oder Hindernisse auftreten." },
+      { id: 6, dim: "motivation", name: "Motivation", text: "Meine eigene innere Begeisterung treibt mich stärker an als äußere Belohnungen." },
+      { id: 7, dim: "empathy", name: "Empathie", text: "Ich erkenne die Gefühlslage anderer Menschen oft schon an ihrer Körpersprache oder Tonlage." },
+      { id: 8, dim: "empathy", name: "Empathie", text: "Es fällt mir leicht, die Perspektive einer anderen Person einzunehmen, selbst wenn ich nicht ihrer Meinung bin." },
+      { id: 9, dim: "socialSkills", name: "Soziale Kompetenz", text: "In Konfliktsituationen gelingt es mir gut, eine konstruktive Brücke zwischen den Parteien zu schlagen." },
+      { id: 10, dim: "socialSkills", name: "Soziale Kompetenz", text: "Ich kann Beziehungen zu unterschiedlichsten Menschen schnell aufbauen und pflegen." }
+    ];
+
+    const dimensionMeta = {
+      selfAwareness: { title: "Selbstwahrnehmung", desc: "Verständnis der eigenen Emotionen, Stärken und Schwächen." },
+      selfRegulation: { title: "Selbstregulierung", desc: "Kontrolle von Impulsen und Anpassungsfähigkeit bei Stress." },
+      motivation: { title: "Motivation", desc: "Innere Leistungsbereitschaft und Ausdauer bei Hindernissen." },
+      empathy: { title: "Empathie", desc: "Einfühlungsvermögen in Gefühle und Perspektiven anderer." },
+      socialSkills: { title: "Soziale Kompetenz", desc: "Beziehungsaufbau, Konfliktlösung und Teamfähigkeit." }
+    };
+
+    let currentIndex = 0;
+    let answers = {};
+
+    function showView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      const activeView = document.getElementById(viewId);
+      activeView.classList.add('active');
+    }
+
+    function startTest() {
+      currentIndex = 0;
+      answers = {};
+      showView('view-quiz');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      document.getElementById('progress-text').innerText = `Frage ${currentIndex + 1} von ${questions.length}`;
+      document.getElementById('dimension-tag').innerText = q.name;
+      document.getElementById('question-text').innerText = q.text;
+
+      const progressPercent = ((currentIndex) / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+    }
+
+    function selectAnswer(val) {
+      const q = questions[currentIndex];
+      answers[q.id] = val;
+
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      showView('view-result');
+
+      // Berechnung nach Dimensionen
+      const dimTotals = { selfAwareness: 0, selfRegulation: 0, motivation: 0, empathy: 0, socialSkills: 0 };
+      const dimCounts = { selfAwareness: 0, selfRegulation: 0, motivation: 0, empathy: 0, socialSkills: 0 };
+
+      let totalScoreSum = 0;
+      let maxPossibleTotal = questions.length * 5;
+
+      questions.forEach(q => {
+        const score = answers[q.id] || 0;
+        dimTotals[q.dim] += score;
+        dimCounts[q.dim] += 1;
+        totalScoreSum += score;
+      });
+
+      const overallPercent = Math.round((totalScoreSum / maxPossibleTotal) * 100);
+      document.getElementById('overall-score').innerText = `${overallPercent}%`;
+
+      let feedbackText = "";
+      if (overallPercent >= 80) {
+        feedbackText = "Ausgezeichnete emotionale Intelligenz. Du besitzt ein hohes Maß an Selbstreflexion und soziale Stärke.";
+      } else if (overallPercent >= 60) {
+        feedbackText = "Gutes Fundament. Du nutzt deine emotionalen Fähigkeiten bereits solide, hast aber in einzelnen Bereichen noch Ausbaupotenzial.";
+      } else {
+        feedbackText = "Potenzial vorhanden. Mit gezielter Selbstbeobachtung kannst du deine emotionale Klarheit und Beziehungsfähigkeit weiter stärken.";
+      }
+      document.getElementById('overall-feedback').innerText = feedbackText;
+
+      // Rendere Dimensionen
+      const dimContainer = document.getElementById('dimension-results');
+      dimContainer.innerHTML = '';
+
+      for (const [key, meta] of Object.entries(dimensionMeta)) {
+        const maxDimScore = dimCounts[key] * 5;
+        const currentDimScore = dimTotals[key];
+        const dimPercent = Math.round((currentDimScore / maxDimScore) * 100);
+
+        const card = document.createElement('div');
+        card.className = 'dimension-card';
+        card.innerHTML = `
+          <div class="dimension-title-row">
+            <span>${meta.title}</span>
+            <span style="color: var(--accent-cyan);">${dimPercent}%</span>
+          </div>
+          <div class="dim-bar-bg">
+            <div class="dim-bar-fill" style="width: 0%" id="dim-bar-${key}"></div>
+          </div>
+          <p class="dim-desc">${meta.desc}</p>
+        `;
+        dimContainer.appendChild(card);
+
+        // Animation für Balken
+        setTimeout(() => {
+          const bar = document.getElementById(`dim-bar-${key}`);
+          if (bar) bar.style.width = `${dimPercent}%`;
+        }, 100);
+      }
+    }
+
+    function restartTest() {
+      showView('view-intro');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-Test | Emotionale Intelligenz</title>
+<style>
+  :root{
+    --bg:#0a0e14;
+    --bg-card:#111826;
+    --bg-card-2:#151f30;
+    --border:#22304a;
+    --text:#e6edf5;
+    --text-dim:#8fa3bf;
+    --accent:#2dd4bf;
+    --accent-2:#38bdf8;
+    --accent-grad: linear-gradient(135deg, #38bdf8, #2dd4bf);
+    --danger:#f87171;
+    --shadow: 0 20px 50px rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at 20% 0%, #0d1622 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+  }
+  .app{
+    width:100%;
+    max-width:640px;
+  }
+  .card{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow: var(--shadow);
+    animation: fadeIn .5s ease;
+  }
+  @keyframes fadeIn{
+    from{opacity:0; transform: translateY(12px);}
+    to{opacity:1; transform: translateY(0);}
+  }
+  h1{
+    font-size: 1.8rem;
+    background: var(--accent-grad);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+  .subtitle{
+    color: var(--text-dim);
+    line-height:1.6;
+    margin-bottom: 28px;
+    font-size: 0.98rem;
+  }
+  .dims{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom: 30px;
+  }
+  .chip{
+    font-size:0.78rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    color: var(--accent-2);
+  }
+  button{
+    font-family: inherit;
+    cursor:pointer;
+    border:none;
+  }
+  .btn-primary{
+    width:100%;
+    padding: 15px;
+    border-radius: 12px;
+    background: var(--accent-grad);
+    color:#04121a;
+    font-weight:700;
+    font-size:1rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45,212,191,0.25);
+  }
+  .btn-secondary{
+    width:100%;
+    padding: 14px;
+    border-radius: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-weight:600;
+    margin-top: 12px;
+    transition: border-color .15s ease, color .15s ease;
+  }
+  .btn-secondary:hover{
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Progress */
+  .progress-wrap{
+    margin-bottom: 26px;
+  }
+  .progress-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .progress-track{
+    width:100%;
+    height:8px;
+    background: var(--bg-card-2);
+    border-radius: 999px;
+    overflow:hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-fill{
+    height:100%;
+    background: var(--accent-grad);
+    border-radius:999px;
+    transition: width .4s ease;
+  }
+
+  .dimension-tag{
+    display:inline-block;
+    font-size:0.75rem;
+    color: var(--accent);
+    background: rgba(45,212,191,0.1);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+    font-weight:600;
+    letter-spacing:0.3px;
+  }
+
+  .question{
+    font-size: 1.25rem;
+    line-height:1.5;
+    margin-bottom: 28px;
+    font-weight:600;
+  }
+
+  .scale{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .scale-option{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    transition: all .15s ease;
+    text-align:left;
+    color: var(--text);
+    font-size:0.95rem;
+  }
+  .scale-option:hover{
+    border-color: var(--accent-2);
+    background: #17263a;
+    transform: translateX(4px);
+  }
+  .scale-option .dot{
+    width:20px;
+    height:20px;
+    min-width:20px;
+    border-radius:50%;
+    border:2px solid var(--accent-2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .scale-option.selected{
+    border-color: var(--accent);
+    background: rgba(45,212,191,0.12);
+  }
+  .scale-option.selected .dot{
+    background: var(--accent-grad);
+    border-color: transparent;
+  }
+
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top: 24px;
+    gap:10px;
+  }
+  .nav-btn{
+    flex:1;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-weight:600;
+    transition: all .15s ease;
+  }
+  .nav-btn:hover:not(:disabled){
+    color: var(--text);
+    border-color: var(--accent-2);
+  }
+  .nav-btn:disabled{
+    opacity:0.35;
+    cursor:not-allowed;
+  }
+
+  /* Results */
+  .score-hero{
+    text-align:center;
+    margin-bottom: 30px;
+  }
+  .score-hero .big{
+    font-size: 3.2rem;
+    font-weight:800;
+    background: var(--accent-grad);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    line-height:1;
+  }
+  .score-hero .label{
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-size:0.95rem;
+  }
+  .score-hero .verdict{
+    margin-top: 14px;
+    font-size:1.05rem;
+    font-weight:600;
+    color: var(--accent-2);
+  }
+
+  .result-card{
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .result-card .row-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom: 10px;
+  }
+  .result-card .dim-name{
+    font-weight:700;
+    font-size:0.98rem;
+  }
+  .result-card .dim-pct{
+    font-weight:700;
+    color: var(--accent);
+    font-size:0.95rem;
+  }
+  .result-bar-track{
+    height:8px;
+    background:#0b1220;
+    border-radius:999px;
+    overflow:hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .result-bar-fill{
+    height:100%;
+    border-radius:999px;
+    background: var(--accent-grad);
+    transition: width .8s ease;
+  }
+  .result-card .desc{
+    font-size:0.87rem;
+    color: var(--text-dim);
+    line-height:1.55;
+  }
+
+  .hidden{display:none !important;}
+
+  @media (max-width:480px){
+    .card{padding: 28px 22px;}
+    h1{font-size:1.5rem;}
+    .score-hero .big{font-size:2.6rem;}
+    .question{font-size:1.1rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- START SCREEN -->
+  <div class="card" id="screen-start">
+    <h1>EQ-Test</h1>
+    <p class="subtitle">
+      Finde heraus, wie ausgeprägt deine emotionale Intelligenz ist. Dieser Test umfasst 12 Fragen
+      zu fünf zentralen Dimensionen der EQ und dauert etwa 4–5 Minuten. Beantworte jede Frage
+      ehrlich und spontan – es gibt keine richtigen oder falschen Antworten.
+    </p>
+    <div class="dims">
+      <span class="chip">Selbstwahrnehmung</span>
+      <span class="chip">Selbstregulierung</span>
+      <span class="chip">Motivation</span>
+      <span class="chip">Empathie</span>
+      <span class="chip">Soziale Kompetenz</span>
+    </div>
+    <button class="btn-primary" onclick="startTest()">Test starten</button>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div class="card hidden" id="screen-quiz">
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">Frage 1 von 12</span>
+        <span id="progress-percent">8%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:8%"></div>
+      </div>
+    </div>
+
+    <span class="dimension-tag" id="dimension-tag">Selbstwahrnehmung</span>
+    <div class="question" id="question-text">Frage kommt hier hin</div>
+
+    <div class="scale" id="scale-options"></div>
+
+    <div class="nav-row">
+      <button class="nav-btn" id="btn-back" onclick="goBack()">Zurück</button>
+      <button class="nav-btn" id="btn-next" onclick="goNext()" disabled>Weiter</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="card hidden" id="screen-result">
+    <div class="score-hero">
+      <div class="big" id="total-score">0%</div>
+      <div class="label">Dein Gesamt-EQ-Score</div>
+      <div class="verdict" id="verdict-text"></div>
+    </div>
+
+    <div id="result-list"></div>
+
+    <button class="btn-secondary" onclick="resetTest()">Test neu starten</button>
+  </div>
+
+</div>
+
+<script>
+  // ---------- DATA ----------
+  const dimensions = {
+    selbstwahrnehmung: {
+      name: "Selbstwahrnehmung",
+      desc: {
+        high: "Du erkennst deine eigenen Emotionen klar und verstehst, wie sie dein Verhalten beeinflussen. Diese Selbstkenntnis ist eine starke Basis für persönliches Wachstum.",
+        mid: "Du hast ein solides Gespür für deine Gefühle, könntest aber noch bewusster reflektieren, wie sie deine Entscheidungen prägen.",
+        low: "Es fällt dir manchmal schwer, deine eigenen Emotionen im Moment zu erkennen. Regelmäßige Selbstreflexion kann hier viel bewirken."
+      }
+    },
+    selbstregulierung: {
+      name: "Selbstregulierung",
+      desc: {
+        high: "Du behältst auch unter Druck einen kühlen Kopf und reagierst durchdacht statt impulsiv. Das ist eine echte Stärke.",
+        mid: "Du kannst deine Impulse meist steuern, gerätst aber in stressigen Situationen gelegentlich aus der Balance.",
+        low: "Starke Emotionen übernehmen bei dir manchmal schnell die Kontrolle. Techniken zur Emotionsregulation könnten dir helfen."
+      }
+    },
+    motivation: {
+      name: "Motivation",
+      desc: {
+        high: "Du verfolgst Ziele mit innerem Antrieb und lässt dich von Rückschlägen kaum entmutigen. Diese intrinsische Motivation trägt dich weit.",
+        mid: "Du bist grundsätzlich zielstrebig, brauchst aber manchmal äußere Anreize, um dranzubleiben.",
+        low: "Es fällt dir schwerer, dich langfristig selbst zu motivieren. Klare, kleine Zwischenziele könnten dir helfen, am Ball zu bleiben."
+      }
+    },
+    empathie: {
+      name: "Empathie",
+      desc: {
+        high: "Du nimmst die Gefühle anderer sehr genau wahr und kannst dich gut in ihre Perspektive hineinversetzen.",
+        mid: "Du erkennst die Gefühle anderer meistens, manchmal übersiehst du jedoch subtilere Signale.",
+        low: "Emotionale Signale anderer Menschen zu deuten fällt dir noch schwer. Aktives Zuhören kann deine Empathie stärken."
+      }
+    },
+    sozialeKompetenz: {
+      name: "Soziale Kompetenz",
+      desc: {
+        high: "Du gehst sicher und geschickt mit anderen Menschen um, löst Konflikte konstruktiv und baust leicht Beziehungen auf.",
+        mid: "Im sozialen Miteinander agierst du meist geschickt, in konfliktreichen Situationen gerätst du aber manchmal ins Straucheln.",
+        low: "Soziale Interaktionen, besonders in Konfliktsituationen, empfindest du oft als herausfordernd. Übung im aktiven Kommunizieren hilft."
+      }
+    }
+  };
+
+  const questions = [
+    { dim:"selbstwahrnehmung", text:"Ich weiß in den meisten Situationen genau, welche Emotion ich gerade empfinde." },
+    { dim:"selbstwahrnehmung", text:"Ich erkenne, wie meine Stimmung mein Verhalten gegenüber anderen beeinflusst." },
+    { dim:"selbstregulierung", text:"Auch in stressigen Momenten gelingt es mir, ruhig und besonnen zu bleiben." },
+    { dim:"selbstregulierung", text:"Ich kann impulsive Reaktionen zurückhalten, wenn ich verärgert oder frustriert bin." },
+    { dim:"motivation", text:"Ich bleibe auch bei Rückschlägen an meinen Zielen dran, ohne schnell aufzugeben." },
+    { dim:"motivation", text:"Ich finde in meinen Aufgaben einen inneren Antrieb, unabhängig von äußerer Anerkennung." },
+    { dim:"empathie", text:"Ich merke oft schon an kleinen Signalen, wie sich eine andere Person fühlt." },
+    { dim:"empathie", text:"Es fällt mir leicht, mich in die Lage anderer Menschen hineinzuversetzen." },
+    { dim:"sozialeKompetenz", text:"In Konfliktsituationen gelingt es mir meist, eine für alle Seiten gute Lösung zu finden." },
+    { dim:"sozialeKompetenz", text:"Ich baue leicht Vertrauen zu neuen Menschen auf." },
+    { dim:"empathie", text:"Ich passe meine Kommunikation an, wenn ich merke, dass mein Gegenüber emotional belastet ist." },
+    { dim:"sozialeKompetenz", text:"Andere Menschen empfinden mich als guten Zuhörer bzw. gute Zuhörerin." }
+  ];
+
+  const likertLabels = [
+    "Trifft gar nicht zu",
+    "Trifft eher nicht zu",
+    "Teils/teils",
+    "Trifft eher zu",
+    "Trifft voll zu"
+  ];
+
+  // ---------- STATE ----------
+  let currentIndex = 0;
+  let answers = new Array(questions.length).fill(null);
+
+  // ---------- ELEMENTS ----------
+  const screenStart = document.getElementById('screen-start');
+  const screenQuiz = document.getElementById('screen-quiz');
+  const screenResult = document.getElementById('screen-result');
+
+  const progressText = document.getElementById('progress-text');
+  const progressPercent = document.getElementById('progress-percent');
+  const progressFill = document.getElementById('progress-fill');
+  const dimensionTag = document.getElementById('dimension-tag');
+  const questionText = document.getElementById('question-text');
+  const scaleOptions = document.getElementById('scale-options');
+  const btnBack = document.getElementById('btn-back');
+  const btnNext = document.getElementById('btn-next');
+
+  // ---------- FLOW ----------
+  function startTest(){
+    currentIndex = 0;
+    answers = new Array(questions.length).fill(null);
+    screenStart.classList.add('hidden');
+    screenResult.classList.add('hidden');
+    screenQuiz.classList.remove('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    const q = questions[currentIndex];
+    const total = questions.length;
+    const num = currentIndex + 1;
+    const pct = Math.round((num / total) * 100);
+
+    progressText.textContent = `Frage ${num} von ${total}`;
+    progressPercent.textContent = `${pct}%`;
+    progressFill.style.width = `${pct}%`;
+    dimensionTag.textContent = dimensions[q.dim].name;
+    questionText.textContent = q.text;
+
+    scaleOptions.innerHTML = '';
+    likertLabels.forEach((label, i) => {
+      const value = i + 1;
+      const btn = document.createElement('button');
+      btn.className = 'scale-option' + (answers[currentIndex] === value ? ' selected' : '');
+      btn.innerHTML = `<span class="dot"></span><span>${label}</span>`;
+      btn.onclick = () => selectAnswer(value);
+      scaleOptions.appendChild(btn);
+    });
+
+    btnBack.disabled = currentIndex === 0;
+    btnNext.disabled = answers[currentIndex] === null;
+    btnNext.textContent = currentIndex === questions.length - 1 ? 'Ergebnis anzeigen' : 'Weiter';
+  }
+
+  function selectAnswer(value){
+    answers[currentIndex] = value;
+    renderQuestion();
+    setTimeout(() => {
+      if(currentIndex < questions.length - 1){
+        goNext();
+      } else {
+        showResults();
+      }
+    }, 280);
+  }
+
+  function goNext(){
+    if(answers[currentIndex] === null) return;
+    if(currentIndex < questions.length - 1){
+      currentIndex++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function goBack(){
+    if(currentIndex > 0){
+      currentIndex--;
+      renderQuestion();
+    }
+  }
+
+  function showResults(){
+    // aggregate per dimension
+    const sums = {};
+    const counts = {};
+    Object.keys(dimensions).forEach(k => { sums[k]=0; counts[k]=0; });
+
+    questions.forEach((q, i) => {
+      const val = answers[i] ?? 3;
+      sums[q.dim] += val;
+      counts[q.dim] += 1;
+    });
+
+    let totalSum = 0, totalMax = 0;
+    const dimResults = Object.keys(dimensions).map(key => {
+      const sum = sums[key];
+      const max = counts[key] * 5;
+      totalSum += sum;
+      totalMax += max;
+      const pct = Math.round((sum / max) * 100);
+      return { key, pct };
+    });
+
+    const overallPct = Math.round((totalSum / totalMax) * 100);
+
+    document.getElementById('total-score').textContent = `${overallPct}%`;
+
+    let verdict;
+    if(overallPct >= 80) verdict = "Ausgeprägte emotionale Intelligenz";
+    else if(overallPct >= 60) verdict = "Solide emotionale Intelligenz";
+    else if(overallPct >= 40) verdict = "Ausbaufähige emotionale Intelligenz";
+    else verdict = "Entwicklungspotenzial bei der EQ";
+    document.getElementById('verdict-text').textContent = verdict;
+
+    const resultList = document.getElementById('result-list');
+    resultList.innerHTML = '';
+
+    dimResults.forEach(r => {
+      const dim = dimensions[r.key];
+      let level = r.pct >= 75 ? 'high' : (r.pct >= 45 ? 'mid' : 'low');
+      const desc = dim.desc[level];
+
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.innerHTML = `
+        <div class="row-top">
+          <span class="dim-name">${dim.name}</span>
+          <span class="dim-pct">${r.pct}%</span>
+        </div>
+        <div class="result-bar-track">
+          <div class="result-bar-fill" style="width:${r.pct}%"></div>
+        </div>
+        <div class="desc">${desc}</div>
+      `;
+      resultList.appendChild(card);
+    });
+
+    screenQuiz.classList.add('hidden');
+    screenResult.classList.remove('hidden');
+  }
+
+  function resetTest(){
+    screenResult.classList.add('hidden');
+    screenQuiz.classList.add('hidden');
+    screenStart.classList.remove('hidden');
+  }
+</script>
+
+</body>
+</html>
