@@ -1,117 +1,420 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
+<html lang="de"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WRZT Seite</title>
+  <title>EQ-Test — Emotionale Intelligenz</title>
   <style>
 
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #172440;
+      --card-border: #283b58;
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-cyan-hover: #0891b2;
+      --accent-glow: rgba(6, 182, 212, 0.15);
+      --border-radius-lg: 16px;
+      --border-radius-md: 10px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
     body {
-      font-family: sans-serif;
       font-family: var(--font-sans);
-      margin: 40px;
-      color: #112255;
-      background: #ededfd;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 16px;
+      line-height: 1.5;
     }
-    h1 {
-      color: #112299;
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
-    
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-      .eq-container { padding: 1.5rem 0; max-width: 640px; }
-      .eq-header { margin-bottom: 2rem; }
-      .eq-header h2 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
-      .eq-header p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
-      .progress-bar { height: 4px; background: var(--color-border-tertiary); border-radius: 2px; margin-bottom: 1.5rem; }
-      .progress-fill { height: 100%; background: #534AB7; border-radius: 2px; transition: width 0.4s ease; }
-      .progress-label { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 8px; }
-      .question-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
-      .question-number { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 8px; }
-      .question-text { font-size: 16px; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 1.25rem; }
-      .options { display: flex; flex-direction: column; gap: 8px; }
-      .option-btn {
-        background: var(--color-background-primary);
-        border: 0.5px solid var(--color-border-tertiary);
-        border-radius: var(--border-radius-md);
-        padding: 10px 16px;
-        font-size: 14px;
-        color: var(--color-text-primary);
-        cursor: pointer;
-        text-align: left;
-        transition: border-color 0.15s, background 0.15s;
-        font-family: var(--font-sans);
+
+    .eq-container { 
+      width: 100%;
+      max-width: 680px; 
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius-lg);
+      padding: 2.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 80px rgba(6, 182, 212, 0.05);
+    }
+
+    /* Header */
+    .eq-header { 
+      margin-bottom: 2rem; 
+      text-align: left;
+    }
+    .eq-header h2 { 
+      font-size: 1.75rem; 
+      font-weight: 700; 
+      color: var(--text-primary); 
+      margin-bottom: 8px; 
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .eq-header p { 
+      font-size: 0.95rem; 
+      color: var(--text-secondary); 
+      line-height: 1.6; 
+    }
+
+    /* Progress */
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .progress-label { 
+      font-size: 0.85rem; 
+      color: var(--text-secondary); 
+      font-weight: 500;
+    }
+    .progress-bar { 
+      height: 6px; 
+      background: var(--card-border); 
+      border-radius: 3px; 
+      margin-bottom: 1.75rem; 
+      overflow: hidden;
+    }
+    .progress-fill { 
+      height: 100%; 
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); 
+      border-radius: 3px; 
+      transition: width 0.4s ease; 
+    }
+
+    /* Question Card */
+    .question-card { 
+      background: rgba(255, 255, 255, 0.02); 
+      border: 1px solid var(--card-border); 
+      border-radius: var(--border-radius-md); 
+      padding: 1.75rem; 
+      margin-bottom: 1.5rem; 
+      transition: border-color 0.3s ease;
+    }
+    .question-number { 
+      font-size: 0.8rem; 
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--accent-cyan); 
+      margin-bottom: 10px; 
+    }
+    .question-text { 
+      font-size: 1.1rem; 
+      font-weight: 500;
+      color: var(--text-primary); 
+      line-height: 1.5; 
+      margin-bottom: 1.5rem; 
+    }
+
+    /* Options */
+    .options { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+    }
+    .option-btn {
+      background: rgba(235, 235, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius-md);
+      padding: 12px 18px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      text-align: left;
+      transition: var(--transition);
+      font-family: var(--font-sans);
+    }
+    .option-btn:hover { 
+      border-color: rgba(6, 182, 212, 0.5); 
+      background: var(--accent-glow); 
+      color: var(--text-primary);
+      transform: translateX(2px);
+    }
+    .option-btn.selected { 
+      background: rgba(6, 182, 212, 0.15); 
+      border-color: var(--accent-cyan); 
+      color: #ffffff; 
+      font-weight: 500;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+    }
+
+    /* Navigation Buttons */
+    .nav-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-top: 1.5rem; 
+    }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius-md);
+      padding: 10px 22px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .nav-btn:hover:not(:disabled) { 
+      background: rgba(255, 255, 255, 0.05); 
+      color: var(--text-primary);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled { 
+      opacity: 0.3; 
+      cursor: not-allowed; 
+    }
+    .nav-btn.primary { 
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); 
+      border: none; 
+      color: #ffffff; 
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
+    }
+    .nav-btn.primary:hover:not(:disabled) { 
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Result Section */
+    .result-section { 
+      display: none; 
+    }
+    .result-title { 
+      font-size: 1.75rem; 
+      font-weight: 700; 
+      margin-bottom: 6px; 
+      color: var(--text-primary); 
+    }
+    .result-subtitle { 
+      font-size: 0.95rem; 
+      color: var(--text-secondary); 
+      margin-bottom: 2rem; 
+      line-height: 1.6; 
+    }
+    .score-display { 
+      display: flex; 
+      align-items: center; 
+      gap: 1.75rem; 
+      margin-bottom: 2rem; 
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      padding: 1.5rem;
+      border-radius: var(--border-radius-md);
+      flex-wrap: wrap; 
+    }
+    .score-circle { 
+      width: 100px; 
+      height: 100px; 
+      border-radius: 50%; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      flex-shrink: 0; 
+      border: 2px solid var(--accent-cyan);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .score-num { 
+      font-size: 2rem; 
+      font-weight: 700; 
+      line-height: 1;
+    }
+    .score-lbl { 
+      font-size: 0.7rem; 
+      margin-top: 4px; 
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.8;
+    }
+    .score-desc { 
+      flex: 1; 
+      min-width: 200px; 
+    }
+    .score-desc .eq-label { 
+      font-size: 1.25rem; 
+      font-weight: 600; 
+      margin-bottom: 6px; 
+      color: var(--text-primary); 
+    }
+    .score-desc p { 
+      font-size: 0.9rem; 
+      color: var(--text-secondary); 
+      line-height: 1.6; 
+    }
+
+    /* Dimensions Grid */
+    .dimensions { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+      gap: 12px; 
+      margin-bottom: 2rem; 
+    }
+    .dim-card { 
+      background: rgba(255, 255, 255, 0.02); 
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius-md); 
+      padding: 1rem; 
+    }
+    .dim-name { 
+      font-size: 0.85rem; 
+      font-weight: 600; 
+      color: var(--text-primary); 
+      margin-bottom: 8px; 
+    }
+    .dim-bar-bg { 
+      height: 6px; 
+      background: var(--card-border); 
+      border-radius: 3px; 
+      margin-bottom: 8px; 
+      overflow: hidden;
+    }
+    .dim-bar { 
+      height: 100%; 
+      border-radius: 3px; 
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+    .dim-val { 
+      font-size: 0.8rem; 
+      color: var(--text-secondary); 
+      text-align: right;
+      font-weight: 500;
+    }
+
+    /* Action Buttons in Results */
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .restart-btn { 
+      background: transparent; 
+      border: 1px solid var(--card-border); 
+      border-radius: var(--border-radius-md); 
+      padding: 12px 24px; 
+      font-size: 0.9rem; 
+      font-weight: 500;
+      cursor: pointer; 
+      font-family: var(--font-sans); 
+      color: var(--text-secondary); 
+      transition: var(--transition);
+      flex: 1;
+    }
+    .restart-btn:hover { 
+      background: rgba(255, 255, 255, 0.05); 
+      color: var(--text-primary);
+      border-color: var(--text-muted);
+    }
+    .sendprompt-btn { 
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); 
+      border: none; 
+      border-radius: var(--border-radius-md); 
+      padding: 12px 24px; 
+      font-size: 0.9rem; 
+      font-weight: 600;
+      cursor: pointer; 
+      font-family: var(--font-sans); 
+      color: #fff; 
+      transition: var(--transition);
+      flex: 1;
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
+    }
+    .sendprompt-btn:hover { 
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .eq-container {
+        padding: 1.5rem;
       }
-      .option-btn:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
-      .option-btn.selected { background: #d5d2f9; border-color: #534AB7; color: #3C3489; }
-      .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
-      .nav-btn {
-        background: transparent;
-        border: 0.5px solid var(--color-border-secondary);
-        border-radius: var(--border-radius-md);
-        padding: 8px 20px;
-        font-size: 14px;
-        cursor: pointer;
-        font-family: var(--font-sans);
-        color: var(--color-text-primary);
-        transition: background 0.15s;
+      .score-display {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
       }
-      .nav-btn:hover { background: var(--color-background-secondary); }
-      .nav-btn:disabled { opacity: 0.35; cursor: default; }
-      .nav-btn.primary { background: #534AB7; border-color: #534AB7; color: #fff; }
-      .nav-btn.primary:hover { background: #3C3489; }
-      .result-section { display: none; padding: 1.5rem 0; }
-      .result-title { font-size: 22px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-primary); }
-      .result-subtitle { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 2rem; line-height: 1.6; }
-      .score-display { display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
-      .score-circle { width: 96px; height: 96px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-      .score-num { font-size: 28px; font-weight: 500; }
-      .score-lbl { font-size: 11px; margin-top: 2px; }
-      .score-desc { flex: 1; min-width: 200px; }
-      .score-desc .eq-label { font-size: 18px; font-weight: 500; margin-bottom: 4px; color: var(--color-text-primary); }
-      .score-desc p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
-      .dimensions { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 2rem; }
-      .dim-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; }
-      .dim-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
-      .dim-bar-bg { height: 6px; background: var(--color-border-tertiary); border-radius: 3px; margin-bottom: 4px; }
-      .dim-bar { height: 6px; border-radius: 3px; transition: width 0.6s ease; }
-      .dim-val { font-size: 12px; color: var(--color-text-secondary); }
-      .restart-btn { background: transparent; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 10px 24px; font-size: 14px; cursor: pointer; font-family: var(--font-sans); color: var(--color-text-primary); }
-      .restart-btn:hover { background: var(--color-background-secondary); }
-      .sendprompt-btn { background: #534AB7; border: none; border-radius: var(--border-radius-md); padding: 10px 24px; font-size: 14px; cursor: pointer; font-family: var(--font-sans); color: #fff; margin-left: 8px; }
-      .sendprompt-btn:hover { background: #3C3489; }
+      .score-circle {
+        align-self: center;
+      }
+      .result-actions {
+        flex-direction: column;
+      }
+    }
   
 </style>
+</head>
+<body class="">
 
   <div class="eq-container">
     <h2 class="sr-only">EQ-Test: Emotionaler Intelligenz Quiz</h2>
 
-    <div id="quiz-section">
+    <!-- QUIZ SECTION -->
+    <div id="quiz-section" class="">
       <div class="eq-header">
-        <h2>EQ-Test</h2>
-        <p>20 Fragen zu deiner emotionalen Intelligenz. Wähle die Antwort, die am besten zu dir passt – es gibt kein Richtig oder Falsch.</p>
+        <h2 class="">EQ-Test</h2>
+        <p class="">20 Fragen zu deiner emotionalen Intelligenz. Wähle die Antwort, die am besten zu dir passt – es gibt kein Richtig oder Falsch.</p>
       </div>
-      <div class="progress-label" id="progress-label">Frage 1 von 20</div>
+      
+      <div class="progress-header">
+        <div class="progress-label" id="progress-label">Frage 1 von 20</div>
+      </div>
       <div class="progress-bar">
         <div class="progress-fill" id="progress-fill" style="width:5%"></div>
       </div>
-      <div class="question-card">
+
+      <div class="question-card" id="q-card">
         <div class="question-number" id="q-number">Frage 1</div>
-        <div class="question-text" id="q-text"></div>
-        <div class="options" id="q-options"></div>
+        <div class="question-text" id="q-text">Jemand kritisiert deine Arbeit scharf in einem Meeting. Wie reagierst du?</div>
+        <div class="options" id="q-options"><button class="option-btn" style="background-color: rgb(44, 208, 237);">Ich bin verletzt, schweige aber und denke darüber nach.</button><button class="option-btn">Ich danke für das Feedback und reflektiere es später.</button><button class="option-btn">Ich höre zu, frage nach Details und nehme Sinnvolles an.</button><button class="option-btn">Ich werde sofort defensiv und rechtfertige mich.</button></div>
       </div>
+
       <div class="nav-row">
-        <button class="nav-btn" id="btn-back" disabled onclick="navigate(-1)">← Zurück</button>
+        <button class="nav-btn" id="btn-back" disabled="" onclick="navigate(-1)">← Zurück</button>
         <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Weiter →</button>
       </div>
     </div>
 
+    <!-- RESULT SECTION -->
     <div class="result-section" id="result-section">
       <div class="result-title">Dein EQ-Ergebnis</div>
       <div class="result-subtitle" id="result-subtitle"></div>
+      
       <div class="score-display">
         <div class="score-circle" id="score-circle">
-          <span class="score-num" id="score-num"></span>
+          <span class="score-num" id="score-num">0</span>
           <span class="score-lbl">von 100</span>
         </div>
         <div class="score-desc">
@@ -119,433 +422,218 @@
           <p id="eq-desc"></p>
         </div>
       </div>
+
       <div class="dimensions" id="dimensions"></div>
-      <button class="restart-btn" onclick="restartQuiz()">Neu starten</button>
-      <button class="sendprompt-btn" onclick="sendPrompt('Erkläre mir meinen EQ-Test weiter. Mein Gesamtscore war ' + lastScore + ' von 100. Was bedeutet das genau und wie kann ich meinen EQ verbessern?')">Mehr erfahren ↗</button>
+
+      <div class="result-actions">
+        <button class="restart-btn" onclick="restartQuiz()">Neu starten</button>
+        <button class="sendprompt-btn" onclick="sendPrompt('Erkläre mir meinen EQ-Test weiter. Mein Gesamtscore war ' + lastScore + ' von 100. Was bedeutet das genau und wie kann ich meinen EQ verbessern?')">Mehr erfahren ↗</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const questions = [{
+    const questions = [
+      {
         text: "Jemand kritisiert deine Arbeit scharf in einem Meeting. Wie reagierst du?",
         dim: "selbstwahrnehmung",
-        options: [{
-            text: "Ich werde sofort defensiv und rechtfertige mich.",
-            score: 1
-          },
-          {
-            text: "Ich bin verletzt, schweige aber und denke darüber nach.",
-            score: 2
-          },
-          {
-            text: "Ich höre zu, frage nach Details und nehme Sinnvolles an.",
-            score: 4
-          },
-          {
-            text: "Ich danke für das Feedback und reflektiere es später.",
-            score: 3
-          },
+        options: [
+          { text: "Ich werde sofort defensiv und rechtfertige mich.", score: 1 },
+          { text: "Ich bin verletzt, schweige aber und denke darüber nach.", score: 2 },
+          { text: "Ich höre zu, frage nach Details und nehme Sinnvolles an.", score: 4 },
+          { text: "Ich danke für das Feedback und reflektiere es später.", score: 3 }
         ]
       },
       {
         text: "Du merkst, dass du wütend wirst – was machst du als erstes?",
         dim: "selbstregulation",
-        options: [{
-            text: "Ich drücke meine Wut direkt aus.",
-            score: 1
-          },
-          {
-            text: "Ich atme tief durch und versuche mich zu beruhigen.",
-            score: 4
-          },
-          {
-            text: "Ich ziehe mich kurz zurück, um mich zu sammeln.",
-            score: 3
-          },
-          {
-            text: "Ich ignoriere das Gefühl und mache weiter.",
-            score: 2
-          },
+        options: [
+          { text: "Ich drücke meine Wut direkt aus.", score: 1 },
+          { text: "Ich atme tief durch und versuche mich zu beruhigen.", score: 4 },
+          { text: "Ich ziehe mich kurz zurück, um mich zu sammeln.", score: 3 },
+          { text: "Ich ignoriere das Gefühl und mache weiter.", score: 2 }
         ]
       },
       {
         text: "Ein Freund erzählt dir von einem persönlichen Problem. Was tust du zuerst?",
         dim: "empathie",
-        options: [{
-            text: "Ich höre aktiv zu, ohne sofort Ratschläge zu geben.",
-            score: 4
-          },
-          {
-            text: "Ich schlage gleich Lösungen vor.",
-            score: 2
-          },
-          {
-            text: "Ich erzähle von einem ähnlichen Problem bei mir.",
-            score: 1
-          },
-          {
-            text: "Ich stelle Fragen, um die Situation besser zu verstehen.",
-            score: 3
-          },
+        options: [
+          { text: "Ich höre aktiv zu, ohne sofort Ratschläge zu geben.", score: 4 },
+          { text: "Ich schlage gleich Lösungen vor.", score: 2 },
+          { text: "Ich erzähle von einem ähnlichen Problem bei mir.", score: 1 },
+          { text: "Ich stelle Fragen, um die Situation besser zu verstehen.", score: 3 }
         ]
       },
       {
         text: "Du schaffst eine schwierige Aufgabe nicht. Wie gehst du damit um?",
         dim: "selbstwahrnehmung",
-        options: [{
-            text: "Ich gebe anderen die Schuld.",
-            score: 1
-          },
-          {
-            text: "Ich analysiere, was schiefgelaufen ist, und lerne daraus.",
-            score: 4
-          },
-          {
-            text: "Ich tue so, als wäre nichts gewesen.",
-            score: 1
-          },
-          {
-            text: "Ich bin hart zu mir selbst und grübele lange.",
-            score: 2
-          },
+        options: [
+          { text: "Ich gebe anderen die Schuld.", score: 1 },
+          { text: "Ich analysiere, was schiefgelaufen ist, und lerne daraus.", score: 4 },
+          { text: "Ich tue so, als wäre nichts gewesen.", score: 1 },
+          { text: "Ich bin hart zu mir selbst und grübele lange.", score: 2 }
         ]
       },
       {
         text: "In einem Konflikt mit einer Kollegin – wie verhältst du dich?",
         dim: "soziale_kompetenz",
-        options: [{
-            text: "Ich vermeide das Gespräch, bis es sich von selbst löst.",
-            score: 1
-          },
-          {
-            text: "Ich suche das Gespräch und höre zuerst ihre Seite.",
-            score: 4
-          },
-          {
-            text: "Ich versuche Recht zu haben und überzeuge sie.",
-            score: 2
-          },
-          {
-            text: "Ich hole eine dritte Person zur Vermittlung.",
-            score: 3
-          },
+        options: [
+          { text: "Ich vermeide das Gespräch, bis es sich von selbst löst.", score: 1 },
+          { text: "Ich suche das Gespräch und höre zuerst ihre Seite.", score: 4 },
+          { text: "Ich versuche Recht zu haben und überzeuge sie.", score: 2 },
+          { text: "Ich hole eine dritte Person zur Vermittlung.", score: 3 }
         ]
       },
       {
         text: "Wie gut erkennst du, was andere Menschen fühlen, ohne dass sie es sagen?",
         dim: "empathie",
-        options: [{
-            text: "Kaum – ich orientiere mich an dem, was gesagt wird.",
-            score: 1
-          },
-          {
-            text: "Manchmal, wenn die Emotionen sehr deutlich sind.",
-            score: 2
-          },
-          {
-            text: "Meistens – ich achte auf Körpersprache und Tonfall.",
-            score: 3
-          },
-          {
-            text: "Sehr gut – ich bemerke oft subtile Stimmungsveränderungen.",
-            score: 4
-          },
+        options: [
+          { text: "Kaum – ich orientiere mich an dem, was gesagt wird.", score: 1 },
+          { text: "Manchmal, wenn die Emotionen sehr deutlich sind.", score: 2 },
+          { text: "Meistens – ich achte auf Körpersprache und Tonfall.", score: 3 },
+          { text: "Sehr gut – ich bemerke oft subtile Stimmungsveränderungen.", score: 4 }
         ]
       },
       {
         text: "Du hast ein wichtiges Ziel noch nicht erreicht. Was denkst du?",
         dim: "motivation",
-        options: [{
-            text: "Es war von Anfang an unrealistisch.",
-            score: 1
-          },
-          {
-            text: "Ich brauche mehr Zeit, ich halte daran fest.",
-            score: 4
-          },
-          {
-            text: "Ich passe mein Ziel an und plane neu.",
-            score: 3
-          },
-          {
-            text: "Ich bin frustriert und fühle mich wie ein Versager.",
-            score: 2
-          },
+        options: [
+          { text: "Es war von Anfang an unrealistisch.", score: 1 },
+          { text: "Ich brauche mehr Zeit, ich halte daran fest.", score: 4 },
+          { text: "Ich passe mein Ziel an und plane neu.", score: 3 },
+          { text: "Ich bin frustriert und fühle mich wie ein Versager.", score: 2 }
         ]
       },
       {
         text: "Jemand unterbricht dich mitten im Gespräch. Was machst du?",
         dim: "selbstregulation",
-        options: [{
-            text: "Ich werde innerlich gereizt, lasse es mir aber nicht anmerken.",
-            score: 2
-          },
-          {
-            text: "Ich weise die Person höflich darauf hin.",
-            score: 4
-          },
-          {
-            text: "Ich spreche einfach lauter weiter.",
-            score: 1
-          },
-          {
-            text: "Ich schweige und verliere den Faden.",
-            score: 2
-          },
+        options: [
+          { text: "Ich werde innerlich gereizt, lasse es mir aber nicht anmerken.", score: 2 },
+          { text: "Ich weise die Person höflich darauf hin.", score: 4 },
+          { text: "Ich spreche einfach lauter weiter.", score: 1 },
+          { text: "Ich schweige und verliere den Faden.", score: 2 }
         ]
       },
       {
         text: "Wie reagierst du, wenn jemand in deiner Nähe weint?",
         dim: "empathie",
-        options: [{
-            text: "Ich werde unsicher und weiß nicht, was ich tun soll.",
-            score: 2
-          },
-          {
-            text: "Ich versuche, die Person aufzuheitern.",
-            score: 2
-          },
-          {
-            text: "Ich bin einfach für sie da und höre zu.",
-            score: 4
-          },
-          {
-            text: "Ich suche schnell nach einer Lösung für ihr Problem.",
-            score: 3
-          },
+        options: [
+          { text: "Ich werde unsicher und weiß nicht, was ich tun soll.", score: 2 },
+          { text: "Ich versuche, die Person aufzuheitern.", score: 2 },
+          { text: "Ich bin einfach für sie da und höre zu.", score: 4 },
+          { text: "Ich suche schnell nach einer Lösung für ihr Problem.", score: 3 }
         ]
       },
       {
         text: "Wie motivierst du dich, wenn du keine Lust hast?",
         dim: "motivation",
-        options: [{
-            text: "Ich erinnere mich an mein 'Warum' und starte trotzdem.",
-            score: 4
-          },
-          {
-            text: "Ich warte, bis die Motivation von selbst kommt.",
-            score: 1
-          },
-          {
-            text: "Ich mache kleine Schritte, um den Einstieg zu erleichtern.",
-            score: 3
-          },
-          {
-            text: "Ich lenke mich ab und verschiebe es.",
-            score: 1
-          },
+        options: [
+          { text: "Ich erinnere mich an mein 'Warum' und starte trotzdem.", score: 4 },
+          { text: "Ich warte, bis die Motivation von selbst kommt.", score: 1 },
+          { text: "Ich mache kleine Schritte, um den Einstieg zu erleichtern.", score: 3 },
+          { text: "Ich lenke mich ab und verschiebe es.", score: 1 }
         ]
       },
       {
         text: "Du erhältst ein Lob, das dir übertrieben erscheint. Wie reagierst du?",
         dim: "selbstwahrnehmung",
-        options: [{
-            text: "Ich freue mich und nehme es dankend an.",
-            score: 3
-          },
-          {
-            text: "Ich sage: 'Ach, das war doch nichts Besonderes.'",
-            score: 2
-          },
-          {
-            text: "Ich hinterfrage mich: Verdiene ich das wirklich?",
-            score: 2
-          },
-          {
-            text: "Ich nehme es an und sage ehrlich, was ich beigetragen habe.",
-            score: 4
-          },
+        options: [
+          { text: "Ich freue mich und nehme es dankend an.", score: 3 },
+          { text: "Ich sage: 'Ach, das war doch nichts Besonderes.'", score: 2 },
+          { text: "Ich hinterfrage mich: Verdiene ich das wirklich?", score: 2 },
+          { text: "Ich nehme es an und sage ehrlich, was ich beigetragen habe.", score: 4 }
         ]
       },
       {
         text: "Ein Team-Mitglied macht einen Fehler, der euch alle betrifft. Wie reagierst du?",
         dim: "soziale_kompetenz",
-        options: [{
-            text: "Ich zeige klar auf, wer schuld ist.",
-            score: 1
-          },
-          {
-            text: "Ich bespreche mit dem Team, wie wir es gemeinsam lösen.",
-            score: 4
-          },
-          {
-            text: "Ich erledige es still selbst, ohne viel Aufhebens.",
-            score: 2
-          },
-          {
-            text: "Ich spreche die Person privat an und biete Hilfe an.",
-            score: 3
-          },
+        options: [
+          { text: "Ich zeige klar auf, wer schuld ist.", score: 1 },
+          { text: "Ich bespreche mit dem Team, wie wir es gemeinsam lösen.", score: 4 },
+          { text: "Ich erledige es still selbst, ohne viel Aufhebens.", score: 2 },
+          { text: "Ich spreche die Person privat an und biete Hilfe an.", score: 3 }
         ]
       },
       {
         text: "Wie gehst du mit Stress um?",
         dim: "selbstregulation",
-        options: [{
-            text: "Ich verliere schnell die Übersicht und werde nervös.",
-            score: 1
-          },
-          {
-            text: "Ich priorisiere und gehe strukturiert vor.",
-            score: 4
-          },
-          {
-            text: "Ich arbeite durch, bis es vorbei ist.",
-            score: 2
-          },
-          {
-            text: "Ich spreche mit jemandem und hole mir Unterstützung.",
-            score: 3
-          },
+        options: [
+          { text: "Ich verliere schnell die Übersicht und werde nervös.", score: 1 },
+          { text: "Ich priorisiere und gehe strukturiert vor.", score: 4 },
+          { text: "Ich arbeite durch, bis es vorbei ist.", score: 2 },
+          { text: "Ich spreche mit jemandem und hole mir Unterstützung.", score: 3 }
         ]
       },
       {
         text: "Du merkst, dass ein Gespräch deinen Gesprächspartner verletzt hat. Was tust du?",
         dim: "empathie",
-        options: [{
-            text: "Ich merke es gar nicht.",
-            score: 1
-          },
-          {
-            text: "Ich spreche es direkt an und entschuldige mich.",
-            score: 4
-          },
-          {
-            text: "Ich mache weiter und hoffe, es klärt sich.",
-            score: 1
-          },
-          {
-            text: "Ich suche später das Gespräch.",
-            score: 3
-          },
+        options: [
+          { text: "Ich merke es gar nicht.", score: 1 },
+          { text: "Ich spreche es direkt an und entschuldige mich.", score: 4 },
+          { text: "Ich mache weiter und hoffe, es klärt sich.", score: 1 },
+          { text: "Ich suche später das Gespräch.", score: 3 }
         ]
       },
       {
         text: "Wie beschreibst du deinen Umgang mit eigenen Schwächen?",
         dim: "selbstwahrnehmung",
-        options: [{
-            text: "Ich verdränge sie, sie stören mich zu sehr.",
-            score: 1
-          },
-          {
-            text: "Ich kenne sie und arbeite aktiv daran.",
-            score: 4
-          },
-          {
-            text: "Ich versuche, sie zu verstecken.",
-            score: 1
-          },
-          {
-            text: "Ich anerkenne sie, aber sie demotivieren mich.",
-            score: 2
-          },
+        options: [
+          { text: "Ich verdränge sie, sie stören mich zu sehr.", score: 1 },
+          { text: "Ich kenne sie und arbeite aktiv daran.", score: 4 },
+          { text: "Ich versuche, sie zu verstecken.", score: 1 },
+          { text: "Ich anerkenne sie, aber sie demotivieren mich.", score: 2 }
         ]
       },
       {
         text: "Jemand bittet dich um Hilfe, obwohl du gerade selbst unter Druck stehst. Was machst du?",
         dim: "soziale_kompetenz",
-        options: [{
-            text: "Ich helfe sofort, auch auf Kosten meiner eigenen Aufgaben.",
-            score: 2
-          },
-          {
-            text: "Ich sage klar, dass ich gerade keine Kapazität habe.",
-            score: 3
-          },
-          {
-            text: "Ich lehne ab, ohne zu erklären warum.",
-            score: 1
-          },
-          {
-            text: "Ich biete an, später zu helfen, und erkläre meine Situation.",
-            score: 4
-          },
+        options: [
+          { text: "Ich helfe sofort, auch auf Kosten meiner eigenen Aufgaben.", score: 2 },
+          { text: "Ich sage klar, dass ich gerade keine Kapazität habe.", score: 3 },
+          { text: "Ich lehne ab, ohne zu erklären warum.", score: 1 },
+          { text: "Ich biete an, später zu helfen, und erkläre meine Situation.", score: 4 }
         ]
       },
       {
         text: "Du verlierst ein Spiel oder einen Wettbewerb. Wie reagierst du?",
         dim: "selbstregulation",
-        options: [{
-            text: "Ich ärgere mich stark und kann nicht loslassen.",
-            score: 1
-          },
-          {
-            text: "Ich gratuliere und schaue, was ich verbessern kann.",
-            score: 4
-          },
-          {
-            text: "Ich tue so, als wäre es mir egal.",
-            score: 2
-          },
-          {
-            text: "Ich bin kurz enttäuscht, nehme es aber sportlich.",
-            score: 3
-          },
+        options: [
+          { text: "Ich ärgere mich stark und kann nicht loslassen.", score: 1 },
+          { text: "Ich gratuliere und schaue, was ich verbessern kann.", score: 4 },
+          { text: "Ich tue so, als wäre es mir egal.", score: 2 },
+          { text: "Ich bin kurz enttäuscht, nehme es aber sportlich.", score: 3 }
         ]
       },
       {
         text: "Wie gut kannst du langfristige Ziele verfolgen, auch wenn es schwierig wird?",
         dim: "motivation",
-        options: [{
-            text: "Ich gebe schnell auf, wenn Hindernisse auftauchen.",
-            score: 1
-          },
-          {
-            text: "Ich halte meistens durch, verliere aber manchmal die Spur.",
-            score: 2
-          },
-          {
-            text: "Ich passe meinen Weg an, halte aber am Ziel fest.",
-            score: 4
-          },
-          {
-            text: "Ich bleibe dran, auch wenn es mühsam ist.",
-            score: 3
-          },
+        options: [
+          { text: "Ich gebe schnell auf, wenn Hindernisse auftauchen.", score: 1 },
+          { text: "Ich halte meistens durch, verliere aber manchmal die Spur.", score: 2 },
+          { text: "Ich passe meinen Weg an, halte aber am Ziel fest.", score: 4 },
+          { text: "Ich bleibe dran, auch wenn es mühsam ist.", score: 3 }
         ]
       },
       {
         text: "Wie verhältst du dich in einer Gruppe, die sich uneinig ist?",
         dim: "soziale_kompetenz",
-        options: [{
-            text: "Ich setze meine Meinung durch.",
-            score: 1
-          },
-          {
-            text: "Ich halte mich heraus und warte ab.",
-            score: 2
-          },
-          {
-            text: "Ich moderiere und suche gemeinsam nach Kompromissen.",
-            score: 4
-          },
-          {
-            text: "Ich höre alle Seiten an und bringe meinen Standpunkt ein.",
-            score: 3
-          },
+        options: [
+          { text: "Ich setze meine Meinung durch.", score: 1 },
+          { text: "Ich halte mich heraus und warte ab.", score: 2 },
+          { text: "Ich moderiere und suche gemeinsam nach Kompromissen.", score: 4 },
+          { text: "Ich höre alle Seiten an und bringe meinen Standpunkt ein.", score: 3 }
         ]
       },
       {
         text: "Wie oft reflektierst du dein eigenes Verhalten nach wichtigen Gesprächen?",
         dim: "selbstwahrnehmung",
-        options: [{
-            text: "Selten – ich mache einfach weiter.",
-            score: 1
-          },
-          {
-            text: "Manchmal, wenn etwas schiefgelaufen ist.",
-            score: 2
-          },
-          {
-            text: "Oft – ich lerne gerne aus Interaktionen.",
-            score: 3
-          },
-          {
-            text: "Fast immer – es gehört für mich dazu.",
-            score: 4
-          },
+        options: [
+          { text: "Selten – ich mache einfach weiter.", score: 1 },
+          { text: "Manchmal, wenn etwas schiefgelaufen ist.", score: 2 },
+          { text: "Oft – ich lerne gerne aus Interaktionen.", score: 3 },
+          { text: "Fast immer – es gehört für mich dazu.", score: 4 }
         ]
-      },
+      }
     ];
 
     const dimLabels = {
@@ -557,11 +645,11 @@
     };
 
     const dimColors = {
-      selbstwahrnehmung: "#534AB7",
-      selbstregulation: "#1D9E75",
-      empathie: "#D85A30",
-      motivation: "#BA7517",
-      soziale_kompetenz: "#378ADD"
+      selbstwahrnehmung: "#3b82f6",
+      selbstregulation: "#06b6d4",
+      empathie: "#10b981",
+      motivation: "#f59e0b",
+      soziale_kompetenz: "#8b5cf6"
     };
 
     let current = 0;
@@ -569,10 +657,7 @@
     let lastScore = 0;
 
     function shuffle(arr) {
-      return arr.map(v => ({
-        v,
-        r: Math.random()
-      })).sort((a, b) => a.r - b.r).map(x => x.v);
+      return arr.map(v => ({ v, r: Math.random() })).sort((a, b) => a.r - b.r).map(x => x.v);
     }
 
     const shuffledOptions = questions.map(q => shuffle(q.options));
@@ -596,11 +681,7 @@
 
       document.getElementById("btn-back").disabled = current === 0;
       const nextBtn = document.getElementById("btn-next");
-      if (current === questions.length - 1) {
-        nextBtn.textContent = "Auswerten →";
-      } else {
-        nextBtn.textContent = "Weiter →";
-      }
+      nextBtn.textContent = (current === questions.length - 1) ? "Auswerten →" : "Weiter →";
     }
 
     function selectOption(i) {
@@ -613,9 +694,9 @@
     function navigate(dir) {
       if (dir === 1) {
         if (answers[current] === null) {
-          const card = document.querySelector(".question-card");
-          card.style.borderColor = "#D85A30";
-          setTimeout(() => card.style.borderColor = "", 800);
+          const card = document.getElementById("q-card");
+          card.style.borderColor = "#ef4444";
+          setTimeout(() => card.style.borderColor = "var(--card-border)", 800);
           return;
         }
         if (current === questions.length - 1) {
@@ -657,32 +738,29 @@
       const scoreNum = document.getElementById("score-num");
       scoreNum.textContent = eq;
 
-      let level, desc, bg, col;
+      let level, desc, strokeCol;
       if (eq >= 80) {
         level = "Herausragend";
-        bg = "#E1F5EE";
-        col = "#085041";
+        strokeCol = "#10b981";
         desc = "Du verfügst über eine sehr ausgeprägte emotionale Intelligenz. Du erkennst Emotionen – bei dir und anderen – schnell und gehst einfühlsam und konstruktiv damit um.";
       } else if (eq >= 65) {
         level = "Gut entwickelt";
-        bg = "#EEEDFE";
-        col = "#3C3489";
+        strokeCol = "#06b6d4";
         desc = "Dein EQ ist gut ausgeprägt. Du bist emotional reflektiert und in den meisten sozialen Situationen anpassungsfähig. Einige Bereiche bieten noch Wachstumspotenzial.";
       } else if (eq >= 45) {
         level = "Durchschnittlich";
-        bg = "#FAEEDA";
-        col = "#633806";
+        strokeCol = "#f59e0b";
         desc = "Du hast grundlegende emotionale Fähigkeiten, aber es gibt deutliche Bereiche, in denen du dich weiterentwickeln kannst – besonders unter Druck oder in Konfliktsituationen.";
       } else {
         level = "Im Aufbau";
-        bg = "#FAECE7";
-        col = "#712B13";
+        strokeCol = "#ef4444";
         desc = "Dein EQ hat noch viel Wachstumspotenzial. Gute Nachricht: Emotionale Intelligenz lässt sich gezielt trainieren – und der erste Schritt ist, dass du diesen Test gemacht hast.";
       }
 
-      circle.style.background = bg;
-      scoreNum.style.color = col;
-      document.querySelector(".score-circle .score-lbl").style.color = col;
+      circle.style.borderColor = strokeCol;
+      circle.style.boxShadow = `0 0 20px ${strokeCol}33`;
+      scoreNum.style.color = strokeCol;
+      
       document.getElementById("eq-label").textContent = level;
       document.getElementById("eq-desc").textContent = desc;
 
@@ -696,11 +774,17 @@
         const card = document.createElement("div");
         card.className = "dim-card";
         card.innerHTML = `
-      <div class="dim-name">${label}</div>
-      <div class="dim-bar-bg"><div class="dim-bar" style="width:${pct}%; background:${dimColors[key]}"></div></div>
-      <div class="dim-val">${pct}%</div>
-    `;
+          <div class="dim-name">${label}</div>
+          <div class="dim-bar-bg"><div class="dim-bar" id="bar-${key}" style="width:0%; background:${dimColors[key]}"></div></div>
+          <div class="dim-val">${pct}%</div>
+        `;
         dimContainer.appendChild(card);
+
+        // Animation für Fortschrittsbalken
+        setTimeout(() => {
+          const bar = document.getElementById(`bar-${key}`);
+          if(bar) bar.style.width = pct + "%";
+        }, 100);
       });
     }
 
@@ -712,5 +796,15 @@
       renderQuestion();
     }
 
+    function sendPrompt(promptText) {
+      if (typeof window.sendPrompt === 'function') {
+        window.sendPrompt(promptText);
+      } else {
+        alert(promptText);
+      }
+    }
+
     renderQuestion();
   </script>
+
+</body></html>
