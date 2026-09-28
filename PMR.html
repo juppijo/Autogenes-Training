@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressive Muskelentspannung (PMR)</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            --card-bg: rgba(255, 255, 255, 0.07);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --accent-color: #4facfe;
+            --accent-hover: #00f2fe;
+            --accent-active: #ff6b6b;
+            --subtext: #a0aec0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        header p {
+            color: var(--subtext);
+            font-size: 1.1rem;
+        }
+
+        .controls-top {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #0072ff, #00c6ff);
+            box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Session Player Card */
+        .player-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .program-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .prog-btn {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            color: var(--subtext);
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .prog-btn.active {
+            background: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .timer-display {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .svg-ring {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .svg-ring-circle-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 8;
+            fill: transparent;
+        }
+
+        .svg-ring-circle {
+            stroke: var(--accent-color);
+            stroke-width: 8;
+            stroke-linecap: round;
+            fill: transparent;
+            stroke-dasharray: 565;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.1s linear, stroke 0.5s ease;
+        }
+
+        .timer-text {
+            position: absolute;
+            font-size: 2.8rem;
+            font-weight: 300;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .phase-prepare { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .phase-tension { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; border: 1px solid #ff6b6b; }
+        .phase-release { background: rgba(79, 172, 254, 0.2); color: #4facfe; border: 1px solid #4facfe; }
+
+        .exercise-instruction {
+            font-size: 1.3rem;
+            min-height: 70px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-tracker {
+            font-size: 0.9rem;
+            color: var(--subtext);
+            margin-bottom: 20px;
+        }
+
+        /* Cards Grid for Overview */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .info-card h3 {
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .info-card p, .info-card ul {
+            color: var(--subtext);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .info-card ul {
+            list-style-position: inside;
+            margin-top: 5px;
+        }
+
+        /* Fullscreen styles */
+        :-webkit-full-screen body { padding: 40px; }
+        :-ms-fullscreen body { padding: 40px; }
+        :fullscreen body { padding: 40px; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .exercise-instruction { font-size: 1.1rem; }
+            .controls-top { top: 10px; right: 10px; }
+            .btn { padding: 8px 16px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls-top">
+        <button class="btn" id="fullscreenBtn" onclick="toggleFullscreen()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            Vollbild
+        </button>
+    </div>
+
+    <header>
+        <h1>Progressive Muskelentspannung</h1>
+        <p>Geführte Entspannung nach Edmund Jacobson für Körper & Geist</p>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- Interactive Session Player -->
+        <div class="player-card">
+            <div class="program-selector">
+                <button class="prog-btn active" onclick="selectProgram(4, this)">4 Gruppen (Schnell)</button>
+                <button class="prog-btn" onclick="selectProgram(7, this)">7 Gruppen (Standard)</button>
+                <button class="prog-btn" onclick="selectProgram(16, this)">16 Gruppen (Intensiv)</button>
+            </div>
+
+            <div class="phase-badge phase-prepare" id="phaseBadge">Bereit machen</div>
+
+            <div class="timer-display">
+                <svg class="svg-ring">
+                    <circle class="svg-ring-circle-bg" cx="100" cy="100" r="90"></circle>
+                    <circle class="svg-ring-circle" id="timerRing" cx="100" cy="100" r="90"></circle>
+                </svg>
+                <div class="timer-text" id="timerText">0</div>
+            </div>
+
+            <div class="step-tracker" id="stepTracker">Gruppe 1 von 4</div>
+
+            <div class="exercise-instruction" id="instructionText">
+                Wähle ein Programm und klicke auf "Sitzung starten", um die geführte Entspannung zu beginnen.
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 15px;">
+                <button class="btn btn-primary" id="startBtn" onclick="toggleSession()">Sitzung starten</button>
+                <button class="btn" onclick="resetSession()">Zurücksetzen</button>
+            </div>
+        </div>
+
+        <!-- Info / Exercise Details -->
+        <div>
+            <h2 class="section-title">Grundprinzip & Wirkungsweise</h2>
+            <div class="grid">
+                <div class="info-card">
+                    <h3>1. Anspannen</h3>
+                    <p>Spanne die genannte Muskelgruppe sanft, aber spürbar für ca. 5 bis 7 Sekunden an. Atme dabei ruhig weiter und überfordere dich nicht.</p>
+                </div>
+                <div class="info-card">
+                    <h3>2. Schlagartig Loslassen</h3>
+                    <p>Lass die Anspannung abrupt und vollständig locker. Bemerke sofort den deutlichen Unterschied zwischen Spannung und Entspannung.</p>
+                </div>
+                <div class="info-card">
+                    <h3>3. Nachspüren</h3>
+                    <p>Spüre für 15 bis 20 Sekunden ganz bewusst in den Muskel hinein. Nimm das Gefühl von Schwere, Wärme oder gelöster Leichtigkeit wahr.</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="section-title">Hintergrund & Tipps</h2>
+            <div class="grid">
+                <div class="info-card">
+                    <h3>Warum PMR wirkt</h3>
+                    <p>Durch den bewussten Wechsel von Muskelanspannung und -entspannung wird das vegetative Nervensystem aktiviert. Der Parasympathikus senkt Herzfrequenz und Blutdruck – der gesamte Körper schaltet auf Regeneration.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Tipps für die Praxis</h3>
+                    <ul>
+                        <li>Suche dir einen ruhigen Ort ohne Störungen.</li>
+                        <li>Nimm eine komfortable Sitz- oder Liegeposition ein.</li>
+                        <li>Übe keinesfalls gegen Schmerzen an – bei Verletzungen betroffene Stellen aussparen.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Database of Exercise Sequences
+        const exercisesData = {
+            4: [
+                { title: "Hände & Arme", detail: "Balle beide Hände zu Fäusten, winkle die Unterarme an und spanne den Bizeps an." },
+                { title: "Gesicht, Nacken & Schultern", detail: "Ziehe die Augenbrauen zusammen, rümpfe die Nase, beiße leicht auf und ziehe die Schultern hoch zu den Ohren." },
+                { title: "Bauch & Rücken", detail: "Spanne die Bauchdecke fest an und drücke die Schulterblätter hinten sanft zusammen." },
+                { title: "Beine & Füße", detail: "Ziehe die Zehen herauf zum Schienbein und spanne Oberschenkel und Waden fest an." }
+            ],
+            7: [
+                { title: "Dominanter Arm & Hand", detail: "Balle die Hand zur Faust und winkle den Unterarm an." },
+                { title: "Nicht-dominanter Arm & Hand", detail: "Balle die andere Hand zur Faust und winkle den Unterarm an." },
+                { title: "Gesicht & Stirn", detail: "Stirn runzeln, Augen fest schließen und Zähne sanft zusammenbeißen." },
+                { title: "Nacken & Schultern", detail: "Kopf leicht nach hinten neigen und Schultern zu den Ohren ziehen." },
+                { title: "Brust & Bauch", detail: "Tief einatmen, Luft kurz anhalten und Bauchmuskeln anspannen." },
+                { title: "Oberschenkel", detail: "Oberschenkelmuskeln fest anspannen." },
+                { title: "Unterschenkel & Füße", detail: "Zehen heranziehen und Waden anspannen." }
+            ],
+            16: [
+                { title: "Rechte Hand & Unterarm", detail: "Hand zur Faust ballen." },
+                { title: "Rechter Oberarm", detail: "Ellbogen in die Unterlage drücken / Bizeps anspannen." },
+                { title: "Linke Hand & Unterarm", detail: "Hand zur Faust ballen." },
+                { title: "Linker Oberarm", detail: "Ellbogen in die Unterlage drücken / Bizeps anspannen." },
+                { title: "Stirn", detail: "Augenbrauen nach oben ziehen." },
+                { title: "Wangen & Nase", detail: "Nase rümpfen und Augen leicht kneifen." },
+                { title: "Kiefer & Mund", detail: "Zähne leicht aufeinanderbeißen und Mundwinkel nach hinten ziehen." },
+                { title: "Nacken", detail: "Kopf sanft nach hinten gegen die Unterlage drücken." },
+                { title: "Schultern", detail: "Schultern hoch zu den Ohren ziehen." },
+                { title: "Brust", detail: "Tief einatmen und die Brustmuskeln anspannen." },
+                { title: "Bauch", detail: "Bauchmuskeln fest anspannen." },
+                { title: "Rücken", detail: "Schulterblätter sanft zusammenziehen." },
+                { title: "Rechter Oberschenkel", detail: "Oberschenkelmuskel anspannen." },
+                { title: "Rechte Wade & Fuß", detail: "Zehen heranziehen." },
+                { title: "Linker Oberschenkel", detail: "Oberschenkelmuskel anspannen." },
+                { title: "Linke Wade & Fuß", detail: "Zehen heranziehen." }
+            ]
+        };
+
+        let currentProgramCount = 4;
+        let currentStep = 0;
+        let isRunning = false;
+        let timerInterval = null;
+        let audioCtx = null;
+
+        const TENSION_TIME = 7;
+        const RELEASE_TIME = 15;
+        const PREPARE_TIME = 5;
+
+        // UI Elements
+        const timerRing = document.getElementById('timerRing');
+        const timerText = document.getElementById('timerText');
+        const phaseBadge = document.getElementById('phaseBadge');
+        const instructionText = document.getElementById('instructionText');
+        const stepTracker = document.getElementById('stepTracker');
+        const startBtn = document.getElementById('startBtn');
+
+        const circumference = 2 * Math.PI * 90; // r = 90
+        timerRing.style.strokeDasharray = `${circumference} ${circumference}`;
+
+        function selectProgram(count, btn) {
+            if(isRunning) resetSession();
+            currentProgramCount = count;
+            document.querySelectorAll('.prog-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateTracker();
+        }
+
+        function updateTracker() {
+            stepTracker.innerText = `Gruppe ${currentStep + 1} von ${currentProgramCount}`;
+        }
+
+        function setRingProgress(percent, color) {
+            const offset = circumference - (percent / 100 * circumference);
+            timerRing.style.strokeDashoffset = offset;
+            if(color) timerRing.style.stroke = color;
+        }
+
+        function playGong() {
+            try {
+                if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(432, audioCtx.currentTime); // Relaxing 432 Hz
+                
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 3);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 3);
+            } catch(e) {
+                console.log("Audio Web API not supported or blocked.");
+            }
+        }
+
+        function toggleSession() {
+            if (isRunning) {
+                resetSession();
+            } else {
+                isRunning = true;
+                startBtn.innerText = "Beenden";
+                startBtn.style.background = "linear-gradient(45deg, #ff416c, #ff4b2b)";
+                runStep();
+            }
+        }
+
+        function resetSession() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            currentStep = 0;
+            startBtn.innerText = "Sitzung starten";
+            startBtn.style.background = "";
+            phaseBadge.innerText = "Bereit machen";
+            phaseBadge.className = "phase-badge phase-prepare";
+            instructionText.innerText = "Klicke auf 'Sitzung starten', um die geführte Entspannung zu beginnen.";
+            timerText.innerText = "0";
+            setRingProgress(0, "var(--accent-color)");
+            updateTracker();
+        }
+
+        function runStep() {
+            if (currentStep >= currentProgramCount) {
+                completeSession();
+                return;
+            }
+
+            updateTracker();
+            const ex = exercisesData[currentProgramCount][currentStep];
+            
+            // Phase 1: Vorbereitung (5s)
+            let timeLeft = PREPARE_TIME;
+            phaseBadge.innerText = "Vorbereiten";
+            phaseBadge.className = "phase-badge phase-prepare";
+            instructionText.innerHTML = `Nächste Muskelgruppe:<br><strong>${ex.title}</strong>`;
+            
+            runTimer(PREPARE_TIME, "rgba(255, 255, 255, 0.4)", () => {
+                // Phase 2: Anspannen (7s)
+                playGong();
+                phaseBadge.innerText = "ANSPANNEN";
+                phaseBadge.className = "phase-badge phase-tension";
+                instructionText.innerText = ex.detail;
+
+                runTimer(TENSION_TIME, "#ff6b6b", () => {
+                    // Phase 3: Loslassen & Nachspüren (15s)
+                    playGong();
+                    phaseBadge.innerText = "LOSLASSEN & ENTSSPANNEN";
+                    phaseBadge.className = "phase-badge phase-release";
+                    instructionText.innerText = "Spannung schlagartig lösen. Tief ausatmen und das wohlige Gefühl der Entspannung spüren.";
+
+                    runTimer(RELEASE_TIME, "#4facfe", () => {
+                        currentStep++;
+                        runStep();
+                    });
+                });
+            });
+        }
+
+        function runTimer(seconds, color, callback) {
+            let total = seconds;
+            let current = seconds;
+            
+            timerText.innerText = current;
+            setRingProgress(100, color);
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if(!isRunning) return;
+                current--;
+                timerText.innerText = current;
+                setRingProgress((current / total) * 100, color);
+
+                if (current <= 0) {
+                    clearInterval(timerInterval);
+                    if (callback) callback();
+                }
+            }, 1000);
+        }
+
+        function completeSession() {
+            playGong();
+            isRunning = false;
+            startBtn.innerText = "Neue Sitzung";
+            startBtn.style.background = "";
+            phaseBadge.innerText = "Fertig";
+            phaseBadge.className = "phase-badge phase-prepare";
+            instructionText.innerHTML = "<strong>Hervorragend gemacht!</strong><br>Dein Körper ist nun tief entspannt. Nimm dir einen Moment Zeit, bevor du wieder aufstehst.";
+            timerText.innerText = "✓";
+            setRingProgress(100, "var(--accent-color)");
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Fehler beim Aktivieren des Vollbildmodus: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
