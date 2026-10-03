@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Big Five Persönlichkeitstest</title>
+<style>
+:root{--bg:#f4f1ec;--card:#fff;--tx:#1d1b2e;--mu:#6b6880;--ac:#6c5ce7;--ac2:#00b8a9;--bd:#e3dfe9;--sh:0 10px 40px rgba(60,40,120,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13121c;--card:#1d1b2b;--tx:#f0eef8;--mu:#9a97b0;--bd:#2f2c45;--sh:0 10px 40px rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--bg:#13121c;--card:#1d1b2b;--tx:#f0eef8;--mu:#9a97b0;--bd:#2f2c45;--sh:0 10px 40px rgba(0,0,0,.5)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);background-image:radial-gradient(circle at 15% 10%,rgba(108,92,231,.18),transparent 45%),radial-gradient(circle at 85% 90%,rgba(0,184,169,.15),transparent 45%);background-attachment:fixed;color:var(--tx);font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;line-height:1.5}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;max-width:760px;margin:0 auto}
+.logo{font-weight:700;letter-spacing:.3px}
+.logo span{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+button{font:inherit;cursor:pointer}
+.ib{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:8px 14px;box-shadow:var(--sh)}
+.ib:hover{border-color:var(--ac)}
+main{max-width:760px;margin:0 auto;padding:6px 16px 40px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:22px;box-shadow:var(--sh);padding:28px 24px}
+h1{font-size:clamp(1.7rem,5vw,2.4rem);margin:0 0 10px;line-height:1.2}
+h2{margin:0 0 6px}
+p{color:var(--mu);margin:0 0 14px}
+.btn{background:linear-gradient(135deg,var(--ac),#8a7bff);color:#fff;border:0;border-radius:14px;padding:13px 26px;font-weight:600;box-shadow:0 6px 20px rgba(108,92,231,.4);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.sec{background:transparent;color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.chip{font-size:.85rem;padding:5px 12px;border-radius:99px;background:rgba(108,92,231,.12);color:var(--ac)}
+.prog{height:8px;background:var(--bd);border-radius:9px;overflow:hidden;margin-bottom:8px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.85rem;color:var(--mu);margin-bottom:22px}
+.q{font-size:clamp(1.2rem,4vw,1.6rem);font-weight:600;margin:10px 0 26px;min-height:3.6em;animation:in .35s}
+@keyframes in{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.opt{background:var(--bg);color:var(--tx);border:2px solid var(--bd);border-radius:14px;padding:14px 4px;text-align:center;transition:.15s}
+.opt b{display:block;font-size:1.3rem}
+.opt small{display:block;font-size:.7rem;color:var(--mu);margin-top:2px}
+.opt:hover{border-color:var(--ac);transform:translateY(-2px)}
+.opt.sel{background:var(--ac);border-color:var(--ac);color:#fff}
+.opt.sel small{color:#fff}
+.trait{margin:20px 0}
+.trait .h{display:flex;justify-content:space-between;font-weight:600}
+.bar{height:14px;background:var(--bd);border-radius:9px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;width:0;border-radius:9px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.trait p{font-size:.9rem;margin:0}
+.saved{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--bd);font-size:.9rem}
+.saved span{color:var(--mu)}
+.hide{display:none}
+.note{font-size:.78rem;color:var(--mu);margin-top:22px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(80px);background:var(--tx);color:var(--bg);padding:10px 20px;border-radius:12px;transition:.3s;z-index:9}
+.toast.on{transform:translateX(-50%)}
+textarea{position:fixed;left:-999px;top:0}
+@media(max-width:480px){.opt small{display:none}.card{padding:22px 16px}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo">🧠 <span>Big Five</span> Test</div>
+  <div style="display:flex;gap:8px">
+    <button class="ib" id="theme" title="Hell/Dunkel">🌓</button>
+    <button class="ib" id="fs">⛶ Vollbild</button>
+  </div>
+</div>
+<main>
+  <section class="card" id="start">
+    <h1>Entdecke deine Persönlichkeit</h1>
+    <p>50 Aussagen, rund 7 Minuten. Bewerte, wie sehr jede Aussage auf dich zutrifft – spontan und ehrlich. Es gibt keine richtigen oder falschen Antworten.</p>
+    <div class="chips"><span class="chip">Offenheit</span><span class="chip">Gewissenhaftigkeit</span><span class="chip">Extraversion</span><span class="chip">Verträglichkeit</span><span class="chip">Neurotizismus</span></div>
+    <div class="row">
+      <button class="btn" id="go">Test starten</button>
+      <button class="btn sec hide" id="resume">Fortsetzen</button>
+    </div>
+    <div id="hist" class="hide" style="margin-top:26px"><h2 style="font-size:1.05rem">Gespeicherte Ergebnisse</h2><div id="histlist"></div></div>
+    <p class="note">Hinweis: Kurztest zur Selbstreflexion, keine psychologische Diagnose. Alle Daten bleiben lokal in deinem Browser.</p>
+  </section>
+
+  <section class="card hide" id="quiz">
+    <div class="prog"><i id="pb"></i></div>
+    <div class="meta"><span id="cnt"></span><span id="pct"></span></div>
+    <div class="q" id="qt"></div>
+    <div class="scale" id="sc"></div>
+    <div class="row" style="justify-content:space-between">
+      <button class="btn sec" id="back">← Zurück</button>
+      <button class="btn sec" id="quit">Pausieren</button>
+    </div>
+    <p class="note">Tipp: Mit den Tasten 1–5 antworten, mit ← zurück.</p>
+  </section>
+
+  <section class="card hide" id="res">
+    <h1>Dein Ergebnis</h1>
+    <p>Skala von 0 % (sehr niedrig) bis 100 % (sehr hoch).</p>
+    <div id="traits"></div>
+    <div class="row">
+      <button class="btn" id="save">💾 Ergebnis speichern</button>
+      <button class="btn sec" id="copy">📋 Kopieren</button>
+      <button class="btn sec" id="again">Neu starten</button>
+    </div>
+    <p class="note">Selbsteinschätzung, keine Diagnose. Ergebnisse werden nur lokal in diesem Browser gespeichert.</p>
+  </section>
+</main>
+<textarea id="ta" aria-hidden="true"></textarea>
+<div class="toast" id="toast"></div>
+
+<script>
+const T={O:{n:"Offenheit",c:"#6c5ce7",lo:"Du bevorzugst Bewährtes, Klarheit und Praxisnähe.",mid:"Du verbindest Neugier mit Bodenständigkeit.",hi:"Du bist neugierig, kreativ und liebst neue Ideen."},
+C:{n:"Gewissenhaftigkeit",c:"#00b8a9",lo:"Du bist spontan und flexibel, Pläne sind eher Richtschnur.",mid:"Du kannst organisiert sein, bleibst aber anpassungsfähig.",hi:"Du bist zuverlässig, organisiert und zielstrebig."},
+E:{n:"Extraversion",c:"#f59e0b",lo:"Du bist eher ruhig und lädst in Ruhe deine Energie auf.",mid:"Du bewegst dich ausgewogen zwischen Geselligkeit und Rückzug.",hi:"Du bist gesellig, energiegeladen und kontaktfreudig."},
+A:{n:"Verträglichkeit",c:"#ec4899",lo:"Du bist direkt, kritisch und vertrittst klar deinen Standpunkt.",mid:"Du balancierst Kooperation und Eigeninteresse.",hi:"Du bist einfühlsam, hilfsbereit und kooperativ."},
+N:{n:"Neurotizismus",c:"#ef4444",lo:"Du bist emotional stabil und bleibst auch unter Druck gelassen.",mid:"Du erlebst Stress und Sorgen in normalem Maß.",hi:"Du erlebst Gefühle intensiv und reagierst sensibel auf Stress."}};
+// [Text, Faktor, umgekehrt?]
+const raw={
+E:[["Ich bin gern der Mittelpunkt einer Party.",0],["Ich komme leicht mit Fremden ins Gespräch.",0],["Ich fühle mich in Gruppen wohl.",0],["Ich bin voller Energie.",0],["Ich gehe aktiv auf andere zu.",0],["Ich bin eher still und zurückhaltend.",1],["Ich bleibe lieber im Hintergrund.",1],["Unter vielen Leuten habe ich wenig zu sagen.",1],["Fremden gegenüber bin ich schüchtern.",1],["Ich brauche viel Zeit nur für mich allein.",1]],
+A:[["Ich interessiere mich für andere Menschen.",0],["Ich nehme mir Zeit für die Anliegen anderer.",0],["Ich fühle mit anderen mit.",0],["Ich bin sehr hilfsbereit.",0],["Ich behandle andere mit Respekt und Wärme.",0],["Die Probleme anderer interessieren mich kaum.",1],["Ich sage manchmal verletzende Dinge.",1],["Ich sehe andere eher als Mittel zum Zweck.",1],["Ich bin manchmal rechthaberisch.",1],["Ich misstraue anderen schnell.",1]],
+C:[["Ich bin meistens gut vorbereitet.",0],["Ich achte auf Details.",0],["Ich erledige Aufgaben sofort.",0],["Ich mag Ordnung.",0],["Ich halte mich an meine Pläne.",0],["Meine Sachen liegen oft herum.",1],["Ich schiebe Dinge gern vor mir her.",1],["Ich vergesse oft, Dinge an ihren Platz zurückzulegen.",1],["Bei mir herrscht oft Chaos.",1],["Ich drücke mich manchmal vor Pflichten.",1]],
+N:[["Ich mache mir schnell Sorgen.",0],["Ich bin leicht gestresst.",0],["Meine Stimmung schwankt häufig.",0],["Ich bin schnell gereizt.",0],["Ich fühle mich oft niedergeschlagen.",0],["Ich bin die meiste Zeit entspannt.",1],["Ich lasse mich selten aus der Ruhe bringen.",1],["Ich bin selten traurig.",1],["Ich bin mit mir selbst im Reinen.",1],["Ich kann gut mit Druck umgehen.",1]],
+O:[["Ich habe eine lebhafte Fantasie.",0],["Ich habe viele Ideen.",0],["Ich lerne gern Neues.",0],["Ich bin neugierig auf vieles.",0],["Ich verstehe abstrakte Ideen schnell.",0],["Kunst interessiert mich wenig.",1],["Abstrakte Gedanken langweilen mich.",1],["Ich bleibe lieber bei Bewährtem.",1],["Ich habe wenig Vorstellungskraft.",1],["Philosophische Diskussionen reizen mich nicht.",1]]};
+const Q=[];for(let k=0;k<10;k++)for(const f of "EACNO")Q.push({t:raw[f][k][0],f,r:raw[f][k][1]});
+const L=["Trifft gar nicht zu","Trifft eher nicht zu","Neutral","Trifft eher zu","Trifft voll zu"];
+const $=id=>document.getElementById(id);
+let ans=[],i=0,last=null;
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2200)}
+function show(id){for(const s of ["start","quiz","res"])$(s).classList.toggle("hide",s!==id);window.scrollTo(0,0)}
+
+function home(){show("start");const p=store.get("b5_progress");$("resume").classList.toggle("hide",!(p&&p.ans&&p.ans.length>0&&p.ans.length<Q.length));renderHist()}
+function renderHist(){const h=store.get("b5_results")||[];$("hist").classList.toggle("hide",!h.length);$("histlist").innerHTML="";
+ h.forEach((r,idx)=>{const d=document.createElement("div");d.className="saved";
+  const s=Object.keys(T).map(k=>k+" "+r.s[k]+"%").join(" · ");
+  d.innerHTML=`<div><b>${new Date(r.d).toLocaleString("de-DE",{dateStyle:"medium",timeStyle:"short"})}</b><br><span>${s}</span></div>`;
+  const b=document.createElement("button");b.className="ib";b.textContent="🗑";b.title="Löschen";b.onclick=()=>{h.splice(idx,1);store.set("b5_results",h);renderHist()};
+  d.appendChild(b);$("histlist").appendChild(d)})}
+
+function start(a){ans=a||[];i=ans.length;if(i>=Q.length)return finish();show("quiz");draw()}
+function draw(){$("qt").style.animation="none";void $("qt").offsetWidth;$("qt").style.animation="";
+ $("qt").textContent=Q[i].t;$("cnt").textContent="Frage "+(i+1)+" von "+Q.length;
+ const p=Math.round(i/Q.length*100);$("pct").textContent=p+" %";$("pb").style.width=p+"%";
+ $("back").disabled=i===0;
+ $("sc").innerHTML=[1,2,3,4,5].map(n=>`<button class="opt ${ans[i]===n?"sel":""}" data-v="${n}"><b>${n}</b><small>${L[n-1]}</small></button>`).join("");
+ $("sc").querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(+b.dataset.v))}
+function pick(v){ans[i]=v;store.set("b5_progress",{ans});
+ [...$("sc").children].forEach(b=>b.classList.toggle("sel",+b.dataset.v===v));
+ setTimeout(()=>{i++;i>=Q.length?finish():draw()},180)}
+function finish(){const sum={O:0,C:0,E:0,A:0,N:0};
+ Q.forEach((q,k)=>{let v=ans[k];if(q.r)v=6-v;sum[q.f]+=v});
+ const s={};for(const f in sum)s[f]=Math.round((sum[f]/10-1)/4*100);
+ last={d:Date.now(),s};store.del("b5_progress");show("res");
+ $("traits").innerHTML=Object.keys(T).map(f=>{const v=s[f],t=T[f],txt=v<38?t.lo:v<63?t.mid:t.hi;
+  return `<div class="trait"><div class="h"><span>${t.n}</span><span>${v} %</span></div><div class="bar"><i data-w="${v}" style="background:${t.c}"></i></div><p>${txt}</p></div>`}).join("");
+ setTimeout(()=>document.querySelectorAll(".bar i").forEach(e=>e.style.width=e.dataset.w+"%"),60)}
+function summary(){return "Big Five Ergebnis ("+new Date(last.d).toLocaleDateString("de-DE")+")\n"+Object.keys(T).map(f=>T[f].n+": "+last.s[f]+" %").join("\n")}
+
+$("go").onclick=()=>{store.del("b5_progress");start([])};
+$("resume").onclick=()=>start((store.get("b5_progress")||{}).ans||[]);
+$("back").onclick=()=>{if(i>0){i--;draw()}};
+$("quit").onclick=home;
+$("again").onclick=home;
+$("save").onclick=()=>{const h=store.get("b5_results")||[];h.unshift(last);if(store.set("b5_results",h.slice(0,30))){toast("Ergebnis gespeichert ✓");$("save").disabled=true}else toast("Speichern im Browser nicht möglich – bitte kopieren")};
+$("copy").onclick=async()=>{const txt=summary();try{await navigator.clipboard.writeText(txt);toast("In Zwischenablage kopiert ✓")}catch(e){const ta=$("ta");ta.value=txt;ta.select();try{document.execCommand("copy");toast("Kopiert ✓")}catch(_){toast("Kopieren nicht möglich")}}};
+$("fs").onclick=async()=>{try{if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}else{const e=document.documentElement;await (e.requestFullscreen||e.webkitRequestFullscreen).call(e)}}catch(e){toast("Vollbild wird hier nicht unterstützt")}};
+document.addEventListener("fullscreenchange",()=>{$("fs").textContent=document.fullscreenElement?"✕ Vollbild beenden":"⛶ Vollbild"});
+$("theme").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+document.addEventListener("keydown",e=>{if($("quiz").classList.contains("hide"))return;if(e.key>="1"&&e.key<="5")pick(+e.key);else if(e.key==="ArrowLeft"&&i>0){i--;draw()}});
+home();
+</script>
+</body>
+</html>

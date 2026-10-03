@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Five Persönlichkeitstest</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            color: var(--accent);
+        }
+
+        .fullscreen-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fullscreen-btn:hover {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 14px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent);
+            background: #1e293b;
+            transform: translateX(4px);
+        }
+
+        .results {
+            display: none;
+        }
+
+        .result-bar-container {
+            margin-bottom: 20px;
+        }
+
+        .result-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .result-bar-bg {
+            height: 16px;
+            background: var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .result-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .result-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .restart-btn {
+            margin-top: 25px;
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            border: none;
+            color: var(--bg-color);
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s ease;
+        }
+
+        .restart-btn:hover {
+            background: var(--accent-hover);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Big Five Test (OCEAN)</h1>
+        <button class="fullscreen-btn" id="fullscreenToggle" onclick="toggleFullscreen()">
+            ⛶ Vollbild
+        </button>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <!-- Test Bereich -->
+    <div id="quiz">
+        <div class="question-card">
+            <div class="question-text" id="questionText">Frage lädt...</div>
+            <div class="options">
+                <button class="option-btn" onclick="answer(5)">Stimme voll und ganz zu</button>
+                <button class="option-btn" onclick="answer(4)">Stimme eher zu</button>
+                <button class="option-btn" onclick="answer(3)">Neutral / Unentschieden</button>
+                <button class="option-btn" onclick="answer(2)">Stimme eher nicht zu</button>
+                <button class="option-btn" onclick="answer(1)">Stimme überhaupt nicht zu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ergebnis Bereich -->
+    <div id="results" class="results">
+        <h2>Dein Persönlichkeitsprofil</h2>
+        <p style="margin-bottom: 25px; color: #94a3b8;">Hier ist die Auswertung deiner 5 Grunddimensionen der Persönlichkeit:</p>
+        
+        <div id="resultBars"></div>
+
+        <button class="restart-btn" onclick="restartQuiz()">Test neu starten</button>
+    </div>
+</div>
+
+<script>
+    // Fragenkatalog für die 5 Dimensionen (O, C, E, A, N)
+    const questions = [
+        { text: "Ich bin sehr neugierig und probiere gerne neue Dinge aus.", trait: "O" },
+        { text: "Ich erfülle meine Aufgaben immer gründlich und zuverlässig.", trait: "C" },
+        { text: "Ich gehe leicht auf andere Menschen zu und bin gesellig.", trait: "E" },
+        { text: "Ich zeige viel Empathie und helfe anderen gerne.", trait: "A" },
+        { text: "Ich gerate schnell in Stress oder mache mir oft Sorgen.", trait: "N" },
+        { text: "Ich begeistere mich für Kunst, Musik oder theoretische Konzepte.", trait: "O" },
+        { text: "Ich halte mein Umfeld stets ordentlich und strukturiert.", trait: "C" },
+        { text: "Ich fühle mich wohl, wenn ich im Mittelpunkt stehe.", trait: "E" },
+        { text: "Ich vermeide Konflikte und suche nach meinst harmonischen Lösungen.", trait: "A" },
+        { text: "Ich bleibe auch in schwierigen Situationen meist ruhig und gelassen.", trait: "N", reverse: true }
+    ];
+
+    const traitNames = {
+        O: { name: "Offenheit für Erfahrungen", desc: "Kreativität, Fantasie, Wissensdrang und kulturelles Interesse." },
+        C: { name: "Gewissenhaftigkeit", desc: "Organisation, Zuverlässigkeit, Disziplin und Zielstrebigkeit." },
+        E: { name: "Extraversion", desc: "Geselligkeit, Energie, Gesprächigkeit und Durchsetzungsvermögen." },
+        A: { name: "Verträglichkeit", desc: "Empathie, Hilfsbereitschaft, Kooperation und Vertrauen." },
+        N: { name: "Neurotizismus (Empfindsamkeit)", desc: "Neigung zu emotionaler Labilität, Stress und Sorgen." }
+    };
+
+    let currentQuestion = 0;
+    let scores = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+    let maxScores = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById("questionText").innerText = `${currentQuestion + 1}. ${q.text}`;
+        
+        const progressPercent = (currentQuestion / questions.length) * 100;
+        document.getElementById("progress").style.width = `${progressPercent}%`;
+    }
+
+    function answer(value) {
+        const q = questions[currentQuestion];
+        let finalValue = q.reverse ? (6 - value) : value;
+
+        scores[q.trait] += finalValue;
+        maxScores[q.trait] += 5;
+
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById("quiz").style.display = "none";
+        document.getElementById("progress").parentElement.style.display = "none";
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.style.display = "block";
+
+        const container = document.getElementById("resultBars");
+        container.innerHTML = "";
+
+        for (let trait in scores) {
+            const percentage = Math.round((scores[trait] / maxScores[trait]) * 100);
+            
+            const html = `
+                <div class="result-bar-container">
+                    <div class="result-label">
+                        <span>${traitNames[trait].name}</span>
+                        <span>${percentage}%</span>
+                    </div>
+                    <div class="result-bar-bg">
+                        <div class="result-bar-fill" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="result-desc">${traitNames[trait].desc}</div>
+                </div>
+            `;
+            container.innerHTML += html;
+        }
+    }
+
+    function restartQuiz() {
+        currentQuestion = 0;
+        scores = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+        maxScores = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+        
+        document.getElementById("results").style.display = "none";
+        document.getElementById("quiz").style.display = "block";
+        document.getElementById("progress").parentElement.style.display = "block";
+        loadQuestion();
+    }
+
+    // Vollbild Funktion
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().then(() => {
+                document.getElementById("fullscreenToggle").innerText = "⛶ Beenden";
+            }).catch(err => {
+                console.error(`Fehler beim Aktivieren des Vollbildmodus: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                document.getElementById("fullscreenToggle").innerText = "⛶ Vollbild";
+            }
+        }
+    }
+
+    // Start
+    loadQuestion();
+</script>
+
+</body>
+</html>
