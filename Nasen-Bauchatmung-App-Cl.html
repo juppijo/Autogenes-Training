@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nasen-Bauchatmung</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#0d1030;--sf:#171b47;--fg:#e8eaff;--mu:#9aa3d9;--ac:#8ea6ff;--bt:#0d1030;--ln:rgba(142,166,255,.22);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=tag]{--bg:#ededfd;--sf:#fff;--fg:#112255;--mu:#4d5a8f;--ac:#112299;--bt:#eeddff;--ln:rgba(17,34,153,.18)}
+:root[data-theme=wald]{--bg:#0c2420;--sf:#14352f;--fg:#e2f5ec;--mu:#8fbfae;--ac:#7fd8b4;--bt:#0c2420;--ln:rgba(127,216,180,.22)}
+:root[data-theme=daemmerung]{--bg:#2a1232;--sf:#3a1b45;--fg:#fbe9f1;--mu:#cfa3bd;--ac:#f4a3c4;--bt:#2a1232;--ln:rgba(244,163,196,.24)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 Figtree,system-ui,sans-serif;transition:background .5s,color .5s}
+.wrap{max-width:860px;margin:0 auto;padding:18px 20px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font:600 clamp(1.5rem,4vw,2.1rem)/1.15 Newsreader,Georgia,serif;margin:0}
+.tools{display:flex;gap:8px}
+button,select{font:inherit;color:inherit}
+.ib{background:var(--ac);color:var(--bt);border:0;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;cursor:pointer;min-height:40px}
+.ib:hover{opacity:.85}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+nav{display:flex;gap:4px;margin:22px 0 10px;border-bottom:1px solid var(--ln);overflow-x:auto}
+nav button{background:none;border:0;padding:10px 14px;cursor:pointer;color:var(--mu);border-bottom:3px solid transparent;white-space:nowrap}
+nav button[aria-selected=true]{color:var(--fg);border-color:var(--ac);font-weight:600}
+section{display:none;padding-top:14px}
+section.on{display:block}
+/* Üben */
+.stage{display:flex;flex-direction:column;align-items:center;gap:18px}
+.orbbox{position:relative;width:min(78vw,360px);aspect-ratio:1;display:grid;place-items:center}
+.guide{position:absolute;inset:0;border:2px dashed var(--ln);border-radius:50%}
+.orb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--ac) 70%,#fff),var(--ac) 55%,color-mix(in srgb,var(--ac) 55%,var(--bg)));box-shadow:0 0 90px color-mix(in srgb,var(--ac) 40%,transparent);transform:scale(.6);will-change:transform}
+.lab{position:relative;text-align:center;color:var(--bt);pointer-events:none;padding:0 12px}
+.lab b{display:block;font:600 clamp(1.3rem,5vw,1.8rem)/1.2 Newsreader,Georgia,serif}
+.lab span{display:block;font-size:2.4rem;font-weight:600;line-height:1.1}
+.lab i{display:block;font-size:.9rem;opacity:.85;font-style:normal}
+.clock{font:600 2.2rem/1 Figtree,sans-serif;font-variant-numeric:tabular-nums}
+.sub{color:var(--mu);font-size:.9rem;margin-top:4px;text-align:center}
+.bar{width:min(78vw,360px);height:5px;background:var(--ln);border-radius:5px;overflow:hidden}
+.bar div{height:100%;width:0;background:var(--ac)}
+.ctl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.go{background:var(--ac);color:var(--bt);border:0;border-radius:12px;padding:12px 28px;font-weight:600;font-size:1.05rem;cursor:pointer;min-width:140px}
+.go.sec{background:transparent;color:var(--fg);border:1px solid var(--ln);min-width:0;padding:12px 18px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;width:100%;max-width:640px}
+.opts label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--mu)}
+select{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:9px 10px;color:var(--fg)}
+.snd{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--mu)}
+/* Text */
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:16px 20px;margin:0 0 14px}
+h2{font:600 1.5rem/1.2 Newsreader,Georgia,serif;margin:6px 0 14px}
+h3{font:600 1.15rem/1.3 Newsreader,Georgia,serif;margin:0 0 6px}
+p{margin:0 0 10px;max-width:68ch}
+ol.st{padding-left:1.3em;max-width:68ch}ol.st li{margin-bottom:12px}
+.imp{font:italic 400 1.3rem/1.55 Newsreader,Georgia,serif;border-left:4px solid var(--ac);padding:4px 0 4px 18px;margin:16px 0;max-width:60ch}
+.vs{font:400 1.2rem/1.75 Newsreader,Georgia,serif;cursor:pointer}
+.vs em{display:block;font-style:italic}
+.vs.act{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac) inset}
+.vh{font:600 .9rem Figtree,sans-serif;color:var(--mu);margin-bottom:6px}
+.gl{list-style:none;padding:0;display:grid;gap:10px}
+.gl li{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.gl button{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px 16px;width:100%;text-align:left;cursor:pointer;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.gl button:hover{border-color:var(--ac)}
+.gl .e{color:var(--mu)}
+@media(max-width:520px){.wrap{padding:14px 14px 40px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Nasen-Bauchatmung</h1>
+<div class="tools">
+<button class="ib" id="thm" title="Thema wechseln" aria-label="Thema wechseln">Thema: Nacht</button>
+<button class="ib" id="fs" title="Vollbild" aria-label="Vollbild">⛶</button>
+</div>
+</header>
+<nav role="tablist" id="tabs">
+<button role="tab" data-t="ueben" aria-selected="true">Üben</button>
+<button role="tab" data-t="wissen" aria-selected="false">Wirkung</button>
+<button role="tab" data-t="anleitung" aria-selected="false">Anleitung</button>
+<button role="tab" data-t="meditation" aria-selected="false">Meditation</button>
+</nav>
+
+<section id="ueben" class="on">
+<div class="stage">
+<div class="orbbox"><div class="guide"></div><div class="orb" id="orb"></div>
+<div class="lab"><b id="ph">Bereit</b><span id="cnt"></span><i id="ga">Hände auf Brust und Unterbauch</i></div></div>
+<div><div class="clock" id="clk" style="text-align:center">05:00</div><div class="sub" id="sub">0 Atemzüge</div></div>
+<div class="bar" aria-hidden="true"><div id="pb"></div></div>
+<div class="ctl"><button class="go" id="go">Starten</button><button class="go sec" id="rs">Zurücksetzen</button></div>
+<div class="opts">
+<label>Dauer<select id="dur"><option value="3">3 Minuten</option><option value="5" selected>5 Minuten</option><option value="10">10 Minuten</option><option value="15">15 Minuten</option><option value="20">20 Minuten</option><option value="0">Ohne Ende</option></select></label>
+<label>Rhythmus (ein : aus)<select id="rh"><option value="4-6" selected>4 : 6 (Standard)</option><option value="4-7">4 : 7</option><option value="5-5">5 : 5</option><option value="6-6">6 : 6</option></select></label>
+<label>Atem-Gedanke<select id="gt"><option value="0">Bauch hebt sich / senkt sich</option><option value="1">Tief / Langsam</option><option value="2">Ruhe / Lächeln</option><option value="3">Hier und Jetzt / Wunderbarer Moment</option></select></label>
+<label>Klangkulisse<select id="kl"><option value="">Aus</option><option value="meer">Meer</option><option value="wald">Wald</option><option value="nacht">Nacht</option><option value="voegel">Vögel</option><option value="regen">Regen</option></select></label>
+<label>Lautstärke<input type="range" id="vol" min="0" max="1" step="0.01" value="0.5"></label>
+</div>
+<label class="snd"><input type="checkbox" id="snd"> Sanfter Ton beim Wechsel</label>
+<p class="sub">Lippen sanft schließen, Zungenspitze ruht am Gaumen. Der Kreis wächst beim Einatmen und schrumpft beim Ausatmen.</p>
+</div>
+</section>
+
+<section id="wissen">
+<h2>Warum Nase und Bauch zusammengehören</h2>
+<div class="card"><h3>Die Nase: Filter und Regulator</h3>
+<p><strong>Physiologisch:</strong> Die Nase wärmt, befeuchtet und filtert die Atemluft. In den Nasennebenhöhlen entsteht <em>Stickstoffmonoxid (NO)</em>. Es erweitert die Blutgefäße und verbessert die Sauerstoffaufnahme in der Lunge um bis zu 15 %.</p>
+<p><strong>Energetisch und symbolisch:</strong> Die Nasenatmung filtert auch die Eindrücke der Außenwelt. Sie verlangsamt den Atemstrom und bringt den Geist zur Ruhe.</p></div>
+<div class="card"><h3>Der Bauch: Zentrum der Regeneration</h3>
+<p><strong>Physiologisch:</strong> Bei der Bauchatmung senkt sich das Zwerchfell tief in den Bauchraum. Magen, Darm und Leber werden sanft massiert, die Verdauung wird angeregt und der venöse Rückfluss zum Herzen unterstützt.</p>
+<p><strong>Vagusnerv:</strong> Das Zwerchfell ist eng mit dem Vagusnerv verwoben. Sein tiefes Absinken stimuliert diesen „Ruhenerv“, schaltet vom Stress-Modus (Sympathikus) in den Regenerations-Modus (Parasympathikus) und senkt Herzfrequenz und Blutdruck.</p></div>
+<div class="imp">„Mit jeder Naseneinatmung nehme ich frische Lebenskraft, Weite und Vertrauen auf. Mit jeder Ausatmung lasse ich Druck, Anspannung und alte Sorgen sanft aus meinem Bauchraum entweichen.“</div>
+</section>
+
+<section id="anleitung">
+<h2>Schritt für Schritt</h2>
+<ol class="st">
+<li><strong>Ankommen und Haltung:</strong> Setze dich aufrecht hin oder lege dich entspannt auf den Rücken. Eine Hand liegt sanft auf dem Brustkorb, die andere auf dem Unterbauch (unterhalb des Bauchnabels).</li>
+<li><strong>Der sanfte Einstieg:</strong> Schließe die Lippen sanft, der Mund bleibt entspannt. Die Zungenspitze ruht am Gaumen hinter den oberen Schneidezähnen.</li>
+<li><strong>Einatmen durch die Nase (Bauch hebt sich):</strong> Atme langsam, leise und ohne Anstrengung ein. Zuerst wölbt sich die Bauchdecke wie ein Ballon nach außen, der Brustkorb bleibt ruhig.</li>
+<li><strong>Langes Ausatmen durch die Nase (Bauch senkt sich):</strong> Lass die Luft noch langsamer und mühelos ausströmen. Die Bauchdecke sinkt sanft zurück.</li>
+<li><strong>Der ideale Rhythmus (z. B. 4 zu 6):</strong> Atme auf 4 Zeiten ein und verlängere das Ausatmen auf 6 (oder 7). Das lange Ausatmen sagt deinem Gehirn: <em>„Ich bin in Sicherheit.“</em></li>
+</ol>
+<button class="ib" data-goto="ueben">Jetzt üben</button>
+</section>
+
+<section id="meditation">
+<h2>Einatmen, ich bin zu Hause. Ausatmen, ich bin angekommen.</h2>
+<p class="sub" style="text-align:left">Eine Meditation für Atem, Bauch und Nervensystem im Geiste von Thich Nhat Hanh. Setze oder lege dich bequem hin und richte die Wirbelsäule auf, wie eine Blume, die der Sonne entgegenwächst. Tippe einen Vers an, um ihn hervorzuheben.</p>
+<div class="card vs"><div class="vh">Vers 1: Das Ankommen im Körper</div>
+<em>Einatmend weiß ich, dass ich einatme.</em><em>Ausatmend weiß ich, dass ich ausatme.</em><em>Einatmen – die Luft strömt sanft durch meine Nase.</em><em>Ausatmen – ich spüre die kühle Frische der Luft.</em><em>Einatmen – tief.</em><em>Ausatmen – langsam.</em><em>(Pause und tief durch die Nase atmen)</em></div>
+<div class="card vs"><div class="vh">Vers 2: Die Berührung des Bauches</div>
+<em>Einatmend spüre ich, wie mein Bauch sich hebt.</em><em>Ausatmend spüre ich, wie mein Bauch sich senkt.</em><em>Bauch hebt sich.</em><em>Bauch senkt sich.</em><em>Ich lege meine Hand ganz sanft auf meinen Bauch, wie eine Mutter ihr Kind berührt.</em><em>Mein Bauch ist die Erde in mir.</em><em>Jeder Atemzug senkt sich wie ein warmer Regen in diese Erde.</em></div>
+<div class="card vs"><div class="vh">Vers 3: Umarmung des Nervensystems und des Vagusnervs</div>
+<em>Einatmend beruhige ich meinen Körper.</em><em>Ausatmend lächle ich allen Verspannungen zu.</em><em>Körper beruhigen.</em><em>Lächeln.</em><em>Ich spüre den Vagusnerv – den Fluss der Ruhe, der durch meine Mitte fließt.</em><em>Ich brauche jetzt nichts zu tun.</em><em>Ich brauche nirgendwo hinzugehen.</em><em>Ich bin sicher. Ich bin gehalten.</em><em>Einatmen – Frieden.</em><em>Ausatmen – Loslassen.</em></div>
+<div class="card vs"><div class="vh">Vers 4: Das Glimmen des Lächelns</div>
+<em>Einatmend schenke ich meinen Organen ein Lächeln.</em><em>Ausatmend schenke ich meinem Kiefer und meinen Schultern ein Lächeln.</em><em>Lächeln zur Anspannung.</em><em>Freiheit erfahren.</em><em>Mit jedem langen Ausatmen lade ich den Frieden ein,</em><em>sich in jeder Zelle meines Körpers niederzulassen.</em><em>Gegenwärtiger Moment – wunderbarer Moment.</em></div>
+<h3 style="margin-top:22px">Atem-Gedanken (Gathas)</h3>
+<p class="sub" style="text-align:left">Tippe ein Paar an, um damit zu üben.</p>
+<ul class="gl" id="gl">
+<li><button data-g="0"><span><strong>Einatmen:</strong> Bauch hebt sich</span><span class="e"><strong>Ausatmen:</strong> Bauch senkt sich</span></button></li>
+<li><button data-g="1"><span><strong>Einatmen:</strong> Tief</span><span class="e"><strong>Ausatmen:</strong> Langsam</span></button></li>
+<li><button data-g="2"><span><strong>Einatmen:</strong> Ruhe</span><span class="e"><strong>Ausatmen:</strong> Lächeln</span></button></li>
+<li><button data-g="3"><span><strong>Einatmen:</strong> Hier und Jetzt</span><span class="e"><strong>Ausatmen:</strong> Wunderbarer Moment</span></button></li>
+</ul>
+</section>
+</div>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var root=document.documentElement;
+var themes=[["nacht","Nacht"],["tag","Tag"],["wald","Wald"],["daemmerung","Dämmerung"]];
+var GA=[["Bauch hebt sich","Bauch senkt sich"],["Tief","Langsam"],["Ruhe","Lächeln"],["Hier und Jetzt","Wunderbarer Moment"]];
+var ti=0;
+function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function setTheme(i){ti=i;root.setAttribute("data-theme",themes[i][0]);$("thm").textContent="Thema: "+themes[i][1];store("nba-theme",i)}
+var sv=parseInt(load("nba-theme"),10);
+if(isNaN(sv)){sv=(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)?1:0}
+setTheme(sv>=0&&sv<themes.length?sv:0);
+$("thm").onclick=function(){setTheme((ti+1)%themes.length)};
+
+/* Vollbild */
+var fsb=$("fs");
+fsb.onclick=function(){
+  var d=document,el=d.documentElement;
+  var on=d.fullscreenElement||d.webkitFullscreenElement;
+  try{
+    if(!on){(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}
+    else{(d.exitFullscreen||d.webkitExitFullscreen).call(d)}
+  }catch(e){fsb.title="Vollbild ist hier nicht verfügbar"}
+};
+function fsUpd(){fsb.textContent=(document.fullscreenElement||document.webkitFullscreenElement)?"✕":"⛶"}
+document.addEventListener("fullscreenchange",fsUpd);document.addEventListener("webkitfullscreenchange",fsUpd);
+
+/* Tabs */
+function show(t){
+  document.querySelectorAll("section").forEach(function(s){s.classList.toggle("on",s.id===t)});
+  document.querySelectorAll("#tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.t===t)});
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("#tabs button").forEach(function(b){b.onclick=function(){show(b.dataset.t)}});
+document.querySelectorAll("[data-goto]").forEach(function(b){b.onclick=function(){show(b.dataset.goto)}});
+document.querySelectorAll(".vs").forEach(function(v){v.onclick=function(){
+  var was=v.classList.contains("act");
+  document.querySelectorAll(".vs").forEach(function(x){x.classList.remove("act")});
+  if(!was)v.classList.add("act");
+}});
+document.querySelectorAll("#gl button").forEach(function(b){b.onclick=function(){$("gt").value=b.dataset.g;apply();show("ueben")}});
+
+/* Atem-Timer */
+var run=false,el=0,last=0,raf=0,ph=-1,inS=4,outS=6,dur=5,done=false,ac=null;
+function fmt(ms){var s=Math.max(0,Math.round(ms/1000));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function ease(x){return .5-.5*Math.cos(Math.PI*x)}
+function beep(f){
+  if(!$("snd").checked)return;
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;
+    o.type="sine";o.frequency.value=f;o.connect(g);g.connect(ac.destination);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.08);g.gain.exponentialRampToValueAtTime(.0001,t+1.2);
+    o.start(t);o.stop(t+1.3);
+  }catch(e){}
+}
+function draw(){
+  var cyc=(inS+outS)*1000,p=el%cyc,inh=p<inS*1000,gi=+$("gt").value;
+  var s=inh?ease(p/(inS*1000)):1-ease((p-inS*1000)/(outS*1000));
+  $("orb").style.transform="scale("+(.6+.4*s)+")";
+  var np=inh?0:1;
+  if(np!==ph){ph=np;if(run)beep(inh?440:330)}
+  $("ph").textContent=inh?"Einatmen":"Ausatmen";
+  $("cnt").textContent=Math.ceil(((inh?inS*1000:cyc)-p)/1000);
+  $("ga").textContent=GA[gi][np];
+  var n=Math.floor(el/cyc);
+  $("sub").textContent=n+(n===1?" Atemzug":" Atemzüge")+(dur?" · noch "+fmt(dur*60000-el):"");
+  $("clk").textContent=dur?fmt(dur*60000-el):fmt(el);
+  $("pb").style.width=dur?Math.min(100,el/(dur*600))+"%":"0%";
+}
+function finish(){
+  run=false;done=true;cancelAnimationFrame(raf);
+  $("orb").style.transform="scale(.6)";
+  $("ph").textContent="Angekommen";$("cnt").textContent="";
+  $("ga").textContent="Gegenwärtiger Moment – wunderbarer Moment";
+  $("clk").textContent="00:00";$("pb").style.width="100%";
+  $("go").textContent="Neu starten";setLock(false);beep(520);
+}
+function tick(ts){
+  if(!run)return;
+  el+=ts-last;last=ts;
+  if(dur&&el>=dur*60000){finish();return}
+  draw();raf=requestAnimationFrame(tick);
+}
+function setLock(l){["dur","rh","gt"].forEach(function(i){$(i).disabled=l&&i!=="gt"})}
+function apply(){
+  var r=$("rh").value.split("-");inS=+r[0];outS=+r[1];dur=+$("dur").value;
+}
+function reset(){
+  cancelAnimationFrame(raf);run=false;done=false;el=0;ph=-1;apply();setLock(false);
+  $("go").textContent="Starten";$("ph").textContent="Bereit";$("cnt").textContent="";
+  $("ga").textContent="Hände auf Brust und Unterbauch";
+  $("orb").style.transform="scale(.6)";$("pb").style.width="0%";
+  $("clk").textContent=dur?fmt(dur*60000):"00:00";$("sub").textContent="0 Atemzüge";
+}
+$("go").onclick=function(){
+  if(done)reset();
+  if(run){run=false;cancelAnimationFrame(raf);$("go").textContent="Weiter";return}
+  run=true;apply();setLock(true);last=performance.now();$("go").textContent="Pause";
+  raf=requestAnimationFrame(tick);
+};
+$("rs").onclick=reset;
+$("dur").onchange=$("rh").onchange=reset;
+$("gt").onchange=function(){if(!run&&!done&&el>0)draw();else if(!run&&el===0)reset()};
+/* Klangkulissen (synthetisch, ohne Dateien) */
+var mg=null,nb=null,cur=null;
+function A(){ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();return ac}
+function master(){var c=A();if(!mg){mg=c.createGain();mg.connect(c.destination)}mg.gain.value=Math.pow(+$("vol").value,2);return mg}
+function gn(v){var g=A().createGain();g.gain.value=v;return g}
+function fl(t,f,q){var b=A().createBiquadFilter();b.type=t;b.frequency.value=f;if(q)b.Q.value=q;return b}
+function nz(L){var c=A();if(!nb){nb=c.createBuffer(1,c.sampleRate*3,c.sampleRate);var d=nb.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+  var s=c.createBufferSource();s.buffer=nb;s.loop=true;L.src.push(s);return s}
+function lf(L,rate,depth,param){var o=A().createOscillator(),g=gn(depth);o.frequency.value=rate;o.connect(g);g.connect(param);L.src.push(o)}
+function bed(L,type,f,q,vol,lr,ld){var n=nz(L),x=fl(type,f,q),g=gn(vol);n.connect(x);x.connect(g);g.connect(L.out);if(lr)lf(L,lr,ld,g.gain);return g}
+function every(L,fn,a,b){(function r(){L.tm=setTimeout(function(){if(!L.on)return;fn();r()},a+Math.random()*(b-a))})()}
+function chirp(d,v){var c=A(),tt=c.currentTime,n=2+Math.floor(Math.random()*4),f=2200+Math.random()*2400;
+  for(var i=0;i<n;i++){var o=c.createOscillator(),g=gn(0),f0=f*(.9+Math.random()*.3),f1=f0*(Math.random()<.5?1.25:.8);
+    o.frequency.setValueAtTime(f0,tt);o.frequency.exponentialRampToValueAtTime(f1,tt+.09);
+    g.gain.setValueAtTime(0,tt);g.gain.linearRampToValueAtTime(v,tt+.015);g.gain.exponentialRampToValueAtTime(.0001,tt+.11);
+    o.connect(g);g.connect(d);o.start(tt);o.stop(tt+.13);tt+=.12+Math.random()*.06}}
+function cricket(d){var c=A(),t=c.currentTime,f=4100+Math.random()*300;
+  for(var i=0;i<3;i++){var o=c.createOscillator(),g=gn(0),s=t+i*.075;o.frequency.value=f;
+    g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.02,s+.012);g.gain.linearRampToValueAtTime(0,s+.055);
+    o.connect(g);g.connect(d);o.start(s);o.stop(s+.07)}}
+function owl(d){var c=A(),t=c.currentTime;
+  [[0,.3,430,390],[.5,.9,360,300]].forEach(function(p){var o=c.createOscillator(),g=gn(0),s=t+p[0];
+    o.frequency.setValueAtTime(p[2],s);o.frequency.linearRampToValueAtTime(p[3],s+p[1]);
+    g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.09,s+.1);g.gain.linearRampToValueAtTime(0,s+p[1]);
+    o.connect(g);g.connect(d);o.start(s);o.stop(s+p[1]+.05)})}
+var SC={
+  meer:function(L){bed(L,"lowpass",650,0,.35,.1,.3);bed(L,"highpass",2200,0,.07,.13,.06)},
+  wald:function(L){bed(L,"bandpass",500,.6,.25,.07,.15);bed(L,"highpass",3500,0,.02,.2,.015);every(L,function(){chirp(L.out,.05)},1500,6000)},
+  nacht:function(L){bed(L,"lowpass",250,0,.18,.05,.08);every(L,function(){cricket(L.out)},800,1200);every(L,function(){owl(L.out)},14000,28000)},
+  voegel:function(L){bed(L,"bandpass",1500,.5,.03);every(L,function(){chirp(L.out,.08)},500,2500);every(L,function(){chirp(L.out,.05)},1500,5000)},
+  regen:function(L){bed(L,"highpass",800,0,.2);bed(L,"bandpass",4000,.7,.12)}
+};
+function setScene(name){
+  if(cur){var o=cur;cur=null;o.on=false;clearTimeout(o.tm);var c=A();o.out.gain.setTargetAtTime(0,c.currentTime,.25);
+    setTimeout(function(){o.src.forEach(function(s){try{s.stop()}catch(e){}});o.out.disconnect()},1500)}
+  if(!name)return;
+  var L={src:[],on:true,tm:0,out:gn(0)};L.out.connect(master());SC[name](L);
+  L.src.forEach(function(s){s.start(0,s.buffer?Math.random()*2:0)});
+  L.out.gain.setTargetAtTime(1,A().currentTime,.6);cur=L;
+}
+$("kl").onchange=function(){setScene($("kl").value)};
+$("vol").oninput=function(){if(mg)mg.gain.value=Math.pow(+$("vol").value,2)};
+reset();
+})();
+</script>
+</body>
+</html>
