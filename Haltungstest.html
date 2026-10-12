@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Situativer Haltungs- & Einstellungstest</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #334155;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            z-index: 100;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        p.intro-text {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-counter {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .question-title {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: var(--text-color);
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .option-badge {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .option-btn:hover .option-badge {
+            background: var(--accent);
+            color: white;
+        }
+
+        .results-section h2 {
+            margin-bottom: 15px;
+            color: var(--success);
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .result-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+
+        .result-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .restart-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .restart-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="fullscreen-btn" id="fsBtn" onclick="toggleFullscreen()">Vollbild</button>
+
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="startScreen">
+            <h1>Situativer Haltungs- & Einstellungstest</h1>
+            <p class="intro-text">Dieser Test konfrontiert dich mit 20 konkreten Alltagssituationen und Konflikten. Es geht nicht um starre Selbstbeurteilung, sondern darum, wie du in Interaktionen mit anderen handelst, Grenzen setzt, vermittelst oder Prioritäten setzt.</p>
+            <button class="restart-btn" onclick="startTest()">Test starten</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" class="hidden">
+            <div class="question-counter" id="counter">Frage 1 von 20</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <h2 class="question-title" id="questionText">Fragetext</h2>
+            <div class="options-grid" id="optionsContainer">
+                <!-- Optionen werden dynamisch eingefügt -->
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="results-section hidden">
+            <h2>Auswertung deiner Haltungsprofile</h2>
+            <p class="intro-text">Hier siehst du, wie sich deine Entscheidungen in den 4 Kernbereichen sozialer Einstellungen verteilen:</p>
+            <div id="resultContent">
+                <!-- Ergebnisse werden hier generiert -->
+            </div>
+            <button class="restart-btn" onclick="startTest()">Test wiederholen</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: "Ein Kollege schiebt dir im Teammeeting die Schuld für einen verpassten Meilenstein zu, obwohl du nicht verantwortlich warst. Wie reagierst du?",
+                options: [
+                    { text: "Ich stelle die Fakten sofort ruhig und sachlich richtig, um die Situation aufzuklären.", type: "assertive" },
+                    { text: "Ich lächle es weg, um keinen Streit im Team zu entfachen, und kläre es später unter vier Augen.", type: "harmonious" },
+                    { text: "Ich analysiere sachlich, wo der Prozess gehakt hat, ohne dem Kollegen persönliche Vorwürfe zu machen.", type: "analytical" },
+                    { text: "Ich nehme mir das zu Herzen und ziehe mich erst einmal zurück, um mich zu sortieren.", type: "reflective" }
+                ]
+            },
+            {
+                text: "Ein guter Freund lädt dich zu einer großen Party ein, obwohl du völlig erschöpft bist und einen ruhigen Abend brauchst.",
+                options: [
+                    { text: "Ich sage ehrlich ab und erkläre, dass ich meine Ruhe brauche, biete aber ein Treffen nächste Woche an.", type: "assertive" },
+                    { text: "Ich gehe trotzdem hin, um meinen Freund nicht zu enttäuschen und gute Stimmung zu verbreiten.", type: "harmonious" },
+                    { text: "Ich überlege rational, ob der Energiegewinn durch soziale Kontakte den Erschöpfungsfaktor aufwiegt.", type: "analytical" },
+                    { text: "Ich sage kurzfristig ab und verbringe den Abend mit einem kreativen Projekt oder Buch in meinem eigenen Rhythmus.", type: "reflective" }
+                ]
+            },
+            {
+                text: "In einer hitzigen Diskussion im Freundeskreis vertreten zwei Personen extrem gegensätzliche, starre Meinungen.",
+                options: [
+                    { text: "Ich greife ein und moderiere das Gespräch, um eine gemeinsame Schnittmenge oder Brücke zu finden.", type: "harmonious" },
+                    { text: "Ich hinterfrage die zugrundeliegenden Logikfehler beider Seiten kritisch.", type: "analytical" },
+                    { text: "Ich sage klar meine eigene Meinung, auch wenn das den Streit kurzzeitig anheizt.", type: "assertive" },
+                    { text: "Ich beobachte das Geschehen fasziniert von außen und betrachte die Dynamik aus psychologischer Sicht.", type: "reflective" }
+                ]
+            },
+            {
+                text: "Du entdeckst im Park ein verlassenes, veraltetes Bauwerk oder eine alte Mauer und hast etwas Zeit.",
+                options: [
+                    { text: "Ich bleibe stehen, berühre die Steine und stelle mir die Geschichten und die Historie dahinter vor.", type: "reflective" },
+                    { text: "Ich überlege, ob man diesen Ort für ein kreatives Projekt (Zeichnen, Fotografie) nutzen könnte.", type: "analytical" },
+                    { text: "Ich gehe weiter; mein Terminkalender lässt keine Zeit für solche Ablenkungen.", type: "assertive" },
+                    { text: "Ich treffe zufällig auf jemanden und beginne ein langes, empathisches Gespräch über das Leben.", type: "harmonious" }
+                ]
+            },
+            {
+                text: "Du stehst vor einer komplexen Lebensentscheidung (z. B. Jobwechsel oder Umzug). Welcher Ansatz leitet dich?",
+                options: [
+                    { text: "Ich höre tief in mein Gefühl hinein und vertraue darauf, dass mein innerer Kompass den Weg zeigt.", type: "reflective" },
+                    { text: "Ich mache eine genaue Pro-und-Contra-Liste mit harten Fakten und Kennzahlen.", type: "analytical" },
+                    { text: "Ich bespreche es mit allen Nahestehenden, um sicherzugehen, dass niemand vor den Kopf gestoßen wird.", type: "harmonious" },
+                    { text: "Ich entscheide mutig aus dem Bauch heraus und gehe das Risiko ein.", type: "assertive" }
+                ]
+            },
+            {
+                text: "Jemand bittet dich um einen großen Gefallen, der deinen Zeitplan stark durcheinanderwirbelt.",
+                options: [
+                    { text: "Ich lehne freundlich, aber bestimmt ab, weil meine eigenen Prioritäten heute vorgehen.", type: "assertive" },
+                    { text: "Ich sage zu, weil ich es nicht übers Herz bringe, jemanden in Not hängen zu lassen.", type: "harmonious" },
+                    { text: "Ich suche nach einer cleveren technischen oder organisatorischen Lösung, um das Problem für die Person zu minimieren.", type: "analytical" },
+                    { text: "I'ch wäge ab, wie wichtig mir die Person ist und ob mein innerer Rhythmus das zulässt.", type: "reflective" }
+                ]
+            },
+            {
+                text: "Du beobachtest, wie ein Verkäufer an der Kasse von einem Kunden unfair und unhöflich behandelt wird.",
+                options: [
+                    { text: "Ich schalte mich ein und sage dem Kunden sachlich, dass dieser Ton unangemessen ist.", type: "assertive" },
+                    { text: "Ich lächle dem Verkäufer danach aufmunternd zu und sage ein paar tröstende Worte.", type: "harmonious" },
+                    { text: "Ich analysiere gedanklich, warum manche Menschen im Alltag so viel Frustration in sich tragen.", type: "reflective" },
+                    { text: "Ich versuche, die Situation durch einen schlagfertigen, deeskalierenden Spruch zu entschärfen.", type: "analytical" }
+                ]
+            },
+            {
+                text: "Du hast einen freien Tag und keinerlei Verpflichtungen. Was tust du als Erstes?",
+                options: [
+                    { text: "Ich vertiefe mich stundenlang in ein Hobby, Kunst, Musik oder ein Lieblingsthema.", type: "reflective" },
+                    { text: "Ich treffe mich spontan mit Freunden oder Familie, um etwas gemeinsam zu unternehmen.", type: "harmonious" },
+                    { text: "Ich erstelle einen klaren Plan, um liegengebliebene Projekte effizient abzuarbeiten.", type: "analytical" },
+                    { text: "Ich packe meine Sachen und fahre spontan dorthin, wo es mich hinzieht.", type: "assertive" }
+                ]
+            },
+            {
+                text: "In einer Gruppe wird ein Projekt geplant, bei dem du merkst, dass die vorgeschlagene Richtung komplett fehlerhaft ist.",
+                options: [
+                    { text: "Ich spreche es sofort offen an und präsentiere eine bessere Alternative.", type: "assertive" },
+                    { text: "Ich äußere meine Bedenken vorsichtig und frage, wie die anderen das sehen, um keinen Konflikt zu triggern.", type: "harmonious" },
+                    { text: "Ich rechne oder belege datenbasiert auf, warum der Ansatz scheitern wird.", type: "analytical" },
+                    { text: "Ich ziehe mich kurz zurück, beobachte die Dynamik und bringe meinen Gedanken ein, wenn Ruhe eingekehrt ist.", type: "reflective" }
+                ]
+            },
+            {
+                text: "Wie gehst du mit Kritik an deiner Person oder deiner Arbeit um?",
+                options: [
+                    { text: "Ich betrachte sie rational als Feedback, trenne Emotionen von der Sache und verbessere mich.", type: "analytical" },
+                    { text: "Sie trifft mich im ersten Moment emotional, aber ich reflektiere danach in Ruhe darüber.", type: "reflective" },
+                    { text: "Wenn sie ungerechtfertigt ist, gehe ich sofort in die Verteidigung und stelle klar, wie es wirklich ist.", type: "assertive" },
+                    { text: "Ich versuche, die Perspektive des Kritisierenden zu verstehen, um Harmonie wiederherzustellen.", type: "harmonious" }
+                ]
+            },
+            {
+                text: "Du musst vor einer Gruppe von Menschen einen Vortrag halten oder etwas präsentieren.",
+                options: [
+                    { text: "Ich strukturiere die Fakten perfekt durch, damit alles logisch und fehlerfrei ist.", type: "analytical" },
+                    { text: "Ich suche den Blickkontakt, baue eine emotionale Verbindung auf und erzähle eine Geschichte.", type: "harmonious" },
+                    { text: "Ich treffe selbstbewusst auf und nehme den Raum ein, weil ich von meiner Sache überzeugt bin.", type: "assertive" },
+                    { text: "Ich genieße die Tiefe des Themas und drücke meine ganz persönliche Perspektive aus.", type: "reflective" }
+                ]
+            },
+            {
+                text: "Ein Projekt, an dem du lange gearbeitet hast, wird von offizieller Seite abgelehnt oder verworfen.",
+                options: [
+                    { text: "Ich hake es ab, analysiere die Gründe und starte direkt das nächste Vorhaben.", type: "assertive" },
+                    { text: "Ich nehme mir Zeit für Trauer oder Enttäuschung, sehe es aber als Teil meines künstlerischen Weges.", type: "reflective" },
+                    { text: "Ich suche das Gespräch mit den Entscheidern, um die Beweggründe nachzuvollziehen und Brücken zu bauen.", type: "harmonious" },
+                    { text: "Ich überprüfe die Parameter und passe die Methodik an, um es beim nächsten Mal effizienter zu machen.", type: "analytical" }
+                ]
+            },
+            {
+                text: "Wie triffst du Entscheidungen beim Einkaufen (z. B. Technik, Kleidung oder Kunstmaterial)?",
+                options: [
+                    { text: "Ich vergleiche Testberichte, Preise und technische Daten minutiös.", type: "analytical" },
+                    { text: "Ich schaue, welches Produkt ästhetisch am meisten Resonanz in mir auslöst.", type: "reflective" },
+                    { text: "Ich achte darauf, dass es nachhaltig produziert wurde und niemandem schadet.", type: "harmonious" },
+                    { text: "Ich greife schnell zu dem, was meinen sofortigen Zweck erfüllt.", type: "assertive" }
+                ]
+            },
+            {
+                text: "Jemand in deinem Bekanntenkreis verhält sich passiv-aggressiv dir gegenüber, ohne dass du den Grund kennst.",
+                options: [
+                    { text: "Ich spreche die Person direkt und offen darauf an: 'Sag mal, ist alles okay zwischen uns?'", type: "assertive" },
+                    { text: "Ich suche das sanfte Gespräch und signalisiere, dass ich für sie da bin, falls etwas ist.", type: "harmonious" },
+                    { text: "Ich analysiere, ob ich mich in letzter Zeit verändert oder etwas ausgelöst haben könnte.", type: "reflective" },
+                    { text: "Ich beobachte das Muster rational und warte ab, ob sich das Verhalten von alleine legt.", type: "analytical" }
+                ]
+            },
+            {
+                text: "Du nimmst an einem Workshop oder Seminar teil. Der Dozent wirkt unsicher und verhaspelt sich.",
+                options: [
+                    { text: "Ich stelle eine kluge, unterstützende Frage, um ihm zu helfen, den Faden wiederzufinden.", type: "harmonious" },
+                    { text: "Ich hinterfrage seine Thesen kritisch und bringe eigene logische Argumente ein.", type: "analytical" },
+                    { text: "Ich ziehe leise meinen Nutzen aus den Passagen, die für mich wertvoll sind.", type: "reflective" },
+                    { text: "Ich nutze die Zeit lieber für meine eigenen Gedanken und arbeite im Kopf an eigenen Projekten.", type: "assertive" }
+                ]
+            },
+            {
+                text: "Du planst einen Urlaub. Was ist dir am wichtigsten?",
+                options: [
+                    { text: "Ein inspirierender Ort mit historischem Tiefgang, schöner Ästhetik und Raum für Kreativität.", type: "reflective" },
+                    { text: "Gemeinsame Zeit und tiefe Gespräche mit den Menschen, die mich begleiten.", type: "harmonious" },
+                    { text: "Ein perfekt durchorganisierter Ablauf, bei dem alle Sehenswürdigkeiten effizient besucht werden.", type: "analytical" },
+                    { text: "Neue, aufregende Herausforderungen und spontane Abenteuer vor Ort.", type: "assertive" }
+                ]
+            },
+            {
+                text: "Ein Projekt gerät in Zeitnot und alle im Team fangen an, hektisch zu werden.",
+                options: [
+                    { text: "Ich übernehme die Führung, verteile klare Aufgaben und bringe Struktur hinein.", type: "assertive" },
+                    { text: "Ich spreche beruhigend auf alle ein, höre mir Sorgen an und halte die Gruppe zusammen.", type: "harmonious" },
+                    { text: "Ich filtere das Wesentliche heraus, um unnötige Arbeitsschritte sofort zu streichen.", type: "analytical" },
+                    { text: "Ich konzentriere mich unbeeindruckt auf meinen eigenen Teilbereich und liefere in meinem Rhythmus ab.", type: "reflective" }
+                ]
+            },
+            {
+                text: "Wie stehst du zu Regeln, Traditionen und Konventionen im Alltag?",
+                options: [
+                    { text: "Wenn sie Sinn machen und für Ordnung sorgen, halte ich mich gerne daran.", type: "analytical" },
+                    { text: "Ich hinterfrage sie kritisch und breche gerne aus ihnen aus, wenn sie meine persönliche Freiheit einschränken.", type: "reflective" },
+                    { text: "Ich passe mich an, solange es dem sozialen Frieden in meiner Umgebung dient.", type: "harmonious" },
+                    { text: "Regeln sind für mich Richtlinien, die ich je nach eigener Zielsetzung biege.", type: "assertive" }
+                ]
+            },
+            {
+                text: "Jemand erzählt dir von einem schweren persönlichen Schicksalsschlag.",
+                options: [
+                    { text: "Ich höre tief empfindend zu, nehme mir Zeit und lasse die Emotionen wirken, ohne sofort Ratschläge zu erteilen.", type: "reflective" },
+                    { text: "I'ch nehme die Person tröstend in den Arm und signalisiere bedingungslose Unterstützung.", type: "harmonious" },
+                    { text: "Ich helfe der Person direkt dabei, praktische und rationale Schritte zur Bewältigung zu planen.", type: "analytical" },
+                    { text: "I'ch ermutige die Person aktiv dazu, nach vorne zu blicken und ihre Stärke wiederzufinden.", type: "assertive" }
+                ]
+            },
+            {
+                text: "Du hast ein Ziel erreicht, für das du lange gekämpft hast. Wie feierst du deinen Erfolg?",
+                options: [
+                    { text: "Ich genieße den Moment in absoluter Ruhe, reflektiere den Weg und lasse ihn innerlich sacken.", type: "reflective" },
+                    { text: "Ich feiere ihn im Kreis meiner engsten Menschen und bedanke mich bei denen, die mich unterstützt haben.", type: "harmonious" },
+                    { text: "Ich hake das Ziel ab, definiere direkt das nächste Level und bleibe zielgerichtet.", type: "assertive" },
+                    { text: "Ich analysiere, was genau zum Erfolg geführt hat, um diesen Prozess zu optimieren.", type: "analytical" }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let scores = {
+            assertive: 0,
+            harmonious: 0,
+            analytical: 0,
+            reflective: 0
+        };
+
+        function startTest() {
+            currentQuestion = 0;
+            scores = { assertive: 0, harmonious: 0, analytical: 0, reflective: 0 };
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('counter').innerText = `Frage ${currentQuestion + 1} von ${questions.length}`;
+            document.getElementById('progressBar').style.width = `${((currentQuestion) / questions.length) * 100}%`;
+            document.getElementById('questionText').innerText = q.text;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-badge">${letters[index]}</span><span>${opt.text}</span>`;
+                btn.onclick = () => selectOption(opt.type);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectOption(type) {
+            scores[type]++;
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+
+            const total = questions.length;
+            const pAssertive = Math.round((scores.assertive / total) * 100);
+            const pHarmonious = Math.round((scores.harmonious / total) * 100);
+            const pAnalytical = Math.round((scores.analytical / total) * 100);
+            const pReflective = Math.round((scores.reflective / total) * 100);
+
+            const content = document.getElementById('resultContent');
+            content.innerHTML = `
+                <div class="result-card">
+                    <h3>1. Der souveräne Durchsetzer (Assertiv: ${pAssertive}%)</h3>
+                    <p>Misst, wie klar du deine eigenen Grenzen ziehst, direkt kommunizierst und in Konflikten für dich einstehst.</p>
+                </div>
+                <div class="result-card">
+                    <h3>2. Der empathische Vermittler / Diplomat (Harmonisch: ${pHarmonious}%)</h3>
+                    <p>Zeigt, wie stark dir der soziale Frieden, das Wohl anderer und die Vermeidung von unnötigen Reibungen am Herzen liegen.</p>
+                </div>
+                <div class="result-card">
+                    <h3>3. Der strukturierte Stratege (Analytisch: ${pAnalytical}%)</h3>
+                    <p>Spiegelt wider, wie stark du Herausforderungen mit Logik, Systematik, Fakten und Effizienz begegnest.</p>
+                </div>
+                <div class="result-card">
+                    <h3>4. Der tiefsinnige Ästhet & Reflektierer (Reflektiv: ${pReflective}%)</h3>
+                    <p>Beleuchtet deinen inneren Reichtum, deine Neigung zu tiefer Innenschau, Kreativität und dem Wahrnehmen feiner Zwischentöne.</p>
+                </div>
+            `;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Fehler beim Aktivieren des Vollbildmodus: ${err.message}`);
+                });
+                document.getElementById('fsBtn').innerText = "Fenstermodus";
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+                document.getElementById('fsBtn').innerText = "Vollbild";
+            }
+        }
+    </script>
+</body>
+</html>
