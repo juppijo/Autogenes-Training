@@ -1,0 +1,34 @@
+{
+  "titel": "Auswertung deiner Haltungsprofile",
+  "beschreibung": "Hier siehst du, wie sich deine Entscheidungen in den 4 Kernbereichen sozialer Einstellungen verteilen:",
+  "haltungsprofile": [
+    {
+      "id": 1,
+      "name": "Der souveräne Durchsetzer",
+      "typ": "Assertiv",
+      "wert": 15,
+      "beschreibung": "Misst, wie klar du deine eigenen Grenzen ziehst, direkt kommunizierst und in Konflikten für dich einstehst."
+    },
+    {
+      "id": 2,
+      "name": "Der empathische Vermittler / Diplomat",
+      "typ": "Harmonisch",
+      "wert": 30,
+      "beschreibung": "Zeigt, wie stark dir der soziale Friede, das Wohl anderer und die Vermeidung von unnötigen Reibungen am Herzen liegen."
+    },
+    {
+      "id": 3,
+      "name": "Der strukturierte Stratege",
+      "typ": "Analytisch",
+      "wert": 30,
+      "beschreibung": "Spiegelt wider, wie stark du Herausforderungen mit Logik, Systematik, Fakten und Effizienz begegnest."
+    },
+    {
+      "id": 4,
+      "name": "Der tiefsinnige Ästhet & Reflektierer",
+      "typ": "Reflektiv",
+      "wert": 25,
+      "beschreibung": "Beleuchtet deinen inneren Reichtum, deine Neigung zu tiefer Innenschau, Kreativität und dem Wahrnehmen feiner Zwischentöne."
+    }
+  ]
+}
