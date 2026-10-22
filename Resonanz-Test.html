@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resonanz- & Gemeinsamkeiten-Test</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { width: 100%; max-width: 650px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h1 { font-size: 1.6rem; margin-bottom: 10px; text-align: center; color: var(--text); }
+        p.sub { color: var(--text-muted); text-align: center; margin-bottom: 25px; font-size: 0.95rem; line-height: 1.4; }
+        .progress { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 25px; overflow: hidden; }
+        .bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
+        .q-tag { color: var(--accent); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 8px; }
+        .q-title { font-size: 1.2rem; margin-bottom: 25px; line-height: 1.4; }
+        .scale-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .scale-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text); padding: 14px 18px; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
+        .scale-btn:hover { background: rgba(99, 102, 241, 0.15); border-color: var(--accent); transform: translateX(4px); }
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: var(--accent-hover); }
+        .hidden { display: none; }
+        canvas { display: block; margin: 20px auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border); }
+        .res-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Start Screen -->
+    <div id="startScreen">
+        <h1>Gemeinsamkeiten- & Resonanz-Test</h1>
+        <p class="sub">Dieser Test untersucht, in welchen universellen Dimensionen dein Denken, deine Ästhetik und deine Lebenshaltung schwingen.</p>
+        <button class="btn" onclick="startQuiz()">Test starten</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quizScreen" class="hidden">
+        <div class="progress"><div class="bar" id="progressBar"></div></div>
+        <div class="q-tag" id="qTag">Kategorie</div>
+        <h2 class="q-title" id="qTitle">Frage</h2>
+        <div class="scale-grid" id="options"></div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="resultScreen" class="hidden">
+        <h1>Deine Resonanz-Fläche</h1>
+        <p class="sub">Dein persönliches Profil der universellen Gemeinsamkeiten:</p>
+        <canvas id="canvas" width="300" height="200"></canvas>
+        <div id="resultsList"></div>
+        <button class="btn" onclick="startQuiz()" style="margin-top: 15px;">Test neu starten</button>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { cat: "Ästhetik & Wahrnehmung", text: "Wie stark fasziniert dich die Vergänglichkeit und die Geschichte alter Ruinen oder historischer Bauwerke?", scores: [1, 2, 3, 4, 5] },
+    { cat: "Ästhetik & Wahrnehmung", text: "Wie wichtig ist dir Kunst, Musik oder Harmonie als Quell deiner täglichen Inspiration?", scores: [1, 2, 3, 4, 5] },
+    { cat: "Geist & Philosophie", text: "Liebst du es, in tiefe, abstrakte Gedankengebäude über das Wesen der Natur oder der Zeit einzutauchen?", scores: [1, 2, 3, 4, 5] },
+    { cat: "Geist & Philosophie", text: "Hinterfragst du Dingen immer so lange, bis du die zugrundeliegende Struktur komplett verstehst?", scores: [1, 2, 3, 4, 5] },
+    { cat: "Menschlichkeit & Empathie", text: "Nimmst du ungesagte Schwingungen und Emotionen in einem Raum sofort tief wahr?", scores: [1, 2, 3, 4, 5] },
+    { cat: "Menschlichkeit & Empathie", text: "Schenkst du Menschen in Not zuerst einfühlsames Zuhören, statt direkt Ratschläge aufzudrängen?", scores: [1, 2, 3, 4, 5] },
+    { cat: "Lebensausrichtung", text: "Wie wichtig ist es dir, deinem eigenen inneren Rhythmus treu zu bleiben, statt dich im Alltagsstrom zu hetzen?", scores: [1, 2, 3, 4, 5] },
+    { cat: "Lebensausrichtung", text: "Suchst du in deinen täglichen Projekten immer nach einem tieferen Sinn und Zweck?", scores: [1, 2, 3, 4, 5] }
+];
+
+const labels = [
+    "1 - Trifft gar nicht zu",
+    "2 - Eher selten",
+    "3 - Ausgewogen / Mittel",
+    "4 - Trifft meistens zu",
+    "5 - Stark ausgeprägt"
+];
+
+let current = 0;
+let scores = { "Ästhetik & Wahrnehmung": 0, "Geist & Philosophie": 0, "Menschlichkeit & Empathie": 0, "Lebensausrichtung": 0 };
+
+function startQuiz() {
+    current = 0;
+    scores = { "Ästhetik & Wahrnehmung": 0, "Geist & Philosophie": 0, "Menschlichkeit & Empathie": 0, "Lebensausrichtung": 0 };
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('resultScreen').classList.add('hidden');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = questions[current];
+    document.getElementById('qTag').innerText = q.cat;
+    document.getElementById('qTitle').innerText = q.text;
+    document.getElementById('progressBar').style.width = `${((current) / questions.length) * 100}%`;
+
+    const container = document.getElementById('options');
+    container.innerHTML = '';
+
+    labels.forEach((label, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'scale-btn';
+        btn.innerText = label;
+        btn.onclick = () => selectOption(q.cat, idx + 1);
+        container.appendChild(btn);
+    });
+}
+
+function selectOption(cat, val) {
+    scores[cat] += val;
+    current++;
+    if (current < questions.length) {
+        showQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultScreen').classList.remove('hidden');
+
+    const list = document.getElementById('resultsList');
+    list.innerHTML = '';
+
+    let totalScore = 0;
+    Object.keys(scores).forEach(key => {
+        const pct = Math.round((scores[key] / 10) * 100);
+        totalScore += pct;
+        list.innerHTML += `
+            <div class="res-card">
+                <span><strong>${key}</strong></span>
+                <span style="color: var(--accent); font-weight: bold;">${pct}%</span>
+            </div>
+        `;
+    });
+
+    drawCanvas(Math.round(totalScore / 4));
+}
+
+function drawCanvas(overallPct) {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Zeichne Resonanz-Schnittmenge (Zwei überlappende Kreise)
+    const radius = 60;
+    const overlap = (overallPct / 100) * 40; 
+
+    // Linker Kreis
+    ctx.beginPath();
+    ctx.arc(150 - 30 + overlap/2, 100, radius, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(99, 102, 241, 0.3)";
+    ctx.fill();
+    ctx.strokeStyle = "#6366f1";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Rechter Kreis
+    ctx.beginPath();
+    ctx.arc(150 + 30 - overlap/2, 100, radius, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(16, 185, 129, 0.3)";
+    ctx.fill();
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Text in der Mitte
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 16px Segoe UI";
+    ctx.textAlign = "center";
+    ctx.fillText(`${overallPct}% Resonanz`, 150, 105);
+}
+</script>
+</body>
+</html>
