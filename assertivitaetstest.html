@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assertivitäts- & Abgrenzungstest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#131e32',
+                            900: '#0f172a',
+                            950: '#080d1a',
+                        },
+                        indigo: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between items-center p-4 sm:p-6 custom-scrollbar">
+
+    <!-- Header / Fullscreen Controls -->
+    <header class="w-full max-w-3xl flex justify-between items-center mb-6">
+        <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-indigo-500 animate-pulse"></div>
+            <span class="text-xs uppercase tracking-widest font-semibold text-slate-400">Psychologisches Profiling</span>
+        </div>
+        <button id="fullscreenBtn" onclick="toggleFullscreen()" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 rounded-lg text-xs font-medium text-slate-300 transition-all flex items-center gap-2 shadow-sm">
+            <svg id="fsIconExpand" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4"></path></svg>
+            <svg id="fsIconCompress" class="w-3.5 h-3.5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 14v6m0 0h-6m6 0l-5-5m-11 5l5-5m-5 5v-6m0 6h6M4 8V2m0 0h6M4 2l5 5m11-5l-5 5m5-5v6m0-6h-6"></path></svg>
+            <span id="fsText">Vollbild</span>
+        </button>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden my-auto">
+        
+        <!-- Ambient Glow Effect -->
+        <div class="absolute -top-24 -right-24 w-60 h-60 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-60 h-60 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- 1. START SCREEN -->
+        <section id="startScreen" class="relative z-10 space-y-6">
+            <div class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-2">
+                Situativer Selbsttest
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+                Assertivität & Gesunde Abgrenzung
+            </h1>
+            <p class="text-slate-400 text-base sm:text-lg leading-relaxed">
+                Assertivität ist die Kunst, eigene Bedürfnisse, Grenzen und Ansichten selbstbewusst, direkt und respektvoll zu vertreten – ohne aggressiv zu werden oder sich unterzuordnen.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-3 text-sm text-slate-300">
+                <div class="flex items-start gap-3 p-3 bg-slate-800/40 rounded-xl border border-slate-800">
+                    <span class="p-1.5 bg-indigo-500/20 rounded-lg text-indigo-400 font-bold">20</span>
+                    <div>
+                        <strong class="block text-white">Konkrete Szenarien</strong>
+                        <span class="text-slate-400 text-xs">Situative Alltags- & Konfliktsituationen</span>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-slate-800/40 rounded-xl border border-slate-800">
+                    <span class="p-1.5 bg-indigo-500/20 rounded-lg text-indigo-400 font-bold">4</span>
+                    <div>
+                        <strong class="block text-white">Analyse-Kategorien</strong>
+                        <span class="text-slate-400 text-xs">Abgrenzung, Kommunikation, Konflikt & Wert</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="startTest()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex justify-center items-center gap-2">
+                <span>Test jetzt starten</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </section>
+
+        <!-- 2. QUIZ SCREEN -->
+        <section id="quizScreen" class="hidden relative z-10 space-y-6">
+            <!-- Top Progress Header -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center text-xs font-semibold tracking-wider">
+                    <span id="counterText" class="text-indigo-400 uppercase">Frage 1 von 20</span>
+                    <span id="progressPercent" class="text-slate-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-indigo-500 h-full w-0 transition-all duration-300 ease-out"></div>
+                </div>
+            </div>
+
+            <!-- Question -->
+            <div class="py-2">
+                <span id="categoryBadge" class="text-xs text-slate-400 font-medium bg-slate-800/80 border border-slate-700/50 px-2.5 py-1 rounded-md inline-block mb-3">
+                    Kategorie
+                </span>
+                <h2 id="questionText" class="text-lg sm:text-xl font-semibold text-white leading-snug">
+                    Fragetext lädt...
+                </h2>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="optionsContainer" class="space-y-3">
+                <!-- Dynamically generated buttons -->
+            </div>
+        </section>
+
+        <!-- 3. RESULTS SCREEN -->
+        <section id="resultsScreen" class="hidden relative z-10 space-y-8">
+            <div class="border-b border-slate-800 pb-4">
+                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">Auswertung abgeschlossen</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-3">Dein Assertivitäts-Profil</h2>
+                <p id="overallSummary" class="text-slate-400 text-sm mt-2 leading-relaxed">
+                    Basierend auf deinen 20 situativen Entscheidungen ergibt sich folgendes Bild deiner Durchsetzungsstärke und Abgrenzungsfähigkeit:
+                </p>
+            </div>
+
+            <!-- Total Score Banner -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <span class="text-xs text-slate-400 font-medium uppercase tracking-wider block">Gesamt-Assertivität Score</span>
+                    <span id="totalScoreTitle" class="text-lg font-bold text-indigo-400 mt-0.5 block">Berechne...</span>
+                </div>
+                <div class="text-3xl sm:text-4xl font-extrabold text-white bg-slate-900 border border-slate-700 px-6 py-2.5 rounded-xl shadow-inner" id="totalScorePercent">
+                    0%
+                </div>
+            </div>
+
+            <!-- Detailed Categories Progress -->
+            <div class="space-y-4">
+                <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Ergebnisse nach Dimensionen</h3>
+                <div id="categoriesContainer" class="space-y-4">
+                    <!-- Dynamically generated category scores -->
+                </div>
+            </div>
+
+            <!-- Actionable Recommendations -->
+            <div class="space-y-4 pt-2">
+                <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Konkrete Handlungsempfehlungen</h3>
+                <div id="recommendationsContainer" class="space-y-3">
+                    <!-- Dynamically generated recommendations -->
+                </div>
+            </div>
+
+            <!-- Restart Button -->
+            <button onclick="startTest()" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold rounded-xl transition-all shadow-md mt-4">
+                Test erneut durchführen
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-3xl text-center text-xs text-slate-500 mt-6 mb-2">
+        Anonym & lokal verarbeitet • Keine Datenspeicherung
+    </footer>
+
+    <script>
+        // Questions Database with 4 Categories and Scores (0 = Passiv/Submissiv, 1 = Teilweise Assertiv, 2 = Konfliktscheu/Aggr., 3 = Voll Assertiv)
+        // Scores are mapped to 0, 1, 2, 3 where 3 is maximum assertive/healthy boundary setting.
+        const questions = [
+            {
+                category: "Grenzziehung & Abgrenzung",
+                catKey: "abgrenzung",
+                text: "Ein Kollege bittet dich kurz vor Feierabend, eine aufwändige Aufgabe für ihn zu übernehmen. Du bist selbst müde und hast private Pläne.",
+                options: [
+                    { text: "Ich übernehme die Aufgabe zähneknirschend, um keinen Unmut zu erzeugen.", score: 0 },
+                    { text: "Ich erfinde eine Notlüge, warum ich leider sofort weg muss.", score: 1 },
+                    { text: "Ich sage ihm klar und freundlich, dass ich heute keine Kapazität mehr habe und pünktlich gehe.", score: 3 },
+                    { text: "Ich reagiere genervt und frage ihn lautstark, warum er seine Arbeit immer auf andere abwälzt.", score: 1 }
+                ]
+            },
+            {
+                category: "Direkte Kommunikation",
+                catKey: "kommunikation",
+                text: "In einem Restaurant bekommst du ein Essen serviert, das kalt ist und nicht deinen Wünschen entspricht.",
+                options: [
+                    { text: "Ich esse es trotzdem auf, weil ich keine Szene machen möchte.", score: 0 },
+                    { text: "Ich passe die Bedienung höflich ab, erkläre das Problem sachlich und bitte um Aufwärmen/Ersatz.", score: 3 },
+                    { text: "Ich beschwere mich nach dem Essen leise bei meiner Begleitung, sage der Bedienung aber nichts.", score: 0 },
+                    { text: "Ich fordere sofort lautstark den Geschäftsführer und verweigere das Trinkgeld komplett.", score: 1 }
+                ]
+            },
+            {
+                category: "Konfliktfestigkeit",
+                catKey: "konflikt",
+                text: "Ein bekannter Freund macht vor einer Gruppe einen abwertenden Witz auf deine Kosten.",
+                options: [
+                    { text: "Ich lache verlegen mit, obwohl ich mich gekränkt fühle.", score: 0 },
+                    { text: "Ich ziehe mich schweigend zurück und ignoriere ihn für den Rest des Abends.", score: 1 },
+                    { text: "Ich blicke ihn direkt an und sage ruhig: 'Das fand ich weder lustig noch in Ordnung.'", score: 3 },
+                    { text: "Ich schlage sofort mit einer noch gemeineren persönlichen Beleidigung zurück.", score: 1 }
+                ]
+            },
+            {
+                category: "Selbstbehauptung im Alltag",
+                catKey: "selbstwert",
+                text: "Jemand drängelt sich in einer langen Supermarktschlange dreist vor dich.",
+                options: [
+                    { text: "Ich sage nichts und ärgere mich im Stillen darüber.", score: 0 },
+                    { text: "Ich räusper mich laut und schaue die Person böse an, sage aber nichts direkt.", score: 1 },
+                    { text: "Ich sage bestimmt und freundlich: 'Entschuldigung, die Schlange fängt hier hinten an.'", score: 3 },
+                    { text: "Ich schubse meinen Einkaufswagen nach vorne und schnauze die Person an.", score: 1 }
+                ]
+            },
+            {
+                category: "Grenzziehung & Abgrenzung",
+                catKey: "abgrenzung",
+                text: "Deine Familie erwartet, dass du jedes Wochenende zum gemeinsamen Essen kommst, aber du brauchst Zeit für dich.",
+                options: [
+                    { text: "Ich fahre jedes Mal hin, fühle mich aber zunehmend fremdbestimmt und erschöpft.", score: 0 },
+                    { text: "Ich kommuniziere liebevoll, dass mir die Familie wichtig ist, ich aber 1-2 Wochenenden im Monat für mich brauche.", score: 3 },
+                    { text: "Ich sage kurzfristig wegen angebblicher 'Krankheit' ab.", score: 1 },
+                    { text: "Ich reagiere gereizt und beschuldige sie, mich einzuengen und zu erdrücken.", score: 1 }
+                ]
+            },
+            {
+                category: "Direkte Kommunikation",
+                catKey: "kommunikation",
+                text: "Du möchtest bei Gehaltsverhandlungen eine Gehaltserhöhung ansprechen, die dir deiner Meinung nach zusteht.",
+                options: [
+                    { text: "Ich wäge ab und schiebe das Gespräch seit Monaten vor mir her aus Angst vor Ablehnung.", score: 0 },
+                    { text: "Ich bereite meine Erfolge sachlich vor und fordere ein Gespräch zur Anpassung meiner Vergütung an.", score: 3 },
+                    { text: "Ich deute im Smalltalk beiläufig an, dass alles teurer geworden ist, frage aber nicht direkt.", score: 1 },
+                    { text: "Ich drohe direkt mit Kündigung, falls ich nicht sofort mehr Geld bekomme.", score: 1 }
+                ]
+            },
+            {
+                category: "Konfliktfestigkeit",
+                catKey: "konflikt",
+                text: "In einer Teamsitzung unterbricht dich ein Kollege wiederholt, während du deine Idee präsentierst.",
+                options: [
+                    { text: "Ich verstumme und lasse ihn einfach das Wort übernehmen.", score: 0 },
+                    { text: "Ich sage ruhig: 'Lass mich diesen Gedanken bitte noch zu Ende führen, danach hör ich dir gerne zu.'", score: 3 },
+                    { text: "Ich werde lauter und versuche, ihn einfach zu übertönen.", score: 1 },
+                    { text: "Ich rolle mit den Augen und stelle mich für den Rest des Meetings stumm.", score: 0 }
+                ]
+            },
+            {
+                category: "Selbstbehauptung im Alltag",
+                catKey: "selbstwert",
+                text: "Du hast ein Produkt gekauft, das nach wenigen Tagen defekt ist. Das Geschäft verweigert die Rücknahme.",
+                options: [
+                    { text: "Ich akzeptiere die Absage enttäuscht und werfe das Produkt weg.", score: 0 },
+                    { text: "Ich bestehe ruhig auf meinen gesetzlichen Gewährleistungsanspruch und verlang den Marktleiter.", score: 3 },
+                    { text: "Ich werde wütend, beschimpfe das Personal und stürme aus dem Laden.", score: 1 },
+                    { text: "Ich hinterlasse zu Hause eine schlechte Online-Bewertung, unternehme im Laden aber nichts mehr.", score: 1 }
+                ]
+            },
+            {
+                category: "Grenzziehung & Abgrenzung",
+                catKey: "abgrenzung",
+                text: "Ein Nachbar leiht sich ständig Werkzeug oder Haushaltsgeräte von dir aus und bringt sie beschädigt oder spät zurück.",
+                options: [
+                    { text: "Ich leihe es ihm weiterhin, ärgere mich aber jedes Mal maßlos.", score: 0 },
+                    { text: "Ich behaupte beim nächsten Mal einfach, dass ich das Gerät selbst gerade verlegt habe.", score: 1 },
+                    { text: "Ich sage klar, dass ich Abmachungen schätze und unter den bisherigen Bedingungen nichts mehr verleihe.", score: 3 },
+                    { text: "Ich knalle die Tür vor seiner Nase zu.", score: 1 }
+                ]
+            },
+            {
+                category: "Direkte Kommunikation",
+                catKey: "kommunikation",
+                text: "Jemand aus deinem Umfeld gibt dir ein gut gemeintes, aber ungefragtes Ratschlag-Feedback zu deinem Lebensstil.",
+                options: [
+                    { text: "Ich nicke brav und tue so, als würde ich den Ratschlag beherzigen.", score: 0 },
+                    { text: "Ich sage höflich: 'Danke für deine Sichtweise, aber ich treffe meine Entscheidungen lieber selbst.'", score: 3 },
+                    { text: "Ich gehe sofort in eine lange Rechtfertigungshaltung über.", score: 1 },
+                    { text: "Ich kontere sofort aggressiv mit Kritisieren seines eigenen Lebensstils.", score: 1 }
+                ]
+            },
+            {
+                category: "Konfliktfestigkeit",
+                catKey: "konflikt",
+                text: "Dein Partner/deine Partnerin lässt zum wiederholten Male abgemachte Aufgaben im Haushalt liegen.",
+                options: [
+                    { text: "Ich schlucke meinen Frust herunter und mache die Arbeit leise selbst.", score: 0 },
+                    { text: "Ich räume es auf, verhalte mich aber den ganzen Tag passiv-aggressiv und einsilbig.", score: 1 },
+                    { text: "Ich suche in ruhiger Lage das Gespräch, benenne die Abmachung und bitte um Einhaltung.", score: 3 },
+                    { text: "Ich zettele sofort einen lautstarken Streit an und mache ihm/ihr pauschale Vorwürfe ('Nie machst du...').", score: 1 }
+                ]
+            },
+            {
+                category: "Selbstbehauptung im Alltag",
+                catKey: "selbstwert",
+                text: "Du wirst gebeten, bei einem Event spontan eine kurze Rede oder Zusammenfassung zu halten, fühlst dich aber unwohl dabei.",
+                options: [
+                    { text: "Ich zwinge mich dazu und leide unter extremer Panik, nur um niemanden zu enttäuschen.", score: 0 },
+                    { text: "Ich lehne freundlich aber bestimmt ab: 'Heute passe ich, frag bitte jemand anderen.'", score: 3 },
+                    { text: "Ich stimme zu, beschwere mich aber danach bei allen anderen darüber.", score: 1 },
+                    { text: "Ich verlasse fluchtartig den Raum, um der Frage zu entgehen.", score: 0 }
+                ]
+            },
+            {
+                category: "Grenzziehung & Abgrenzung",
+                catKey: "abgrenzung",
+                text: "In einer Gruppenarbeit übernehmen andere Mitstreiter kaum Aufgaben und verlassen sich voll auf dich.",
+                options: [
+                    { text: "Ich mache die Arbeit für alle mit, um eine gute Note/Ergebnis nicht zu gefährden.", score: 0 },
+                    { text: "Ich verteile die Pakete transparent, setze klare Fristen und fordere die Beiträge sachlich ein.", score: 3 },
+                    { text: "Ich drohe sofort damit, die Namen beim Chef/Dozenten wegen Faulheit zu melden.", score: 1 },
+                    { text: "Ich reduziere meine eigene Leistung ebenfalls drastisch, ohne etwas zu sagen.", score: 1 }
+                ]
+            },
+            {
+                category: "Direkte Kommunikation",
+                catKey: "kommunikation",
+                text: "Ein Freund schuldet dir seit Wochen einen größeren Geldbetrag und erwähnt ihn nicht mehr.",
+                options: [
+                    { text: "Ich spreche es nie wieder an aus Angst, die Freundschaft zu gefährden.", score: 0 },
+                    { text: "Ich schreibe ihm eine kurze, sachliche Nachricht mit Erinnerung an die Rückzahlung.", score: 3 },
+                    { text: "Ich mache immer wieder vage Anspielungen auf meine derzeitige finanzielle Lage.", score: 1 },
+                    { text: "Ich beschuldige ihn öffentlich in der Freundesgruppe als unzuverlässig.", score: 1 }
+                ]
+            },
+            {
+                category: "Konfliktfestigkeit",
+                catKey: "konflikt",
+                text: "Dein Vorgesetzter äußert unsachliche Kritik an einer Ausarbeitung, die du sorgfältig erstellt hast.",
+                options: [
+                    { text: "Ich nimm die Kritik schweigend hin und fühle mich schlecht.", score: 0 },
+                    { text: "Ich bleibe ruhig, frage nach konkreten fachlichen Bedenken und erläutere sachlich meine Argumente.", score: 3 },
+                    { text: "Ich werde emotional und verteidige mich rechthaberisch.", score: 1 },
+                    { text: "Ich stimme ihm zu und ändere alles verschlimmbessernd ab.", score: 0 }
+                ]
+            },
+            {
+                category: "Selbstbehauptung im Alltag",
+                catKey: "selbstwert",
+                text: "Du sitzt im Kino/Zug und Personen neben dir unterhalten sich lautstark während des Films/in der Ruhezone.",
+                options: [
+                    { text: "Ich ertrage es genervt die ganze Zeit.", score: 0 },
+                    { text: "Ich drehe mich höflich um und bitte freundlich, das Gespräch leiser zu führen.", score: 3 },
+                    { text: "Ich pfeife laut oder stöhne genervt, sage aber kein Wort.", score: 1 },
+                    { text: "Ich brülle die Personen an, dass sie sich gefälligst benehmen sollen.", score: 1 }
+                ]
+            },
+            {
+                category: "Grenzziehung & Abgrenzung",
+                catKey: "abgrenzung",
+                text: "Jemand schickt dir außerhalb deiner Arbeitszeit Arbeitsnachrichten und erwartet sofortige Antworten.",
+                options: [
+                    { text: "Ich antworte sofort jedes Mal, auch spät abends oder am Wochenende.", score: 0 },
+                    { text: "Ich antworte erst wieder zu meinen normalen Arbeitszeiten und schalte Benachrichtigungen stumm.", score: 3 },
+                    { text: "Ich antworte genervt mit kurzen, kühlen Worten mitten in der Nacht.", score: 1 },
+                    { text: "Ich beschwere mich am Montag lautstark beim gesamten Team.", score: 1 }
+                ]
+            },
+            {
+                category: "Direkte Kommunikation",
+                catKey: "kommunikation",
+                text: "Du verstehst eine wichtige Erklärung in einer Besprechung oder Schulung nicht.",
+                options: [
+                    { text: "Ich schweige und hoffe, dass ich es später irgendwie allein herausfinde.", score: 0 },
+                    { text: "Ich hebe die Hand und bitte sachlich um eine kurze Klarstellung des Punktes.", score: 3 },
+                    { text: "Ich warte bis zum Ende und frage heimlich einen Sitznachbarn.", score: 1 },
+                    { text: "Ich unterbreche den Referenten und behaupte, der Erklärungsansatz sei unverständlich aufgebaut.", score: 1 }
+                ]
+            },
+            {
+                category: "Konfliktfestigkeit",
+                catKey: "konflikt",
+                text: "Zwei Bekannte wollen dich zwingen, in ihrem Streit Partei für eine Seite zu ergreifen.",
+                options: [
+                    { text: "Ich gebe der Person recht, die gerade vor mir steht, um meine Ruhe zu haben.", score: 0 },
+                    { text: "Ich stelle klar, dass ich beide mag und mich nicht in ihren persönlichen Konflikt hineinziehen lasse.", score: 3 },
+                    { text: "Ich ziehe mich komplett von beiden Personen zurück ohne Erklärung.", score: 1 },
+                    { text: "Ich fange an, beide Seiten gegeneinander auszuspielen.", score: 0 }
+                ]
+            },
+            {
+                category: "Selbstbehauptung im Alltag",
+                catKey: "selbstwert",
+                text: "Du wirst nach deiner Meinung zu einem Thema gefragt, hast aber eine völlig andere Ansicht als die Mehrheit im Raum.",
+                options: [
+                    { text: "Ich passe meine Meinung der Mehrheit an, um nicht aufzufallen.", score: 0 },
+                    { text: "Ich vertrete meine Perspektive ruhig, sachlich und ohne Anspruch, andere missionieren zu müssen.", score: 3 },
+                    { text: "Ich weiche der Frage schwammig aus.", score: 1 },
+                    { text: "Ich erkläre die Ansichten der anderen aggressiv für völlig falsch und unwissend.", score: 1 }
+                ]
+            }
+        ];
+
+        let currentIdx = 0;
+        let categoryScores = {
+            abgrenzung: { obtained: 0, max: 0, name: "Grenzziehung & Abgrenzung" },
+            kommunikation: { obtained: 0, max: 0, name: "Direkte Kommunikation" },
+            konflikt: { obtained: 0, max: 0, name: "Konfliktfestigkeit & Souveränität" },
+            selbstwert: { obtained: 0, max: 0, name: "Selbstbehauptung & Selbstwert" }
+        };
+
+        function startTest() {
+            currentIdx = 0;
+            // Reset scores
+            for (let k in categoryScores) {
+                categoryScores[k].obtained = 0;
+                categoryScores[k].max = 0;
+            }
+            
+            // Calculate max achievable scores per category
+            questions.forEach(q => {
+                categoryScores[q.catKey].max += 3;
+            });
+
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentIdx];
+            const total = questions.length;
+            const progress = Math.round((currentIdx / total) * 100);
+
+            document.getElementById('counterText').innerText = `Frage ${currentIdx + 1} von ${total}`;
+            document.getElementById('progressPercent').innerText = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+
+            document.getElementById('categoryBadge').innerText = q.category;
+            document.getElementById('questionText').innerText = q.text;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const prefixes = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl bg-slate-800/40 hover:bg-indigo-600/15 border border-slate-700/60 hover:border-indigo-500/50 text-slate-200 transition-all duration-200 flex items-center gap-3.5 group cursor-pointer";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg bg-slate-800 group-hover:bg-indigo-600 text-slate-300 group-hover:text-white font-bold text-sm flex items-center justify-center shrink-0 border border-slate-700 group-hover:border-indigo-500 transition-colors">
+                        ${prefixes[idx]}
+                    </span>
+                    <span class="text-sm sm:text-base leading-snug">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(q.catKey, opt.score);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(catKey, score) {
+            categoryScores[catKey].obtained += score;
+            currentIdx++;
+
+            if (currentIdx < questions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+
+            // Calculate overall percentage
+            let totalObtained = 0;
+            let totalMax = 0;
+            for (let k in categoryScores) {
+                totalObtained += categoryScores[k].obtained;
+                totalMax += categoryScores[k].max;
+            }
+
+            const overallPercent = Math.round((totalObtained / totalMax) * 100);
+
+            // Total Score Title
+            const scoreTitleElem = document.getElementById('totalScoreTitle');
+            const totalPercentElem = document.getElementById('totalScorePercent');
+            totalPercentElem.innerText = `${overallPercent}%`;
+
+            if (overallPercent >= 80) {
+                scoreTitleElem.innerText = "Stark Assertiv & Gesunde Abgrenzung";
+                scoreTitleElem.className = "text-lg font-bold text-emerald-400 mt-0.5 block";
+            } else if (overallPercent >= 55) {
+                scoreTitleElem.innerText = "Moderat Assertiv mit Entwicklungspotenzial";
+                scoreTitleElem.className = "text-lg font-bold text-indigo-400 mt-0.5 block";
+            } else if (overallPercent >= 35) {
+                scoreTitleElem.innerText = "Tendenziell Angepasst & Konfliktscheu";
+                scoreTitleElem.className = "text-lg font-bold text-amber-400 mt-0.5 block";
+            } else {
+                scoreTitleElem.innerText = "Stark Submissiv / Abgrenzungsschwierigkeiten";
+                scoreTitleElem.className = "text-lg font-bold text-rose-400 mt-0.5 block";
+            }
+
+            // Render Categories
+            const catContainer = document.getElementById('categoriesContainer');
+            catContainer.innerHTML = '';
+
+            const recommendations = [];
+
+            for (let k in categoryScores) {
+                const cat = categoryScores[k];
+                const pct = Math.round((cat.obtained / cat.max) * 100);
+
+                let colorClass = "bg-indigo-500";
+                if (pct >= 75) colorClass = "bg-emerald-500";
+                else if (pct <= 45) colorClass = "bg-amber-500";
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-800/40 border border-slate-800 rounded-xl p-4 space-y-2";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="font-medium text-white">${cat.name}</span>
+                        <span class="font-bold text-slate-300">${pct}%</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                        <div class="${colorClass} h-full rounded-full" style="width: ${pct}%"></div>
+                    </div>
+                `;
+                catContainer.appendChild(card);
+
+                // Collect recommendations
+                if (pct < 60) {
+                    if (k === 'abgrenzung') {
+                        recommendations.push({
+                            title: "Grenzziehung stärken",
+                            text: "Übe das 'Nein'-Sagen ohne unmittelbare Rechtfertigung. Dein Gegenüber benötigt eine klare Grenze, keine lange Entschuldigung."
+                        });
+                    } else if (k === 'kommunikation') {
+                        recommendations.push({
+                            title: "Direkte Ansprache kultivieren",
+                            text: "Sprich Wünsche und Kritik direkt an, statt auf vage Anspielungen oder das Erraten durch andere zu hoffen."
+                        });
+                    } else if (k === 'konflikt') {
+                        recommendations.push({
+                            title: "Konfliktangst abbauen",
+                            text: "Sieh Gegenwind nicht als Bedrohung der Beziehung. Sachliche Meinungsverschiedenheiten sind Zeichen einer gesunden Kommunikation."
+                        });
+                    } else if (k === 'selbstwert') {
+                        recommendations.push({
+                            title: "Raum einnehmen erlauben",
+                            text: "Erinnere dich daran, dass deine Bedürfnisse und Rechte genauso viel Gewicht haben wie die deiner Mitmenschen."
+                        });
+                    }
+                }
+            }
+
+            // Fallback recommendation if score is high everywhere
+            if (recommendations.length === 0) {
+                recommendations.push({
+                    title: "Exzellente Balance beibehalten",
+                    text: "Du besitzt eine hervorragende Mischung aus Klarheit, Selbstachtung und Empathie. Achte darauf, deine Bestimmtheit weiterhin von Aggression abzugrenzen."
+                });
+            }
+
+            // Render Recommendations
+            const recContainer = document.getElementById('recommendationsContainer');
+            recContainer.innerHTML = '';
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = "p-3.5 bg-indigo-950/30 border border-indigo-800/30 rounded-xl space-y-1";
+                item.innerHTML = `
+                    <h4 class="text-sm font-semibold text-indigo-300 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        ${rec.title}
+                    </h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">${rec.text}</p>
+                `;
+                recContainer.appendChild(item);
+            });
+        }
+
+        function toggleFullscreen() {
+            const fsBtnText = document.getElementById('fsText');
+            const iconExpand = document.getElementById('fsIconExpand');
+            const iconCompress = document.getElementById('fsIconCompress');
+
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Vollbild-Fehler: ${err.message}`);
+                });
+                fsBtnText.innerText = "Beenden";
+                iconExpand.classList.add('hidden');
+                iconCompress.classList.remove('hidden');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+                fsBtnText.innerText = "Vollbild";
+                iconExpand.classList.remove('hidden');
+                iconCompress.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
